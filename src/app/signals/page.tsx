@@ -13,6 +13,7 @@ import { Predictions } from "@/components/signals/Predictions";
 import { MarketTide } from "@/components/signals/MarketTide";
 import { CongressTable, DarkPoolTable } from "@/components/signals/PartnerTables";
 import { MorningNote } from "@/components/signals/MorningNote";
+import { GsMacroPanel } from "@/components/signals/GsMacroPanel";
 import { ButtonLink } from "@/components/ui/Button";
 
 export const metadata: Metadata = {
@@ -34,7 +35,7 @@ async function MacroPanel() {
   const macro = await getMacro();
   return (
     <Panel title="Macro dashboard" subtitle="Rates, inflation, labor and financial conditions" source={macro.source} className="lg:col-span-3">
-      <MacroGrid series={macro.data} wide />
+      <MacroGrid series={macro.data} />
     </Panel>
   );
 }
@@ -132,6 +133,10 @@ export default function SignalsPage() {
             <MacroPanel />
           </Suspense>
 
+          <Suspense fallback={null}>
+            <GsMacroPanel />
+          </Suspense>
+
           <Suspense fallback={<Skeleton className="h-96 lg:col-span-3" />}>
             <OptionsPanels />
           </Suspense>
@@ -171,7 +176,8 @@ export default function SignalsPage() {
           <p>
             <span className="font-semibold text-paper/70">Sources.</span> Quotes: Alpaca Markets (IEX). Macro: FRED®, Federal
             Reserve Bank of St. Louis. Options: Cboe delayed quotes (~15 min). Insider filings: SEC EDGAR. Prediction markets:
-            Polymarket. Partner panels activate with a licensed provider.
+            Polymarket. Goldman Sachs Marquee data appears only where licensed. Partner panels activate with a licensed
+            provider.
           </p>
           <p>
             <span className="font-semibold text-paper/70">Delays.</span> Panels refresh on a cache of one to thirty minutes.

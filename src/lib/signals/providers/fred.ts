@@ -49,7 +49,7 @@ export async function fetchFredMacro(): Promise<MacroSeries[] | null> {
         observation_start: start,
         units: s.units ?? "lin",
       });
-      const json = await getJson<Observations>(`https://api.stlouisfed.org/fred/series/observations?${params}`);
+      const json = await getJson<Observations>(`https://api.stlouisfed.org/fred/series/observations?${params}`, { timeoutMs: 15000 });
       const obs = (json?.observations ?? []).filter((o) => o.value !== "." && o.value !== "");
       if (obs.length < 2) return null;
       const values = obs.map((o) => Number(o.value));

@@ -3,11 +3,23 @@ import { Sparkline } from "@/components/charts/Sparkline";
 import { cn, formatDate } from "@/lib/utils";
 
 /** Grid of macro tiles; 1px gaps over a colored backdrop draw the rules. */
-export function MacroGrid({ series, tone = "dark", limit, wide = false }: { series: MacroSeries[]; tone?: "dark" | "light"; limit?: number; wide?: boolean }) {
+export function MacroGrid({
+  series,
+  tone = "dark",
+  limit,
+  wide = false,
+  gridClassName,
+}: {
+  series: MacroSeries[];
+  tone?: "dark" | "light";
+  limit?: number;
+  wide?: boolean;
+  gridClassName?: string;
+}) {
   const dark = tone === "dark";
   const items = limit ? series.slice(0, limit) : series;
   return (
-    <ul className={cn("grid grid-cols-2 gap-px sm:grid-cols-4", wide && "xl:grid-cols-8", dark ? "bg-term-line" : "bg-line")}>
+    <ul className={cn("grid gap-px", gridClassName ?? cn("grid-cols-2 sm:grid-cols-4", wide && "xl:grid-cols-8"), dark ? "bg-term-line" : "bg-line")}>
       {items.map((s) => {
         const flat = Math.abs(s.change) < Math.pow(10, -s.decimals) / 2;
         const up = s.change > 0;

@@ -43,7 +43,8 @@ export default function DisclosuresPage() {
       <h2>Market data and third-party content</h2>
       <p>
         Amador Signals displays data from third parties, which may include Alpaca Markets (IEX feed), FRED® (Federal Reserve
-        Bank of St. Louis), Cboe delayed quotes, SEC EDGAR filings, Polymarket and, where licensed, Unusual Whales. Data may be
+        Bank of St. Louis), Cboe delayed quotes, SEC EDGAR filings, Polymarket and, where licensed, Unusual Whales and Goldman
+        Sachs Global Investment Research (via Marquee). Data may be
         delayed, incomplete or inaccurate and is provided &ldquo;as is&rdquo; without warranty. Options premium figures are
         estimates. Panels marked &ldquo;Sample&rdquo; or &ldquo;Partner data&rdquo; show illustrative data, not live markets.
         Trademarks and data remain the property of their respective owners, and their appearance does not imply endorsement.

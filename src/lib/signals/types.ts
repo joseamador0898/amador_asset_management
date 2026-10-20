@@ -107,3 +107,14 @@ export type DarkPoolPrint = {
 };
 
 export type TidePoint = { t: string; netCall: number; netPut: number };
+
+export type GsCommodityForecast = {
+  label: string;
+  unit: string;
+  quarterLabel: string; // e.g. "2026 Q4"
+  quarter: number | null;
+  twelveMonth: number | null;
+  date: string; // forecast publication date
+};
+
+export type GsMacro = { tiles: MacroSeries[]; commodities: GsCommodityForecast[] };

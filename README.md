@@ -56,6 +56,7 @@ Every variable is optional. Without keys, panels show clearly labelled sample da
 | `SEC_USER_AGENT` | SEC EDGAR fair-access identification for Form 4 insider filings |
 | `SIGNALS_CBOE=on` | Options Pulse and unusual activity from Cboe delayed chains |
 | `UNUSUAL_WHALES_API_KEY` | Market Tide, Congressional trades, Dark pool panels (paid plan) |
+| `GS_CLIENT_ID`, `GS_CLIENT_SECRET`, `SIGNALS_GS=on` | Goldman Sachs macro lens (Marquee: FCI, activity nowcast, MAP surprises, risk appetite, social sentiment, GIR commodity forecasts). Licensed data; see below |
 | `GEMINI_API_KEY`, `GEMINI_MODEL` | AI Morning Note on `/signals` |
 | `RESEND_API_KEY`, `EMAIL_FROM`, `EMAIL_TO`, `RESEND_AUDIENCE_ID` | Form emails, confirmations and subscriber list |
 | `FORMS_WEBHOOK_URL` | Send every form submission to Zapier, Make, Slack, a CRM, etc. |
@@ -74,8 +75,11 @@ Keys are read only on the server (route handlers and cached server functions). T
 | Insider filings | SEC EDGAR Form 4 | no | Open-market buys listed first |
 | Prediction markets | Polymarket Gamma API | no | Macro and market events only |
 | Market tide, Congress, Dark pool | Unusual Whales | yes (paid) | Shown as "Partner data" until a valid key is set |
+| Goldman Sachs macro lens | Goldman Sachs Marquee (GIR) | yes (`SIGNALS_GS=on`) | Hidden unless enabled; licensed to the account holder |
 | Morning Note | Google Gemini | yes | Summarizes only the data on the page; labelled as AI-generated |
 
+> **Goldman Sachs Marquee data is licensed to the Marquee account holder** and is generally not for public redistribution. Keep `SIGNALS_GS` unset on public deployments unless Goldman Sachs has confirmed in writing that your license permits displaying it.
+>
 > **Before a public launch,** confirm that each provider's terms allow public display of its data: Alpaca, Cboe and Unusual Whales in particular. FRED, SEC EDGAR and Polymarket's public API are generally fine with attribution. Data is cached server-side (`cacheLife` profiles `signals` and `filings` in `next.config.ts`) to keep provider usage low.
 
 ## Writing content

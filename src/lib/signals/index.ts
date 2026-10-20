@@ -4,6 +4,7 @@ import type {
   CongressTrade,
   DarkPoolPrint,
   Feed,
+  GsMacro,
   InsiderTrade,
   MacroSeries,
   OptionsPulse,
@@ -19,6 +20,7 @@ import { fetchOptionsPulse } from "./providers/cboe";
 import { fetchSecInsiders } from "./providers/sec";
 import { fetchUwCongress, fetchUwDarkPool, fetchUwMarketTide } from "./providers/unusualwhales";
 import { generateBrief } from "./providers/gemini";
+import { fetchGsMacro } from "./providers/gsquant";
 import { fmt } from "@/lib/utils";
 
 const now = () => new Date().toISOString();
@@ -93,6 +95,19 @@ export async function getMarketTide(): Promise<Feed<TidePoint[]>> {
   return live
     ? { data: live, source: { provider: "Unusual Whales", live: true, url: "https://unusualwhales.com", asOf: now() } }
     : { data: sampleTide, source: { provider: "Data partner required", live: false, note: "Add a valid UNUSUAL_WHALES_API_KEY.", asOf: now() } };
+}
+
+/**
+ * Goldman Sachs Marquee macro lens (licensed data). Returns null unless
+ * SIGNALS_GS=on with credentials, so public deployments omit the panel.
+ */
+export async function getGsMacro(): Promise<Feed<GsMacro> | null> {
+  "use cache";
+  cacheLife("filings");
+  const live = await fetchGsMacro();
+  return live
+    ? { data: live, source: { provider: "Goldman Sachs Global Investment Research, via Marquee", live: true, url: "https://marquee.gs.com", asOf: now() } }
+    : null;
 }
 
 /** Gemini-written summary of markets, macro and prediction markets. Refreshed hourly. */
