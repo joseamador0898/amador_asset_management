@@ -1,0 +1,103 @@
+---
+title: "How to Read a Backtest Like a Skeptic"
+dek: "Probabilistic and Deflated Sharpe Ratios, backtest-overfitting tests, multiple seeds, and ten quiet bugs that make strategies look better than they are."
+date: "2026-10-10"
+category: "Risk"
+author: "Jose Luis Amador Jaime"
+tags: ["backtesting", "statistics", "Sharpe ratio", "research methods"]
+series: "Deep HRP"
+featured: false
+cover: "bars"
+---
+
+A backtest is an argument, not a measurement. It is assembled from choices: the period, the universe, the parameters, the costs, the code. And the person making those choices usually wants the answer to be yes. Our research on [Deep HRP](/insights/deep-hrp-learnable-risk-parity) forced us to build an evaluation protocol designed to say no whenever it reasonably could. This article shares the tools we use and the bugs we have learned to hunt for, in our own work first.
+
+## Problem one: a Sharpe ratio is an estimate
+
+A reported Sharpe ratio is a sample statistic. Over short samples, or with skewed, fat-tailed returns, a high value can easily be luck. Bailey and López de Prado (2012) proposed the **Probabilistic Sharpe Ratio (PSR)**: the probability that the true Sharpe ratio exceeds a benchmark $SR^*$ (often zero), given the observed Sharpe ratio $\widehat{SR}$ (measured per period), the number of observations $n$, the skewness $\gamma_3$ and the kurtosis $\gamma_4$ of returns:
+
+$$
+\mathrm{PSR}(SR^*) = \Phi\!\left( \frac{(\widehat{SR} - SR^*)\sqrt{n-1}}{\sqrt{1 - \gamma_3 \widehat{SR} + \frac{\gamma_4 - 1}{4}\widehat{SR}^2}} \right)
+$$
+
+Here $\Phi$ is the standard normal distribution function. Some intuition, for a strategy with an annualized Sharpe ratio of 1.0 measured on daily returns with normal tails:
+
+| Track record | PSR (probability the true Sharpe exceeds 0) |
+|---|---|
+| 1 year | 84.1% |
+| 2 years | 92.1% |
+| 3 years | 95.8% |
+| 5 years | 98.7% |
+
+A one-year Sharpe of 1.0 leaves roughly a one-in-six chance that the strategy has no edge at all. For daily data, the length of the record matters more than fat tails: with three years of data, moving from normal tails to a skew of −2 and a kurtosis of 12 lowers the PSR only from 95.8% to 94.8%.
+
+<Callout type="warning" title="PSR is not a comparison">
+A high PSR says a Sharpe ratio is probably positive. It does not say one strategy beats another. For that you need paired tests on the two return streams over the same dates, such as a block-bootstrap test of the Sharpe-ratio difference (Ledoit and Wolf, 2008), corrected for multiple comparisons when you test many pairs (Holm, 1979).
+</Callout>
+
+## Problem two: you tried more than one thing
+
+The more configurations you test, the higher the best one's Sharpe ratio will be, even if none has any edge. Bailey and López de Prado (2014) formalized this in the **Deflated Sharpe Ratio (DSR)**: compute the PSR against a benchmark equal to the Sharpe ratio you would *expect* from the best of $N$ skill-less trials,
+
+$$
+SR_0 = \sqrt{V\!\left[\widehat{SR}_n\right]}\left( (1-\gamma)\,\Phi^{-1}\!\left(1 - \tfrac{1}{N}\right) + \gamma\,\Phi^{-1}\!\left(1 - \tfrac{1}{N e}\right) \right)
+$$
+
+where $V[\widehat{SR}_n]$ is the variance of the Sharpe ratios across the trials and $\gamma \approx 0.5772$ is the Euler–Mascheroni constant.
+
+<Chart
+  title="Deflated Sharpe Ratio of a three-year, Sharpe 1.0 backtest"
+  caption="Illustrative: cross-trial standard deviation of annualized Sharpe ratios of 0.5, normal returns. The more variations were tried, the less the winner's Sharpe ratio means."
+  decimals={2}
+  data={[
+    { label: "1 trial", value: 0.96 },
+    { label: "10 trials", value: 0.64 },
+    { label: "100 trials", value: 0.32, highlight: true },
+    { label: "1,000 trials", value: 0.14 }
+  ]}
+/>
+
+The hard part is honesty about $N$. Every lookback you tried, every universe you dropped, every hyperparameter you nudged after peeking at results is a trial. Tuning anything on the test period, even informally, quietly multiplies $N$.
+
+## Problem three: the winner in sample is not the winner out of sample
+
+The **Probability of Backtest Overfitting (PBO)**, from Bailey, Borwein, López de Prado and Zhu (2017), asks a direct question: if you pick the best configuration in one half of the data, how often does it land below the median in the other half? Their combinatorially symmetric cross-validation splits the sample into $S$ blocks and tries every way of choosing half of them for selection, $\binom{S}{S/2}$ combinations (12,870 when $S = 16$). A PBO near zero means in-sample winners keep winning; a PBO near one half means selection is no better than a coin flip.
+
+Note what PBO measures: the stability of a *selection process* over a *set of candidates*. Running it over a handful of unrelated fixed strategies tells you whether their ranking is stable, not whether your development process overfit. To answer that, the candidate set must be the configurations you actually explored.
+
+## Problem four: one seed is one anecdote
+
+Machine-learning allocators add another source of luck: the random seed that initializes the network and shuffles the training data. In our experience, the spread across seeds can be as large as the gap between methods. We report every neural result as a mean and standard deviation over ten seeds, and we treat a result that depends on the seed as no result.
+
+## Ten quiet bugs we hunt for
+
+These are the errors that do not crash anything. They simply make results better than they should be, or just different from what the paper says. Every item on this list is something we now test for explicitly.
+
+1. **Price returns instead of total returns.** Unadjusted closing prices leave out dividends and coupons. For bond and dividend-heavy funds that can understate returns by several percentage points a year and distort every comparison.
+2. **Training windows that silently extend.** When an asset starts trading late, data code that keeps only dates where every asset has a price can push the "training" sample into the test period without raising an error.
+3. **Comparing methods on different dates.** If one method's backtest starts later because it needed more history, its Sharpe ratio is measured over a different market.
+4. **Costs charged incorrectly.** Spreading a rebalance's cost across the holding period, then charging only one day's share, quietly removes most of the cost.
+5. **Raw returns in factor regressions.** Alphas must be estimated on returns in excess of the risk-free rate; otherwise cash yield shows up as skill.
+6. **Mis-scaled t-statistics.** Annualizing the numerator and denominator of a t-statistic inconsistently can inflate it by a factor of nearly 16 for daily data, the square root of 252.
+7. **Models left in training mode.** Neural networks with dropout give different answers on every call unless switched to evaluation mode before inference.
+8. **Timestamps that leak.** A headline dated the same day as the return it is meant to predict may have been published after the close.
+9. **Tuning on the test set.** Comments like "this setting worked better in the backtest" in a codebase are trials that belong in $N$.
+10. **Numbers from different runs.** Tables assembled from several runs, code versions or data cut-offs cannot be reproduced. Every number should be generated by script from one tagged run, and checked against the text before publication.
+
+<PullQuote cite="How we work">
+The goal of a research process is not to find a strategy that backtests well. It is to stop believing in the ones that don't deserve it as early and cheaply as possible.
+</PullQuote>
+
+## How we apply this
+
+Every piece of Amador research is held to this checklist before publication, and we report what fails along with what passes. It is the same standard we will apply to the [Nautilus Fund](/fund) and the same one we would apply to a strategy someone pitches to you. If you want a second opinion on a backtest you have been shown, [book a consultation](/book).
+
+## Key takeaways
+
+- Read a Sharpe ratio together with its track-record length; the PSR turns the two into a probability.
+- Deflate for every trial you ran, including the informal ones.
+- Use PBO to test your selection process, and paired tests to compare strategies.
+- Report neural results across seeds, not from the best one.
+- Assume there is a quiet bug until a checklist says otherwise.
+
+*References: Bailey and López de Prado (2012), "The Sharpe Ratio Efficient Frontier," Journal of Risk; Bailey and López de Prado (2014), "The Deflated Sharpe Ratio," Journal of Portfolio Management; Bailey, Borwein, López de Prado and Zhu (2017), "The Probability of Backtest Overfitting," Journal of Computational Finance; Ledoit and Wolf (2008), "Robust Performance Hypothesis Testing with the Sharpe Ratio," Journal of Empirical Finance; Holm (1979), Scandinavian Journal of Statistics.*

@@ -1,0 +1,119 @@
+---
+title: "Hierarchical Risk Parity, Explained"
+dek: "How a 2016 idea from machine learning sidesteps the most fragile step in portfolio optimization, and what it quietly assumes along the way."
+date: "2026-10-14"
+category: "Education"
+author: "Jose Luis Amador Jaime"
+tags: ["HRP", "portfolio construction", "risk parity", "clustering"]
+series: "Deep HRP"
+featured: false
+cover: "dendrogram"
+---
+
+Every portfolio-construction method answers the same question: given what we know about a set of assets, how much of each should we hold? The textbook answer, Markowitz's mean-variance optimization (1952), is elegant and, in practice, fragile. Hierarchical Risk Parity, introduced by Marcos López de Prado in the *Journal of Portfolio Management* in 2016, is one of the most influential attempts to keep the good part of that answer while discarding the fragile part.
+
+This article explains how HRP works step by step, walks through a four-asset example with every number computed, and is candid about what the method assumes. It is the first piece in our series on [Deep HRP](/insights/deep-hrp-learnable-risk-parity), our research into making the hierarchy learnable.
+
+## The problem HRP solves
+
+Mean-variance optimization needs two inputs: expected returns and a covariance matrix. Both are estimated with error, and the optimizer is exquisitely sensitive to that error. Richard Michaud called optimizers "estimation-error maximizers" (1989): they pile into whichever assets happen to look best in the sample. DeMiguel, Garlappi and Uppal (2009) found that across many datasets, optimized portfolios struggled to beat a naive equal-weight portfolio out of sample.
+
+Part of the fragility comes from a single algebraic step: **inverting the covariance matrix**. When assets are highly correlated, that matrix is close to singular, and small changes in estimated correlations produce large swings in the inverse, and so in the weights. The more similar your assets, the worse it gets, which is exactly when you most need diversification to be computed carefully.
+
+Risk-parity methods sidestep expected returns entirely and allocate by risk. HRP goes one step further: it never inverts the full covariance matrix at all.
+
+## The three steps
+
+HRP borrows a tool from machine learning, hierarchical clustering, and uses it to impose structure on the allocation problem.
+
+### Step 1: Build a tree of assets
+
+First, convert each pair of assets' correlation $\rho_{ij}$ into a distance:
+
+$$
+d_{ij} = \sqrt{\tfrac{1}{2}\left(1 - \rho_{ij}\right)}
+$$
+
+Perfectly correlated assets are at distance 0; uncorrelated assets at about 0.71; perfectly anti-correlated assets at 1. A clustering algorithm then merges the closest assets, then the closest groups, until everything sits in one tree (a dendrogram). The original paper uses single linkage, where the distance between two groups is the distance between their closest members, and computes an additional "distance of distances" between correlation profiles. Implementations differ on both choices, and the choice matters.
+
+### Step 2: Reorder the covariance matrix
+
+Reading the tree's leaves from left to right gives an ordering in which similar assets sit next to each other. López de Prado calls reordering the covariance matrix this way *quasi-diagonalization*: large covariances cluster along the diagonal, revealing the block structure that was hidden in the original ordering.
+
+### Step 3: Split the risk, recursively
+
+Starting with all assets, split the ordered list into two halves. Give each half a weight that is inversely proportional to its variance, where a cluster's variance is computed using inverse-variance weights inside it:
+
+$$
+\alpha = 1 - \frac{V_{\text{left}}}{V_{\text{left}} + V_{\text{right}}}
+$$
+
+The left half gets a fraction $\alpha$ of the current budget and the right half gets $1 - \alpha$. Then repeat inside each half until every asset has its weight. No matrix is ever inverted; the only operations are variances of small sub-portfolios and simple ratios.
+
+## A four-asset example
+
+Take four assets with the following annualized volatilities and correlations. They are illustrative assumptions, not forecasts.
+
+| | Volatility | US stocks | Intl stocks | Treasuries | Gold |
+|---|---|---|---|---|---|
+| US stocks | 16% | 1.00 | 0.85 | −0.20 | 0.05 |
+| Intl stocks | 18% | 0.85 | 1.00 | −0.15 | 0.15 |
+| Treasuries | 6% | −0.20 | −0.15 | 1.00 | 0.30 |
+| Gold | 15% | 0.05 | 0.15 | 0.30 | 1.00 |
+
+The correlation distances make the tree almost obvious. US and international stocks are by far the closest pair (distance 0.274). Treasuries and gold come next (0.592). The two pairs then join at the top. The ordered list is: US stocks, international stocks, Treasuries, gold.
+
+**First split: stocks versus the defensive pair.** Using inverse-variance weights inside each cluster, the stock cluster's variance is 0.0264 and the Treasuries-plus-gold cluster's variance is 0.0037. So the stock cluster receives $\alpha = 1 - 0.0264/(0.0264 + 0.0037) = 12.4\%$ of the portfolio and the defensive cluster 87.6%.
+
+**Second splits.** Inside the stock cluster, US stocks get 55.9% and international stocks 44.1% of its 12.4%. Inside the defensive cluster, Treasuries get 86.2% and gold 13.8% of its 87.6%.
+
+Here is the result next to two simpler alternatives, with each asset's share of total portfolio risk (its risk contribution):
+
+| | Weights: EW | Weights: Inverse vol | Weights: HRP | Risk share: EW | Risk share: Inverse vol | Risk share: HRP |
+|---|---|---|---|---|---|---|
+| US stocks | 25.0% | 17.8% | 6.9% | 34.8% | 28.3% | 4.2% |
+| Intl stocks | 25.0% | 15.8% | 5.5% | 41.8% | 30.8% | 5.0% |
+| Treasuries | 25.0% | 47.4% | 75.5% | 1.9% | 15.8% | 70.6% |
+| Gold | 25.0% | 19.0% | 12.1% | 21.5% | 25.0% | 20.3% |
+| Portfolio volatility | 9.4% | 7.0% | 5.5% | | | |
+
+<Chart
+  title="Share of portfolio risk from stocks (US + international)"
+  caption="Illustrative four-asset example from the table above. Risk share = weight × marginal contribution ÷ portfolio variance."
+  decimals={1}
+  data={[
+    { label: "Equal weight", value: 76.6 },
+    { label: "Inverse vol", value: 59.1 },
+    { label: "HRP", value: 9.2, highlight: true }
+  ]}
+/>
+
+Two lessons stand out. First, **equal weights are not equal risk**: the "balanced" portfolio gets more than three-quarters of its risk from stocks. Second, **HRP is not equal risk contribution either**. Because it splits budgets by inverse variance at every level, it hands the low-volatility asset most of the capital, and here Treasuries end up carrying 70% of the risk. HRP balances risk *between clusters at each split* in an inverse-variance sense; it does not promise that each asset, or each economic exposure, contributes equally.
+
+<Callout type="insight" title="Why the tree matters">
+Had international stocks been clustered with gold instead of with US stocks, the first split would have been entirely different. HRP's weights depend heavily on the shape of the tree, which depends on noisy correlation estimates and on the linkage rule. That is both its strength (structure) and a source of sensitivity.
+</Callout>
+
+## What HRP gets right
+
+- **No matrix inversion.** HRP works even when the covariance matrix is singular, for example with more assets than observations.
+- **Structure as a prior.** Grouping similar assets before allocating mirrors how a thoughtful human allocator thinks: decide between asset classes first, then within them.
+- **Stability.** Because it avoids the optimizer's sensitivity to small input changes, HRP weights tend to move less from one rebalance to the next than mean-variance weights. In the original paper's Monte Carlo experiments, HRP delivered lower out-of-sample variance than the minimum-variance portfolio.
+
+## What it assumes, and where it breaks
+
+- **The tree is treated as truth.** Clustering is run once per rebalance and its output is taken at face value, even when two candidate trees are nearly equally plausible.
+- **Bisection follows list position, not the tree.** The original algorithm splits the ordered list in half, which can cut through a natural cluster. Later work by Raffinot (2017) and others explored other linkages and splitting along the tree's own branches.
+- **It ignores expected returns** by design. That is a feature when return forecasts are noise; it is a limitation when you have a real view.
+- **It is frozen.** Every step is a fixed rule. HRP cannot learn from outcomes, adapt its splits to market regimes, or be trained together with other models, because clustering and bisection are discrete operations with no gradients.
+
+That last point is what motivated our research. If the hierarchy is a good inductive bias, can we keep it while letting a model learn how decisively to split risk, which assets belong together and when to lean away from the classical answer? That is the subject of [Deep HRP: Teaching Hierarchical Risk Parity to Learn](/insights/deep-hrp-learnable-risk-parity).
+
+## Key takeaways
+
+- HRP replaces covariance inversion with three robust steps: cluster assets by correlation, reorder them, and split risk recursively by inverse variance.
+- Equal weights concentrate risk; HRP shifts capital toward low-volatility clusters and does not equalize risk contributions.
+- The method's results depend on the tree, the linkage rule and the splitting convention, so implementation details matter.
+- HRP's rules are fixed, which makes it stable but unable to learn. That trade-off is where our Deep HRP research begins.
+
+*References: Markowitz (1952), "Portfolio Selection," Journal of Finance; Michaud (1989), "The Markowitz Optimization Enigma: Is 'Optimized' Optimal?," Financial Analysts Journal; DeMiguel, Garlappi and Uppal (2009), Review of Financial Studies; López de Prado (2016), "Building Diversified Portfolios that Outperform Out of Sample," Journal of Portfolio Management; Raffinot (2017), "Hierarchical Clustering-Based Asset Allocation," Journal of Portfolio Management.*

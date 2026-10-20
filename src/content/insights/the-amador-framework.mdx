@@ -1,0 +1,143 @@
+---
+title: "The Amador Framework: Five Questions Before Any Position"
+dek: "Before any position earns capital, we ask what would prove it wrong, what is priced in, how its payoff is shaped, how it fits, and how to size and exit it."
+date: "2026-10-12"
+category: "Frameworks"
+author: "Jose Luis Amador Jaime"
+tags: ["investment process", "expected value", "position sizing", "risk management", "diversification"]
+featured: false
+cover: "grid"
+---
+
+Most investment mistakes are failures of process rather than intelligence: a good story bought at a price that already assumed it, a correct view held at a size it could not support, a position kept long after its reason had expired. No process eliminates error, but a good one makes errors smaller and easier to correct.
+
+We ask the five questions below, in order, before taking any position. Each is a filter: there is little point in estimating the payoff of an idea we cannot falsify, and none in sizing one whose upside is already in the price.
+
+1. What is the thesis, and what would prove it wrong?
+2. What is already priced in?
+3. What is the payoff asymmetry?
+4. How does it fit the portfolio?
+5. How much, and when do we exit?
+
+<PullQuote cite="Amador Asset Management">
+A thesis that cannot be proven wrong cannot be sized.
+</PullQuote>
+
+## Question one: the thesis and its kill criteria
+
+A thesis is a causal claim with a mechanism, a horizon and observable consequences, not a story. "The company is well run" is not a thesis. "Operating margins will recover toward their pre-shock range within four quarters as input costs normalize, and the share price does not reflect that recovery" is one, because every clause can be checked.
+
+The second half matters more. Before entering, we write kill criteria: observable conditions under which we will conclude that we are wrong and exit. The standard is Karl Popper's falsifiability: a thesis that survives every possible outcome cannot be managed, because nothing will ever tell us to leave. Good kill criteria are:
+
+- **Observable:** a reported margin, a policy decision, an inflation print. "Sentiment deteriorates" does not qualify.
+- **Pre-committed:** written before entry, while there is no position to defend.
+- **Anchored in the thesis:** prices move for many unrelated reasons, so a large move triggers a review, while the exit decision rests on the variables the thesis names.
+
+A useful aid is Klein's (2007) pre-mortem: assume the position failed badly a year from now, and write the most plausible account of why. It often yields the best kill criteria.
+
+## Question two: what is already priced in
+
+Being right about the world is not enough. A price embeds expectations, and a position pays only if reality beats them: an excellent company priced for perfection can be a poor investment, and a mediocre one priced for ruin a good one. We make those expectations explicit, then explain why ours differ.
+
+**Base rates.** Kahneman and Lovallo (1993) contrasted the inside view, built from the specifics of a case, with the outside view: how have similar cases turned out? A forecast far in the tail of its reference class is not necessarily wrong, but it carries the burden of proof. Mauboussin, Callahan and Majd's *The Base Rate Book* (2016) compiles such base rates for corporate performance.
+
+**Reverse discounted cash flow.** Following Rappaport and Mauboussin's *Expectations Investing* (2001), we take the price as given and solve for the growth it implies. In the constant-growth case:
+
+$$
+P = \frac{FCF_1}{r - g} \quad \Longrightarrow \quad g^{*} = r - \frac{FCF_1}{P}
+$$
+
+With a hypothetical 9% discount rate and a 4% forward free-cash-flow yield, the implied perpetual growth rate is 5%. The question is whether base rates make 5% plausible.
+
+**Options-implied moves.** An at-the-money straddle prices the expected absolute move to expiry, roughly $0.8\,\sigma\sqrt{T}$ times the underlying price for implied volatility $\sigma$ and time to expiry $T$ in years. A thesis that needs a much larger move must explain why the market is wrong.
+
+**Prediction markets.** A contract paying one dollar if an event occurs, trading at 30 cents, implies roughly a 30% probability, before fees, thin liquidity and biases such as overpriced long shots. We track such odds on our [Signals dashboard](/signals); see also [Prediction markets as macro signals](/insights/prediction-markets-as-macro-signals).
+
+The output is a variant perception: a specific, stated difference between our expectations and the market's, with a reason we might be right. Without one, the idea stops here.
+
+## Question three: the shape of the payoff
+
+A position is a distribution of outcomes, not a forecast. We replace the point estimate with a few explicit scenarios, each with a probability and a return; the expected return is their probability-weighted sum, $\mathbb{E}[R] = \sum_i p_i \, r_i$.
+
+The mean is only the start. We also ask how often we lose, how much, and whether the gains rest on one heroic scenario. Other things equal, we prefer positive skew, frequent small losses with occasional large gains, to the negative skew of selling insurance: its errors are cheap and its worst outcomes survivable.
+
+### A worked example (hypothetical)
+
+<Callout type="warning" title="Hypothetical illustration">
+
+A 12-month equity position on the margin-recovery thesis from question one. All scenarios, probabilities and returns are invented to show the arithmetic; they describe no real security, forecast or position.
+
+</Callout>
+
+| Scenario | Probability | Return | Contribution |
+| --- | --- | --- | --- |
+| Bull: early recovery, shares re-rate | 20% | +70% | +14.0% |
+| Base: recovery on schedule, largely priced in | 40% | +5% | +2.0% |
+| Bear: recovery stalls, kill criterion forces exit | 35% | −20% | −7.0% |
+| Severe: sudden shock gaps the shares lower | 5% | −60% | −3.0% |
+| **Total** | **100%** | | **+6.0%** |
+
+Each contribution is probability times return (for the bull case, $0.20 \times 70\% = 14.0\%$), and the four contributions sum to an expected return of 6.0%.
+
+Four observations matter more than the headline. First, the position loses money 40% of the time yet looks attractive on paper, because weighted gains of 16.0% are 1.6 times weighted losses of 10.0%; a high hit rate is not the objective. Second, the bear case is shallow because it assumes we act on the kill criteria, so exit discipline is part of the payoff. Third, no exit can manage the severe case, since a gap moves the price before anyone can act; that scenario sets the maximum size in question five. Fourth, the answer is fragile. If the bull probability falls to 15%, with the difference moving to the bear case, the expected return drops to 1.5%:
+
+$$
+0.15 \times 70\% + 0.40 \times 5\% + 0.40 \times (-20\%) + 0.05 \times (-60\%) = 1.5\%
+$$
+
+An expected return that hinges on five percentage points of subjective probability is not one we can claim to know; it argues for a smaller position, a better price or more work. Even 6.0% must be weighed against what cash and the existing portfolio offer.
+
+## Question four: fit within the portfolio
+
+The question is not whether a position is good, but whether the portfolio is better with it. Markowitz (1952) showed that portfolio risk depends on how holdings move together, not only on the risk of each. Diversification is about risk, not tickers: thirty stocks that all depend on falling interest rates are one bet held thirty times.
+
+**Correlation.** Correlations that look low in calm markets tend to rise in sell-offs, when diversification matters most, so we measure them in stressed periods too.
+
+**Risk contribution.** Portfolio volatility decomposes exactly into the contributions of its holdings. With weights $w$ and covariance matrix $\Sigma$:
+
+$$
+\sigma_p = \sqrt{w^{\top} \Sigma \, w}, \qquad RC_i = \frac{w_i \, (\Sigma w)_i}{\sigma_p}, \qquad \sum_i RC_i = \sigma_p
+$$
+
+A small position in a volatile asset that moves with the rest of the portfolio can contribute more risk than a far larger position in a stable, diversifying one. We budget risk, not capital; our [regime map](/insights/four-seasons-of-the-economy) applies the same logic to asset classes.
+
+**Hierarchical clustering.** To see how many independent bets we really hold, we group holdings by a correlation distance,
+
+$$
+d_{ij} = \sqrt{\tfrac{1}{2}\left(1 - \rho_{ij}\right)}
+$$
+
+which is zero for perfectly correlated assets and one for perfectly anti-correlated ones. The resulting dendrogram shows which holdings behave as a group. López de Prado (2016) built hierarchical risk parity on this structure and, in simulations, found lower out-of-sample variance than minimum-variance optimization, which must invert a noisy covariance matrix. A candidate that joins a cluster already dominating portfolio risk must clear a higher bar.
+
+## Question five: size and exit
+
+Conviction is not a position size; the first four questions supply what sizing needs.
+
+We size from the downside. Each position gets a risk budget, set by its contribution to portfolio volatility and by its loss in the severe scenario, whichever binds first. In the hypothetical example, if no position may cost more than 1.5% of capital in its severe scenario, a −60% severe case caps the weight at:
+
+$$
+w_{\max} = \frac{1.5\%}{60\%} = 2.5\%
+$$
+
+The Kelly criterion (Kelly, 1956), which maximizes long-run growth when the odds are known, gives a theoretical upper bound. Our odds are estimates, and overbetting an overstated edge does far more harm than underbetting a real one, so we treat Kelly as a ceiling; see [Kelly is a ceiling](/insights/kelly-is-a-ceiling).
+
+We write four exits before entry:
+
+1. **Falsified:** a kill criterion triggers, and we exit without renegotiating it.
+2. **Priced in:** the market now shares our view, so the reason to own the position is gone.
+3. **Over budget:** a winner has grown to dominate portfolio risk, so we trim it.
+4. **Out of time:** the catalyst has not arrived by the review date, so we re-underwrite rather than extend by default.
+
+Review triggers, such as an outsized price move or a surprise in a thesis variable, do not force a sale. They force the five questions to be answered again, ending with one test: knowing what we know today, would we buy this position at this size? Written exits are also our main defense against what Shefrin and Statman (1985) named the disposition effect, the tendency to sell winners too early and ride losers too long.
+
+## What the framework does not do
+
+It does not make us right. Scenario probabilities are judgments, and judgments can be poor. The framework makes them explicit so they can be checked and improved, keeps errors small enough to survive, and leaves a record of what we believed and why. It is deliberately restrictive: passing on a good idea usually costs less than owning a bad one at size. The same questions apply at every scale, up to a multi-asset portfolio such as the forthcoming [Amador Nautilus Fund](/fund). To discuss the framework, [book a conversation](/book) with us.
+
+## Key takeaways
+
+- State the thesis as a falsifiable claim, with kill criteria written before entry.
+- Make the market's implied expectations explicit, and know why yours differ.
+- Judge the whole distribution, including its tails and sensitivity, not just the expected value.
+- Measure diversification in risk, not in the number of holdings.
+- Size from the severe scenario, treat Kelly as a ceiling, and plan the exit before entry.

@@ -1,0 +1,107 @@
+---
+title: "Deep HRP: Teaching Hierarchical Risk Parity to Learn"
+dek: "Our research replaces HRP's frozen clustering and bisection with a differentiable tree that can be trained end to end, and holds it to an evidence standard built to resist flattering noise."
+date: "2026-10-17"
+category: "Research"
+author: "Jose Luis Amador Jaime"
+tags: ["HRP", "DHRP", "machine learning", "portfolio construction", "research"]
+series: "Deep HRP"
+featured: true
+cover: "dendrogram"
+---
+
+Hierarchical Risk Parity is one of the most useful ideas in modern portfolio construction, and one of the most rigid. It clusters assets by correlation and splits risk down the resulting tree using fixed rules. Those rules make it robust. They also make it impossible to train: clustering and bisection are discrete steps, so no gradient can flow through them, and the method cannot learn from outcomes or be combined end to end with other models. (If HRP is new to you, start with [Hierarchical Risk Parity, Explained](/insights/hierarchical-risk-parity-explained).)
+
+Differentiable Hierarchical Risk Parity, or **DHRP**, is our attempt to keep HRP's structure while making every step learnable. This article describes the idea, the architecture, how we evaluate it, and what we have and have not established so far.
+
+## Why make a hierarchy differentiable?
+
+Over the last decade, machine learning has learned to put optimization *inside* models. Amos and Kolter's OptNet (2017) showed how to backpropagate through quadratic programs; Agrawal and colleagues (2019) extended this to general convex programs. In parallel, *decision-focused learning*, for example Elmachtoub and Grigas's "Smart Predict, then Optimize" (2022), argued that models should be trained for the quality of the decision they drive, not for forecast accuracy alone.
+
+Portfolio construction is a natural home for both ideas. Yet hierarchical allocators had stayed outside this toolkit, precisely because their core operations are discrete. We wanted an allocator that:
+
+- keeps HRP's inductive bias: risk is budgeted down a tree, and similar assets share a branch;
+- can learn how decisively to split risk at each branch, and which assets belong together, from data;
+- can be trained directly on a portfolio objective rather than tuned by hand; and
+- stays anchored to the classical solution, so it does not wander into fragile corners.
+
+## The architecture
+
+DHRP maps recent market features and an estimated covariance matrix to portfolio weights in four stages.
+
+**1. A market state.** Recent return features are combined with a learned projection of the (normalized) covariance matrix. Conditioning on the full covariance, not just volatilities, lets the model react to changes in correlation structure, which is exactly what HRP clusters on.
+
+**2. A soft gating tree.** Instead of a hard dendrogram, DHRP uses a perfect binary tree whose internal nodes are small neural gates. Each gate looks at the market state and splits its incoming risk budget between two children with a softmax:
+
+$$
+\pi_k = \mathrm{softmax}\!\left(\frac{g_k(h_t)}{\tau}\right)
+$$
+
+The temperature $\tau$ is learned: low temperatures make splits decisive, high temperatures spread risk evenly. A leaf's budget is the product of the gate probabilities along its path from the root, adjusted by a learned prior over leaves.
+
+**3. A learned assignment.** Leaves are not tied to fixed clusters. A learnable matrix softly assigns each asset to leaves, so the model discovers its own grouping instead of inheriting one from a linkage rule. Each asset's raw allocation is a weighted combination of the budgets of the leaves it belongs to, normalized to sum to one.
+
+**4. An anchor to risk parity.** The learned allocation $a$ is blended with simple inverse-volatility weights $v$ through a learned coefficient:
+
+$$
+w = \alpha\, a + (1 - \alpha)\, v
+$$
+
+The blend keeps the allocator near a sensible risk-parity baseline early in training, while letting the learned path take over where it helps.
+
+### Training objective
+
+DHRP is trained end to end on a portfolio objective rather than a forecasting loss: a risk-averse (CRRA) utility of forward returns and a Sharpe-style term, plus penalties for portfolio variance, concentration and erratic weights. A regularizer pulls the weights toward classical HRP, with a strength that decays during training, so the model starts near the classical answer and relaxes away from it only as the data justify.
+
+<Callout type="method" title="A relaxation, not a clone">
+DHRP is HRP-inspired, not an exact differentiable copy. At very low temperatures its gates collapse budget onto single leaves rather than reproducing HRP's balanced inverse-variance splits. What it preserves is the inductive bias: hierarchical risk budgeting over a tree conditioned on correlation structure, with an explicit anchor to the classical solution.
+</Callout>
+
+## How we evaluate it: the DHRP-8 benchmark
+
+A new allocator is easy to make look good. Run one random seed on one asset universe over one convenient period, and some configuration will shine. We designed the evaluation to make that hard.
+
+<KeyStats
+  items={[
+    { value: "8", label: "asset universes, from developed equities to commodities and bonds" },
+    { value: "10", label: "random seeds for every neural model" },
+    { value: "6", label: "classical baselines, including HRP and equal weight" },
+    { value: "1", label: "tagged run that every reported number must come from" }
+  ]}
+/>
+
+- **Eight universes**: developed and emerging equities, commodities, US sectors, a global multi-asset mix, equity factors, crypto-linked assets and bonds.
+- **Strong baselines**: equal weight, mean-variance, minimum variance, risk parity, maximum diversification and classical HRP. Equal weight is the hardest of them to beat in practice.
+- **Seeds as a source of risk**: every neural result is reported as a mean and standard deviation across ten seeds. A result that appears for one seed and vanishes for another is not a result.
+- **A statistical battery**: Probabilistic Sharpe Ratios, paired tests against the baselines with multiple-comparison corrections, the Deflated Sharpe Ratio and the Probability of Backtest Overfitting. We explain each of these in [How to Read a Backtest Like a Skeptic](/insights/read-a-backtest-like-a-skeptic).
+- **Costs**: results are reported with transaction costs charged at every rebalance, alongside a cost-sensitivity curve.
+
+## What we have found so far
+
+Our first round of experiments was encouraging in a specific place: the learnable hierarchy looked strongest in **commodities**, a universe where correlations shift quickly between regimes and a fixed tree goes stale. Elsewhere, simple baselines frequently matched or beat it, which is consistent with decades of evidence on how hard naive diversification is to beat.
+
+We are deliberately not quoting headline numbers yet. Before publishing final figures, we are re-running the full benchmark under a stricter protocol:
+
+- **total-return prices**, so that dividends and coupons are credited to every asset;
+- **strictly separated training windows**, including for assets with short trading histories;
+- **every method compared on identical dates**;
+- **costs charged at every rebalance**, with results shown both gross and net;
+- **one tagged run**, with every number in the paper regenerated by script from that run's outputs.
+
+<PullQuote cite="Our research standard">
+If a result cannot be regenerated from a single tagged run, it is not a result yet.
+</PullQuote>
+
+We also tested an extension that feeds the tree a summary of financial-news embeddings. So far it has not delivered a reliable improvement over the price-only model. Text data is especially easy to misalign in time, so we are auditing coverage, timestamps and alignment before drawing conclusions. Either way, we will publish what we find, including a negative result if that is what the evidence shows.
+
+## Why this matters for how we invest
+
+Research like this is not a trading signal. It informs how we think about diversification:
+
+- **Structure helps.** Grouping assets by how they actually move, then budgeting risk down that hierarchy, is a sound default, and the starting point for our approach to portfolio construction.
+- **Learning should be anchored.** The most useful role for machine learning in allocation is adjusting a robust prior at the margin, not replacing it.
+- **Evidence has to survive scrutiny.** Multi-seed reporting, paired tests and a single reproducible run are now part of how we evaluate any idea, including our own.
+
+We will update this article when the re-run is complete. To get the results when they are published, subscribe to Research Papers on our [Briefings](/briefings) page.
+
+*References: López de Prado (2016), Journal of Portfolio Management; Amos and Kolter (2017), "OptNet," ICML; Agrawal, Amos, Barratt, Boyd, Diamond and Kolter (2019), "Differentiable Convex Optimization Layers," NeurIPS; Elmachtoub and Grigas (2022), "Smart 'Predict, then Optimize'," Management Science; DeMiguel, Garlappi and Uppal (2009), Review of Financial Studies.*

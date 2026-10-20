@@ -1,0 +1,136 @@
+---
+title: "Reading Options Flow Without Fooling Yourself"
+dek: "Unusual options activity is easy to find and hard to interpret; this is how we read it, what the research supports, and where our own screen falls short."
+date: "2026-10-08"
+category: "Signals"
+author: "Jose Luis Amador Jaime"
+tags: ["options flow", "unusual options activity", "market microstructure", "dealer hedging", "signals"]
+featured: false
+cover: "waves"
+---
+
+A large block of short-dated calls prints in a stock that has gone nowhere for a month, and within minutes it is circulating as evidence of smart money. Sometimes it is. Often it is a hedge, a spread, a roll or an income trade that looks bullish only because nobody can see the other side.
+
+Our [Signals dashboard](/signals) runs an unusual-activity screen because concentrated option volume is useful context, not a forecast. Here is what it measures, what the research supports, and what we ask before reading anything into a print.
+
+## What "unusual" actually means
+
+**Volume** is the number of contracts traded today; **open interest** is the number outstanding. The Options Clearing Corporation updates open interest once a day, after the prior session's trades are processed, so the figure you see intraday is yesterday's.
+
+Volume well above open interest means today's trading is large relative to existing positions. That raises the odds that new positions are being created but does not prove it: the same contracts can change hands many times in a session, and positions can pass between holders with no net change. "Unusual" describes activity, not intent, and it is relative. In the most heavily traded names, half a million dollars of premium in one contract is not rare.
+
+## Sweeps, blocks and the side of the trade
+
+### Sweeps and blocks
+
+A **sweep** is a large order split across several exchanges at once to take whatever is offered at the best prices. Flow services read sweeps as urgency. A **block** is a single large print, usually negotiated between an institution and a market maker, and often one piece of a package such as an option tied to a stock trade or one leg of a spread.
+
+Urgency is not information. A manager who has just bought stock may sweep puts for protection; a market maker may sweep to cut risk.
+
+### Who initiated: ask versus bid
+
+The most useful single fact about a trade is which side was in a hurry. A print at or above the offer suggests a buyer crossed the spread; one at or below the bid suggests a seller. Prints near the middle are ambiguous. Commercial feeds classify trades this way, but the result is an inference: quotes move constantly with the stock, multi-leg orders are priced as packages, and negotiated trades often print near the midpoint. None of this survives into a delayed chain, which reports volume only as a running daily total.
+
+## Opening or closing
+
+Selling to close calls bought six weeks ago is a profit-take, not a new bullish bet, yet it adds the same volume as a fresh purchase.
+
+From public data, the first real evidence arrives the next morning. If open interest rose by roughly the size of the trade, positions were probably opened; if it barely moved or fell, the volume was mostly closing or intraday turnover. Even then the figure is net across all trading in the contract. Exchanges sell data that tags volume as opening or closing, but it is not in a public delayed chain.
+
+## Trades that look directional but are not
+
+Much of the largest option volume has a purpose other than a view on direction:
+
+- **Hedges.** An investor who owns the stock buys puts to protect a gain; a collar adds a sold call.
+- **Spreads.** A call spread buys one strike and sells another; a risk reversal sells a put to finance a call. Each leg prints separately, so gross premium overstates the money at risk.
+- **Rolls.** A holder closes an expiring position and reopens it further out or at another strike. The new contract can trade many times its open interest while the position is essentially the same.
+- **Overwriting.** Selling calls against stock already owned trades away upside for income. Without trade side, it reads as heavy call activity.
+- **Dividend trades.** Around ex-dividend dates, professionals sometimes trade huge quantities of deep in-the-money calls in strategies tied to early exercise.
+- **Volatility trades.** Options bought and delta-hedged with stock are a bet on the size of moves, not their direction.
+
+<Callout type="warning" title="Why most unusual activity is not a trade signal">
+
+A large share of option volume involves market makers, hedgers, spread traders and income strategies. Even when an informed trader is in the tape, a public screen sees the trade late, unsigned, without knowing whether it opened a position, and mixed with everyone else's activity. The research that found predictive power relied on signed volume, and in its strongest form on data the public could not see. We treat a flagged contract as a reason to look closer, never as a reason to trade.
+
+</Callout>
+
+## Premium is not direction
+
+Premium is the most quoted number in flow commentary and the least informative about direction. It is unsigned: two million dollars of call premium is equally consistent with a buyer and a seller. It is also a poor gauge of exposure. A better translation is the share-equivalent, or delta-adjusted, position for $N$ contracts:
+
+$$
+\text{share-equivalent exposure} \approx N \times 100 \times \Delta
+$$
+
+<Chart title="Share-equivalent exposure per $1 million of call premium (thousands of shares)" caption="Hypothetical $100 stock, 30-day options, 40% implied volatility, zero rates and dividends, Black-Scholes values. Not market data." decimals={0} data={[{ label: "80 call (ITM)", value: 49 }, { label: "100 call (ATM)", value: 114 }, { label: "115 call (OTM)", value: 185, highlight: true }]} />
+
+The same premium buys nearly four times the share-equivalent exposure in out-of-the-money calls as in deep in-the-money calls. Deep in-the-money options carry large premium because most of their price is intrinsic value, so they crowd premium-ranked lists while behaving much like stock.
+
+<PullQuote>Premium tells you how much money changed hands. It does not tell you which way it was pointed.</PullQuote>
+
+## Dealers, hedging and gamma
+
+Market makers, often on the other side of customer trades, typically hedge with stock: sell a call, buy shares. Gamma measures how fast an option's delta changes as the stock moves, so a market maker who is short options must buy more stock as the price rises and sell as it falls. For a market maker short $N$ contracts, a small move $dS$ in the stock requires roughly
+
+$$
+\text{shares to buy} \approx N \times 100 \times \Gamma \times dS
+$$
+
+with a negative result meaning shares to sell. If market makers in aggregate are short gamma, their hedging adds to moves; if long gamma, it leans against them. Ni, Pearson and Poteshman (2005) found that optionable stocks tend to close near strike prices on expiration dates, consistent with this channel.
+
+Two cautions. Hedging gives option volume a mechanical route to move the stock without any information, so a move after a large print proves nothing about the trader. And published "gamma exposure" estimates must assume who is long and short each contract, which public data does not reveal. If the assumption is wrong, the sign can be too.
+
+## What the research supports
+
+The academic case that option volume can carry information is real, and narrower than flow marketing suggests.
+
+**Easley, O'Hara and Srinivas (1998)** modeled informed traders choosing between stock and options, depending on the leverage options offer and the liquidity of each market. In their tests, option volume carried information about future stock price changes, but the informative measures were signed: volume reflecting positive news (buying calls, selling puts) or negative news (buying puts, selling calls).
+
+**Pan and Poteshman (2006)** used a Chicago Board Options Exchange dataset that classified option volume by whether trades were initiated by buyers or sellers and whether they opened or closed positions. From volume initiated by buyers to open new positions, they built put-call ratios. Stocks with low ratios went on to outperform stocks with high ratios over the following days and week, and the authors traced the predictability to nonpublic information held by option traders.
+
+The signal rested on exactly the two facts a public chain does not reveal in real time: who initiated each trade and whether it opened a position. The evidence shows that buyers opening new positions were, on average, ahead of the stock, not that total volume or premium estimated from a delayed chain carries the same information.
+
+## How our screen works
+
+<KeyStats items={[{ value: "≥1,000", label: "Contracts traded" }, { value: "≥2×", label: "Volume vs. prior-day open interest" }, { value: "≥$500K", label: "Estimated premium" }, { value: "~15 min", label: "Cboe data delay" }]} />
+
+<Callout type="method" title="How the unusual-activity screen is defined">
+
+- **Universe.** A fixed watchlist of twelve large, heavily traded U.S. stocks.
+- **Data.** Cboe's public delayed chains, about 15 minutes behind; our cache can add a few minutes more.
+- **Estimated premium.** The day's volume × last trade price × 100, with the bid-ask midpoint standing in when there is no last trade.
+- **Screen.** Volume of at least 1,000, at least twice prior-day open interest, and estimated premium of at least \$500,000. A contract with zero open interest passes the ratio test automatically.
+- **Display.** The 30 qualifying contracts with the largest estimated premium.
+- **Options pulse.** Per ticker, estimated call and put premium across every contract that traded, and the difference.
+
+</Callout>
+
+The limitations follow from the data:
+
+- **Delay.** The market has had at least 15 minutes to react before a row appears.
+- **Estimated premium.** Applying the last price to the whole day's volume can miss badly if the option's price moved during the session.
+- **No trade side.** We cannot tell bought from sold, so pulse-panel call premium counts both.
+- **No opening or closing information.** Open interest in the chain is yesterday's.
+- **No linkage or baseline.** Spreads, rolls and stock-tied trades appear as unrelated contracts, and volume is never compared with normal activity, so busy near-dated contracts are flagged often.
+
+If a feed is unavailable, the panel is marked as sample data.
+
+## A practical checklist
+
+Before reading anything into a flagged contract, we ask:
+
+1. **Do we know the side?** If not, we do not know the direction.
+2. **Was it opening?** Check the next day's change in open interest.
+3. **Is it one leg of something larger?** Look for matching size in other strikes, expiries or the stock.
+4. **Is there a calendar reason?** Earnings, ex-dividend dates, expirations and index events generate heavy volume with little directional content.
+5. **How big is it, really?** Compare it with normal option and share volume, in share-equivalents.
+6. **Does it repeat?** Accumulation over several sessions with rising open interest says more than one print.
+7. **Would the idea stand without the print?** Flow can prompt research; it cannot replace it.
+
+Insider filings pose a similar problem of separating routine from informative activity; see [What Insider Buying Does (and Doesn't) Tell You](/insights/what-insider-buying-tells-you). For a digest of flagged contracts, see our [alerts](/briefings#alerts).
+
+## References
+
+- Easley, D., O'Hara, M., and Srinivas, P. S. (1998). "Option Volume and Stock Prices: Evidence on Where Informed Traders Trade." *Journal of Finance*, 53(2).
+- Ni, S. X., Pearson, N. D., and Poteshman, A. M. (2005). "Stock Price Clustering on Option Expiration Dates." *Journal of Financial Economics*, 78(1).
+- Pan, J., and Poteshman, A. M. (2006). "The Information in Option Volume for Future Stock Prices." *Review of Financial Studies*, 19(3).

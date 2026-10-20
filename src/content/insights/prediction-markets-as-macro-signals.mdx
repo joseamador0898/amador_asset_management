@@ -1,0 +1,107 @@
+---
+title: "Prediction Markets as Macro Signals"
+dek: "Event-contract prices can be read as probabilities, with care. We show how to convert them, where they mislead, and when they say something rates markets do not."
+date: "2026-09-21"
+category: "Markets"
+author: "Jose Luis Amador Jaime"
+tags: ["prediction markets", "macro", "Federal Reserve", "probabilities", "signals"]
+featured: false
+cover: "grid"
+---
+
+Macro investors spend much of the day asking what the market is pricing. For the path of policy rates, the answer comes from fed funds futures and overnight index swaps; for inflation, from breakevens. But many market-moving questions have no traditional instrument that maps cleanly onto them. Will the government shut down? Will a tariff take effect? Will this month's inflation print clear a threshold?
+
+Prediction markets fill part of that gap, and their prices, quoted in cents, are widely read as probabilities. Read carefully, they are a useful input; read naively, they are a source of false precision. This note covers how to convert prices into probabilities, how they compare with rates markets, where they mislead, and how we show them on [Signals](/signals).
+
+## From prices to probabilities
+
+A binary event contract pays one dollar if the event occurs and nothing otherwise. If traders were risk-neutral, faced no costs and shared a common view, the price would equal the probability: 62 cents would imply a 62% chance. Justin Wolfers and Eric Zitzewitz set out this mapping in "Prediction Markets" (*Journal of Economic Perspectives*, 2004), alongside contract designs that reveal a market's expected mean or median of a quantity instead.
+
+Three qualifications keep the interpretation honest.
+
+**It is a risk-neutral probability, not a physical one.** A price reflects both the likelihood of an event and the value of a dollar if it happens. A contract that pays off in bad times, such as a recession, can trade above the true probability because it works as insurance, and insurance tends to cost more than its expected payout. For most political questions the wedge is probably small; for business-cycle questions it may not be.
+
+**Whose probability?** Charles Manski, in "Interpreting the Predictions of Prediction Markets" (*Economics Letters*, 2006), showed that when risk-neutral traders hold different beliefs and face budget limits, the price need not equal the average belief. In his stylized model the price is a quantile of the belief distribution, and the average belief can sit anywhere in a wide range around it: at 50 cents, anywhere between 25% and 75%. That is a caution against false precision, not evidence that prices are wrong.
+
+**Frictions blur the signal.** Spreads, fees and the cost of tying up capital let prices differ from probabilities by a few points without anyone being able to profit from correcting them. Read a price as a range.
+
+### A worked example
+
+Suppose a binary contract offers Yes at 62 cents and No at 41 cents. Buying both would cost 1.03 dollars for a certain one-dollar payoff; the 3-cent excess is the overround, the cost of trading both sides. The simplest correction divides each price by the total:
+
+$$
+\frac{0.62}{1.03} = 0.602 \qquad \frac{0.41}{1.03} = 0.398
+$$
+
+The implied probabilities are 60.2% and 39.8%, which sum to 100%. The same quotes can be read another way: buying No at 41 cents is equivalent to selling Yes at 59, so Yes is effectively 59 bid and 62 offered, with a midpoint of 60.5 cents. The point estimate is about 60%; the honest statement is 59% to 62%. The spread is the error bar.
+
+The arithmetic extends to several outcomes, as in these hypothetical prices for an FOMC decision:
+
+| Outcome | Price | Normalized probability |
+| --- | ---: | ---: |
+| No change | 0.66 | 64.1% |
+| Cut 25 bp | 0.30 | 29.1% |
+| Cut 50 bp or more | 0.07 | 6.8% |
+| Total | 1.03 | 100.0% |
+
+## How this compares with fed funds futures and OIS
+
+For the policy-rate path, prediction markets have serious competition. Fed funds futures settle on the average effective federal funds rate over the contract month, so their price, 100 minus that average, reveals the expected rate; overnight index swaps do the same over the life of the swap. Comparing implied rates before and after an FOMC meeting, adjusted for where the meeting falls in the month, gives the expected change in the policy rate.
+
+Turning that change into a probability usually assumes only two adjacent outcomes, such as no change or a cut of 25 basis points (bp), so the probability of the move is the expected change divided by 25 bp. This is the logic behind the meeting probabilities widely quoted in the press, and it works when the assumption holds.
+
+The limitation is that futures and swaps deliver an expected value, not a distribution. An expected change of −10 bp fits a 40% chance of a 25 bp cut, a 20% chance of a 50 bp cut, or many mixtures. The hypothetical FOMC prices above imply an expected change of about −10.7 bp, which a two-outcome reading would report as a 43% chance of a 25 bp cut. The outcome-level prices say something different: a 36% chance of any cut, about 7 points of it on a larger move. Options on rate futures recover more of the distribution, with more effort.
+
+Futures and swaps have their own noise: term premia, and drift in the effective rate within the Fed's target range, can move implied probabilities without any change in expectations. Still, for near-dated Fed decisions they are far deeper markets and deserve more weight, while prediction markets add outcome-level detail and an independent cross-check. When the two disagree, the gap is a prompt to investigate contract terms, costs and participants, not a free lunch.
+
+## Known biases
+
+### The favorite–longshot bias
+
+In betting markets, longshots tend to be overpriced and favorites underpriced. Erik Snowberg and Justin Wolfers, in "Explaining the Favorite–Long Shot Bias: Is It Risk-Love or Misperceptions?" (*Journal of Political Economy*, 2010), studied horse-race betting and concluded that the pattern is better explained by misperception of small probabilities than by a taste for risk. If the same tendency operates in event contracts, prices in the low single digits overstate the odds of unlikely events, and the mechanics make correction costly. Betting against a 3-cent longshot means buying No at 97 cents; if the true probability is 1%, the trade earns about 2% over the contract's life before fees, less than cash might earn if it runs a year.
+
+### Thin liquidity and manipulation
+
+Many contracts trade in small size. The last trade can be stale, the quote may not be available in size, and one motivated or well-capitalized trader can move the price, at least temporarily. A jump from 40 to 55 cents on light volume tells you about one participant, not the crowd. The standard defense against manipulation, that a distorted price invites better-informed traders to push it back, is only as strong as the market is deep. Before treating a sharp move as information, check the spread and volume, whether related contracts moved and whether traditional markets agreed.
+
+### Fees and capital lockup
+
+Fees, spreads and the cost of moving money on and off a venue create a band within which mispricing cannot be profitably corrected, and fee schedules differ across venues and change over time. Capital is also tied up until resolution: if cash earns 4% a year, a contract certain to pay one dollar in twelve months is worth only about 96 cents today. Moves smaller than these frictions are rarely news.
+
+### Resolution risk
+
+A contract pays according to its written rules, not its headline. A recession contract might resolve on a determination by the NBER's Business Cycle Dating Committee, which typically comes months after the fact, or on a GDP-based rule. An inflation contract may specify headline or core, a rounding convention, or a first release that is later revised. Read the rules: which source, what deadline, what happens if the source is delayed or revised, and who settles disputes.
+
+<PullQuote>A price becomes a probability only after you have read the rules, checked the spread and asked who is on the other side.</PullQuote>
+
+## When they add information
+
+We find prediction markets most useful in four situations:
+
+- **Fast-moving political and policy events.** Shutdowns, tariffs, legislation and nominations move asset prices, but so does everything else. An event contract isolates the question and reprices as news arrives.
+- **Discrete macro prints.** Contracts on ranges for an inflation or payrolls release offer a distribution where the survey consensus offers a point, which helps gauge how likely a surprise of a given size is.
+- **News outside market hours.** Some venues trade around the clock, including weekends, when futures markets are closed. Weekend liquidity can be thin, so treat those moves as provisional.
+- **Outcome-level detail.** As in the FOMC example, they separate probabilities that futures blend into one expected value.
+
+They add least where deep traditional markets already price the event, such as the next Fed decision; there they mostly echo futures and swaps.
+
+## How the Signals dashboard presents them
+
+The prediction-markets panel on [Signals](/signals) shows Polymarket odds on macro and market events, including Fed decisions, inflation, recession, tariffs, Treasury yields and equity indexes, ranked by recent trading volume. Each market lists its leading outcomes and its 24-hour volume, a rough gauge of liquidity. The figures are quoted prices as the venue publishes them. We do not normalize them, and because only the leading outcomes are shown, an event's figures need not sum to 100%. Apply the conversion above before treating them as a distribution.
+
+Beside it sits a macro panel built from FRED data: the 2-year and 10-year Treasury yields and the spread between them, the effective federal funds rate, CPI inflation, unemployment, 10-year breakeven inflation and the Chicago Fed's National Financial Conditions Index. The pairing is deliberate. Rate-cut odds belong next to the effective fed funds rate and the 2-year yield, recession odds next to the curve, unemployment and financial conditions, and inflation contracts next to CPI and breakevens. When event odds move and neither the data nor rates markets follow, explain the gap before drawing conclusions.
+
+Event odds are one way we make implied expectations explicit, the second of the five questions in [The Amador Framework](/insights/the-amador-framework), and we read them against the regime map in [Four Economic Seasons](/insights/four-seasons-of-the-economy). Every panel shows its source and its delay, and [Briefings](/briefings) can deliver macro event odds by email.
+
+<Callout type="warning" title="Informational only">
+The Signals dashboard displays third-party market data for information only and is not a recommendation to trade any contract or security. Access to prediction markets, and the rules governing them, vary by jurisdiction and have changed over time. We make no representation that any venue is available or lawful for any reader; anyone considering participation should understand the rules where they live.
+</Callout>
+
+## Key takeaways
+
+- A binary contract's price is an approximate, risk-neutral probability; read it as a range.
+- When quotes sum to more than one, normalize: 62 and 41 cents imply 60.2% and 39.8%. The spread is the error bar.
+- Futures and OIS give expected rates; prediction markets give outcome-level odds. Use both, weighting the deeper market more.
+- Discount low-priced longshots, thin markets and contracts whose resolution rules you have not read.
+- Prediction markets add the most on fast-moving political and policy events, discrete macro prints and off-hours news.
+- On Signals, the odds sit beside FRED data so moves can be checked against hard numbers; the dashboard is informational only.

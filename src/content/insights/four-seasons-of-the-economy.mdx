@@ -1,0 +1,117 @@
+---
+title: "Four Economic Seasons: A Regime Map for Portfolios That Hold Up"
+dek: "Growth and inflation, each rising or falling, define four economic seasons, and a portfolio built to hold up balances its risk across all four instead of betting on one."
+date: "2026-10-05"
+category: "Frameworks"
+author: "Jose Luis Amador Jaime"
+tags: ["asset allocation", "risk parity", "macro regimes", "inflation", "diversification", "Nautilus Fund"]
+featured: false
+cover: "rings"
+---
+
+Every portfolio is built for some kind of economy, whether or not its owner has chosen one. The traditional mix of 60% equities and 40% bonds is, at heart, a bet on growth with contained inflation, the environment in which both its main assets have tended to do well. For most of the two decades before 2022, inflation was low and stable, bonds tended to rally when equities fell, and the mix looked like diversification. Then inflation returned, and both halves fell together.
+
+This essay sets out the regime map we use to think about that problem, how risk parity puts it into practice, and where it breaks. The patterns are stylized tendencies from history, not rules, and nothing here is a forecast.
+
+## Two variables, four seasons
+
+Asset prices are discounted expectations of future cash flows. Growth drives the cash flows: earnings, rents and the capacity to service debt. Inflation drives the discount rates applied to them, the real value of fixed nominal payments and the reaction of central banks. Ilmanen (2011) treats both as central drivers of asset returns, and Bridgewater's All Weather strategy, launched in 1996 and the best-known pioneer of this way of thinking, organized an entire portfolio around them.
+
+What moves prices is surprise: the gap between what happens and what was expected. A strong economy that everyone anticipated is already in the price, so we define each season by whether growth and inflation are rising or falling relative to expectations, not by their levels.
+
+| Season | Growth | Inflation | Tended to do better | Tended to do worse |
+| --- | --- | --- | --- | --- |
+| Spring: disinflationary expansion | Rising | Falling | Equities, corporate credit | Commodities, gold, cash |
+| Summer: overheating | Rising | Rising | Commodities, inflation-linked bonds, cyclical equities | Nominal government bonds |
+| Autumn: stagflation | Falling | Rising | Commodities, gold, inflation-linked bonds, cash | Equities, nominal bonds, corporate credit |
+| Winter: deflationary slowdown | Falling | Falling | Nominal government bonds, cash | Equities, corporate credit, commodities |
+
+The pattern follows from the two channels. Rising growth favors claims on future cash flows, such as equities and credit; falling growth favors the safety and fixed payments of high-quality government bonds. Rising inflation favors real assets and inflation-linked claims and erodes fixed nominal payments. A long-horizon study of US inflation surges by Neville, Draaisma, Funnell, Harvey and Van Hemert (2021) found that equities and nominal government bonds tended to deliver negative real returns in those episodes, while commodities tended to do well. Individual episodes differ, sometimes sharply.
+
+<Callout type="note" title="Seasons without a calendar">
+
+Unlike the calendar's, economic seasons arrive in no fixed order, last for no fixed time and are usually recognized only after they begin. Real-time data, such as the macro series on our [Signals dashboard](/signals), describe the present; they do not reliably predict the next season. That is the main reason to build a portfolio that does not depend on predicting it.
+
+</Callout>
+
+## Balancing risk, not dollars
+
+Owning something from every row of the table is not the same as being meaningfully exposed to every season. What matters is how much risk each holding contributes, and capital weights are a poor guide. Because equities are far more volatile than high-quality bonds, they dominate a 60/40 portfolio's risk:
+
+<Chart
+  title="Illustrative only: 60/40 portfolio, share of capital vs. share of risk (%)"
+  caption="Illustrative calculation, not data or a forecast. Assumes 16% annualized volatility for equities, 5% for bonds and a 0.2 correlation. Risk share is each asset's contribution to portfolio variance."
+  decimals={1}
+  data={[
+    { label: "Equities: capital", value: 60 },
+    { label: "Equities: risk", value: 92.4, highlight: true },
+    { label: "Bonds: capital", value: 40 },
+    { label: "Bonds: risk", value: 7.6, highlight: true },
+  ]}
+/>
+
+Different assumptions change the numbers but not the conclusion: across a wide range of plausible volatilities and correlations, equities account for roughly 80% or more of the risk. A 60/40 portfolio is close to a concentrated bet on the seasons that favor equities, with a modest hedge attached.
+
+Risk balancing reverses the logic. Instead of choosing capital weights and accepting the resulting risk, we decide how much risk each source of return should carry, typically about the same, and solve for the weights. The simplest version weights assets in inverse proportion to their volatility; a fuller one, equal risk contribution, also accounts for correlations:
+
+$$
+w_i \propto \frac{1}{\sigma_i} \qquad \text{or} \qquad w_i \, (\Sigma w)_i = w_j \, (\Sigma w)_j \quad \text{for all } i, j
+$$
+
+Applied to the regime map, the aim is for the assets that tend to do well in each season to carry a comparable share of total risk, so that no single surprise, whether in growth or inflation, dominates the result. Bridgewater has publicly described All Weather in similar terms, as roughly equal risk in each of four economic environments.
+
+<PullQuote cite="Amador Asset Management">
+The goal is not to forecast the next season. It is to hold a portfolio that does not need the forecast to be right.
+</PullQuote>
+
+## Volatility scaling and the leverage question
+
+Risk balancing creates a practical problem. The assets that protect against falling growth, chiefly high-quality government bonds, are much less volatile than equities, so an equal share of risk requires holding a great deal of them, which pulls expected return toward that of bonds. The choice is to accept a lower return with lower risk, or to apply moderate leverage to the whole balanced portfolio, usually through futures and other derivatives, until its risk reaches the desired level.
+
+Asness, Frazzini and Pedersen (2012) gave the second choice its theoretical footing. Because many investors cannot or will not use leverage, they overweight risky assets to reach higher returns, which leaves safer assets offering higher returns per unit of risk to investors who can. Their historical tests found higher risk-adjusted returns for risk-parity portfolios than for market-weighted and 60/40 benchmarks. Like all backtests, those results depend on the period studied and on the assumed cost of leverage.
+
+Many risk-balanced portfolios also scale exposure through time to hold volatility near a target, using an exposure multiplier
+
+$$
+L_t = \frac{\sigma_{\text{target}}}{\hat{\sigma}_t}
+$$
+
+where $\hat{\sigma}_t$ is the current volatility estimate. Exposure shrinks when markets turn turbulent and grows when they calm. That keeps risk roughly stable, at a price: estimates lag reality, so exposure is often cut only after losses, and the resulting sales can add to the pressure on falling prices.
+
+<Callout type="warning" title="Leverage changes the failure modes">
+
+A levered portfolio depends on financing staying available and affordable, on margin calls being met without forced sales, and on the correlations that justified the leverage holding up under stress. All three can fail at once.
+
+</Callout>
+
+## Where the map breaks: 2022 and other failure modes
+
+The map's most important limitation is that it relies on relationships, above all the stock-bond correlation, that are not constants of nature, as 2022 showed.
+
+US consumer price inflation climbed above 9% in mid-2022, its highest rate in four decades, and the Federal Reserve raised its policy rate by more than four percentage points within the year. Rising inflation and real yields struck every asset priced off long-term discount rates at once, and US equities and the broad US investment-grade bond market both posted double-digit losses. Bonds, which risk-balanced portfolios hold in size and often with leverage, partly because they have tended to rally when equities fall, fell alongside them. Even inflation-linked bonds lost value as real yields rose sharply. Commodities helped, but for most risk-balanced portfolios they could not offset the losses on duration.
+
+The episode fits a broader pattern. For most of the two decades before 2022, the US stock-bond correlation was negative, as growth scares dominated and inflation was stable; in earlier decades of high and volatile inflation it was mostly positive. Brixton, Brooks, Hecht, Ilmanen, Maloney and McQuinn (2023) link its sign to the relative importance of growth and inflation uncertainty: when inflation dominates, stocks and bonds tend to move together. A regime map that assumes bonds always hedge equities is really a map of one regime.
+
+Other failure modes we watch:
+
+- **Correlation regime shifts.** Hedging relationships can change sign when the dominant source of macro uncertainty changes.
+- **Common discount-rate shocks.** Equities and long bonds are both long-duration assets, so a sharp rise in real rates can hurt nearly everything at once.
+- **Estimation error.** Volatilities and correlations are estimated from the past, so an unusually calm asset can be overweighted just before its calm ends.
+- **Liquidity and financing stress.** In panics, investors sell what they can. In March 2020 even US Treasuries sold off briefly in the scramble for cash, and leverage turns such moments from painful into dangerous.
+- **Starting valuations.** Balancing risk says nothing about expected return. Bonds that start at very low yields offer little cushion against inflation and little room to rally in a slowdown.
+
+None of these is a reason to abandon balance, but each is a reason for humility: more than one kind of protection per season, correlation stress-tested rather than assumed, moderate leverage with robust financing, and tests against shocks the portfolio has not yet lived through, from inflation surges like 2022 to deflationary busts like 2008.
+
+## What this means for the Amador Nautilus Fund
+
+The Amador Nautilus Fund, our forthcoming flagship, is in pre-launch. It is being designed around the philosophy described here: an all-season, risk-balanced, multi-asset approach that seeks to avoid dependence on any one economic season, including the assumption that bonds will always offset equity losses. Its motto, *firme en mar fuerte*, steady in rough seas, names what we are working toward, not a result anyone can promise.
+
+The lessons of 2022 shape how we think about that design: diversifying the sources of protection within each season, stress-testing against a positive stock-bond correlation and sharp moves in real rates, treating leverage as something to justify rather than assume, and measuring diversification in risk, as our [five-question framework](/insights/the-amador-framework) does for individual positions. The fund's strategy, risks and terms will be described in its offering documents; nothing here is an offer to sell or a solicitation of an offer to buy any interest in it. More information is on the [Nautilus Fund page](/fund).
+
+## Key takeaways
+
+- Growth and inflation surprises define four economic seasons, each of which has tended to favor different assets.
+- Seasons arrive in no fixed order, so balancing risk across them is more robust than betting on the next one.
+- Capital weights hide risk: in a 60/40 portfolio, equities typically carry roughly 80% or more of total risk.
+- Risk parity relies on volatility scaling and often leverage, which bring failure modes of their own.
+- In 2022 the stock-bond correlation turned positive as inflation dominated. Durable balance needs more than one hedge per season.

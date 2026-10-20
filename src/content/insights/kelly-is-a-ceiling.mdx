@@ -1,0 +1,132 @@
+---
+title: "Position Sizing: Treat Kelly as a Ceiling, Not a Target"
+dek: "The Kelly criterion marks the point beyond which more risk only destroys growth. Estimation error, correlation and drawdowns are why sensible sizing sits well below it."
+date: "2026-09-28"
+category: "Risk"
+author: "Jose Luis Amador Jaime"
+tags: ["position sizing", "Kelly criterion", "risk management", "portfolio construction", "drawdowns"]
+featured: false
+cover: "bars"
+---
+
+Every investment decision has two halves: what to own and how much. The first gets nearly all the attention; the second often decides whether an investor stays in the game long enough for the first to matter.
+
+Of the formal answers to "how much," the Kelly criterion is the best known and, in our view, the most often misused. Treated as a target, it invites aggressive bets on inputs no one knows precisely. Treated as a ceiling, it is one of the most useful ideas in risk management, because it marks the point beyond which more risk reduces long-run growth.
+
+## Where Kelly comes from
+
+In 1956, John L. Kelly Jr., a researcher at Bell Labs, published "A New Interpretation of Information Rate" in the *Bell System Technical Journal*. His gambler received tips over a noisy channel, and Kelly showed that the maximum rate at which the gambler's capital could compound equaled the channel's information rate. The lasting insight for investors concerns objectives: when you bet repeatedly and reinvest, long-run wealth is governed not by the average return of each bet but by the expected logarithm of wealth, which sets the compound growth rate.
+
+Edward O. Thorp carried the idea from the blackjack table to the stock market. His survey "The Kelly Criterion in Blackjack, Sports Betting, and the Stock Market" (2006) develops the continuous approximation used below and makes the case for betting a fraction of Kelly. *The Kelly Capital Growth Investment Criterion: Theory and Practice*, edited by Leonard MacLean, Thorp and William Ziemba (2011), collects much of the theory and debate that followed.
+
+### The binary bet
+
+Take a bet that wins with probability $p$, pays $b$ per unit staked and otherwise loses the stake, with $q = 1 - p$. Staking a fraction $f$ of capital gives expected log growth of $G(f) = p\ln(1 + bf) + q\ln(1 - f)$ per bet, which is maximized at the Kelly fraction:
+
+$$
+f^{*} = p - \frac{q}{b}
+$$
+
+An even-money bet ($b = 1$) that wins 55% of the time has $f^{*} = 0.55 - 0.45 = 0.10$: stake 10% of capital. With no edge, $f^{*}$ is zero or negative, and the right bet is no bet.
+
+### The continuous version
+
+For portfolios, the useful form describes a risky asset with expected excess return $\mu$ over cash and volatility $\sigma$. Holding a fraction $f$ of capital in the asset and the rest in cash earning $r$, the long-run compound growth rate is approximately
+
+$$
+g(f) = r + f\mu - \frac{f^{2}\sigma^{2}}{2}
+$$
+
+The reward rises in proportion to position size; the volatility drag rises with its square. Growth peaks at $f^{*} = \mu/\sigma^{2}$, where excess growth is $\mu^{2}/(2\sigma^{2})$. Since $\mu/\sigma$ is the Sharpe ratio $S$, the Kelly portfolio's volatility equals $S$ and its excess growth rate is $S^{2}/2$.
+
+That is sobering. For an asset with a 6% expected excess return and 15% volatility (illustrative inputs, not forecasts), $S = 0.4$, and full Kelly calls for about 2.67 times capital: a leveraged portfolio with 40% annual volatility, in exchange for 8% a year of excess growth.
+
+## The arithmetic of fractional Kelly
+
+Now bet a fraction $k$ of the Kelly amount, so that $f = kf^{*}$. Substituting into the growth rate:
+
+$$
+g(kf^{*}) - r = \frac{\mu^{2}}{2\sigma^{2}}\left(2k - k^{2}\right)
+$$
+
+Relative to the maximum, excess growth is $2k - k^{2}$, or equivalently $1 - (1 - k)^{2}$, while portfolio volatility is proportional to $k$.
+
+<Chart
+  title="Excess growth rate relative to full Kelly"
+  caption="Share of the maximum excess growth rate at k times the Kelly fraction (continuous approximation): 2k − k². Volatility rises in proportion to k."
+  decimals={4}
+  data={[
+    { label: "0.25× Kelly", value: 0.4375 },
+    { label: "0.5× Kelly", value: 0.75, highlight: true },
+    { label: "0.75× Kelly", value: 0.9375 },
+    { label: "1× Kelly (full)", value: 1.0 },
+    { label: "1.5× Kelly", value: 0.75 },
+    { label: "2× Kelly", value: 0.0 },
+  ]}
+/>
+
+Three features stand out.
+
+**The top is flat.** Half Kelly keeps 75% of the maximum growth rate with half the volatility; three-quarters Kelly keeps about 94%.
+
+**Overbetting is worse than underbetting.** Betting $k$ and $2 - k$ times Kelly produce the same growth, so 1.5 times Kelly earns what half Kelly earns with three times the volatility. Because estimation errors are proportional, the comparison that matters is in multiples, and there the penalty is lopsided: halving the Kelly bet costs a quarter of the growth, while doubling it costs all of it.
+
+**Twice Kelly earns nothing.** At $k = 2$, the investor bears double the Kelly volatility to compound at the cash rate. Beyond that, growth falls below cash even though each period's expected return is positive. Expected wealth keeps rising with leverage, but only because a shrinking minority of lucky paths lifts the average; the typical outcome deteriorates.
+
+The discrete bet behaves almost identically: in the 55% even-money example, staking 5% earns about 75% of the maximum growth rate, and staking 20% earns slightly less than nothing.
+
+This is why we call Kelly a ceiling. For an investor who judges outcomes by long-run compound growth and dislikes volatility, any position above Kelly is dominated: a smaller one delivers the same growth with less risk. Below Kelly lies a genuine trade-off between growth and stability. How far below to go depends on risk tolerance, and on how much the inputs deserve to be trusted.
+
+## Why full Kelly on estimated inputs over-bets
+
+Everything above assumes we know $\mu$ and $\sigma$. We do not, and $\mu$ is the bigger problem. The Kelly fraction is proportional to it: overestimate expected return by half and you are at 1.5 times Kelly; overestimate it twofold and you have bet away the entire excess growth rate. And expected returns are hard to estimate. With $T$ years of data, the standard error of an average annual return is roughly $\sigma/\sqrt{T}$, so for a strategy with a true Sharpe ratio of 0.3, ten years of history yield a standard error slightly larger than the mean itself.
+
+<Callout type="method" title="How much to shrink">
+Suppose your estimate of $\mu$ is unbiased, with a standard error equal to a fraction $s$ of the true value, and you bet $c$ times the Kelly fraction your estimate implies. Averaged over estimation error, expected excess growth as a share of the true maximum is $2c - c^{2}(1 + s^{2})$, which peaks at $c = 1/(1 + s^{2})$.
+
+When the standard error equals the true expected return ($s = 1$), the best response is half the naive Kelly bet, and the full naive bet expects zero excess growth. In the ten-year, Sharpe 0.3 example, the optimal scale is a little under one-half.
+</Callout>
+
+Real estimates are worse than unbiased. The ideas we choose to size up are, almost by definition, those whose estimates look best, and selecting on a noisy estimate tilts its errors toward optimism.
+
+Volatility is measured more precisely, but it moves, and the Kelly fraction depends on its square. Underestimate volatility by 20%, which is easy to do after a calm stretch, and the position becomes about 1.56 times Kelly, with roughly 68% of the maximum growth and more risk. The continuous model also assumes prices never gap. At 2.67 times leverage, a single 37.5% drop erases the capital, an outcome the formula treats as impossible.
+
+## Drawdowns are the cost you live through
+
+Growth rates describe the long run; investors live through the path. In the idealized model (known inputs, continuous trading, wealth measured relative to cash), a standard result for Brownian motion gives the probability that wealth ever falls to a fraction $x$ of its current level at $k$ times Kelly: $x^{2/k - 1}$. At full Kelly, that is simply $x$.
+
+| Probability of ever falling by | Full Kelly | Half Kelly | Quarter Kelly |
+| --- | ---: | ---: | ---: |
+| 10% | 90.0% | 72.9% | 47.8% |
+| 30% | 70.0% | 34.3% | 8.2% |
+| 50% | 50.0% | 12.5% | 0.8% |
+
+Even with a perfect model, maximum growth comes with a coin-flip chance of losing half of one's capital at some point. Real inputs are uncertain and real returns have fat tails, so these figures are optimistic. And a strategy abandoned at the bottom of a drawdown never earns its long-run growth rate.
+
+## Correlation is the hidden multiplier
+
+Kelly applies to the portfolio, not the line item. With many assets the growth-optimal weights are $\Sigma^{-1}\mu$, where $\Sigma$ is the covariance matrix, so sizing each position at its standalone Kelly fraction quietly over-bets. Take $n$ similar positions with pairwise correlation $\rho$: standalone sizing amounts to $1 + (n - 1)\rho$ times Kelly for the portfolio. Five positions with a correlation of just 0.25 put the portfolio at twice Kelly, where excess growth disappears. Correlations that look modest on average can be materially higher in a sell-off, which is exactly when sizing is tested.
+
+## Practical rules
+
+None of this argues against conviction, only for expressing it inside limits. The rules we find most useful:
+
+1. **Compute Kelly with conservative inputs and treat it as the upper bound.** Shrink expected returns toward zero or a skeptical prior, and use volatility estimates that include stressed periods.
+2. **Operate at a fraction.** Half Kelly keeps 75% of the growth at half the volatility; quarter Kelly keeps about 44% at a quarter.
+3. **Size the portfolio before the position.** Group holdings by common drivers (rates, the dollar, equity beta, a single theme) and cap each group as well as each line.
+4. **Set the risk budget first.** Decide total risk, in volatility or tolerable drawdown, and make ideas compete for it. Kelly ranks and caps; the budget binds.
+5. **Cap the loss per idea.** Decide how much any single idea may cost in a severe but plausible scenario. If that limit is 1.5% of capital and the severe case is a 60% loss, the weight cannot exceed 2.5%, whatever Kelly says (hypothetical figures).
+6. **Test the gap.** At leverage $L$, a decline of $1/L$ in the underlying erases the capital. Ask how close a plausible one-day move comes.
+
+These rules sit inside the broader process described in [The Amador Framework](/insights/the-amador-framework). Volatility and correlation also shift with the economic regime, a theme of [Four Economic Seasons](/insights/four-seasons-of-the-economy).
+
+<PullQuote>Above Kelly, every extra unit of risk buys less growth. Below it, each unit of risk you decline costs surprisingly little.</PullQuote>
+
+## Key takeaways
+
+- With known inputs, Kelly maximizes long-run compound growth: $f^{*} = p - q/b$ for a binary bet, $f^{*} = \mu/\sigma^{2}$ for a continuous risky asset.
+- Betting $k$ times Kelly earns $2k - k^{2}$ of the maximum excess growth rate. Half Kelly keeps 75% with half the volatility; twice Kelly earns nothing over cash.
+- Positions above Kelly are dominated by smaller ones with equal growth and less risk, which makes Kelly a ceiling.
+- Estimation error pushes the right bet lower. When the standard error equals the expected return, the best scale is half the naive Kelly fraction.
+- Correlation multiplies exposure: five standalone-Kelly positions correlated at 0.25 amount to twice Kelly.
+- In practice, use fractional Kelly on conservative inputs, inside a risk budget, with a maximum loss per idea and a gap test for leverage.

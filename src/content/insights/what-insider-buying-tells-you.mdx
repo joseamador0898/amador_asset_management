@@ -1,0 +1,120 @@
+---
+title: "What Insider Buying Does (and Doesn't) Tell You"
+dek: "Open-market purchases by executives and directors are among the most studied signals in public markets, but the evidence is narrower than the folklore and the filings reward careful reading."
+date: "2026-09-30"
+category: "Signals"
+author: "Jose Luis Amador Jaime"
+tags: ["insider trading", "Form 4", "SEC filings", "Rule 10b5-1", "signals"]
+featured: false
+cover: "bars"
+---
+
+Corporate insiders know more about their companies than anyone else, and when they trade their own stock they must say so publicly within days. That has made insider filings one of the most studied data sources in finance, and one of the most misread.
+
+The evidence is real but specific. It points to purchases rather than sales, to smaller companies more than large ones, and to insiders who trade opportunistically rather than on a schedule. Our [Signals dashboard](/signals) shows the latest Form 4 filings with open-market purchases first; this piece explains how we read them.
+
+## Form 4 in brief
+
+Section 16 of the Securities Exchange Act of 1934 requires officers, directors and beneficial owners of more than 10% of a class of a company's registered equity securities to report their trades in its stock. Changes are reported on Form 4, generally before the end of the second business day after the transaction. The deadline dates from the Sarbanes-Oxley Act of 2002; before it, most trades were due by the tenth day of the following month, so some of the returns older studies measured accrued before the public could have known.
+
+Table I of a Form 4 covers non-derivative securities, usually common stock; Table II covers derivatives such as options. Each row carries a transaction code, shares, price, the holding after the transaction, and whether it is held directly or indirectly, for example through a trust. The footnotes often hold the most important details.
+
+<KeyStats items={[{ value: "2", label: "Business days to file a Form 4" }, { value: "6 months", label: "Section 16(b) short-swing window" }, { value: "90–120", label: "Cooling-off days for directors and officers" }, { value: "30", label: "Cooling-off days for most other plan users" }]} />
+
+### The codes that matter
+
+| Code | Meaning | How we read it |
+| --- | --- | --- |
+| P | Open-market or private purchase | The signal of interest |
+| S | Open-market or private sale | Noisy; sales have many motives |
+| A | Grant or award | Compensation, not an investment decision |
+| M | Exercise or conversion of a derivative | Mechanical; watch what happens next |
+| F | Shares withheld for exercise price or taxes | Mechanical, not a decision to sell |
+| G | Gift | Estate or charitable planning |
+
+Other codes include D (disposition to the issuer), C (conversion) and X (exercise of an in-the-money or at-the-money derivative). Much of Form 4 traffic is compensation and its mechanics; code P is the cleanest record of an insider committing personal cash to the stock.
+
+## Why purchases say more than sales
+
+Insiders sell to diversify, to pay taxes on vested stock, to fund a house or tuition, or because a plan adopted months earlier says so. Much of their pay arrives as stock and options, so selling is the ordinary way to manage an outsized position. A line usually credited to the investor Peter Lynch captures the asymmetry: insiders sell for all sorts of reasons, but they buy for only one.
+
+A purchase also costs something. It uses personal cash, adds to a concentration that is usually already high, and invites scrutiny. Under Section 16(b), profits from a purchase and sale, or a sale and purchase, within less than six months can be recovered by the company, which discourages a buyer from flipping the position.
+
+The research is consistent with this asymmetry. **Seyhun (1986)** found that insiders' trades predicted abnormal returns, more so for insiders likely to know most about the firm as a whole, such as chairmen and officer-directors, but that outsiders imitating insiders after the trades became public could not earn abnormal profits once trading costs were counted. **Lakonishok and Lee (2001)** found little market reaction when insiders traded or reported their trades, yet companies with intensive insider buying went on to outperform those with intensive selling over the following months. The predictive power came mainly from purchases, and insiders behaved as contrarians, tending to buy after declines and sell after rises.
+
+<PullQuote>The asymmetry between buying and selling is the whole signal. It erodes quickly when a purchase is routine, scheduled or small.</PullQuote>
+
+## Cluster buying
+
+One purchase can reflect one person's circumstances: a new director establishing a position, an executive projecting confidence, a trade in a family account. Several insiders buying in the same window is harder to explain away, because their circumstances differ while their information overlaps, so we treat clusters as stronger evidence than single trades. Lakonishok and Lee, similarly, aggregated purchases and sales across a company's insiders over a period of months.
+
+Clusters rarely appear in one batch of filings. Insiders file separately, so a cluster usually builds over days or weeks, and a company's recent Form 4 history on EDGAR is the place to check.
+
+## Routine versus opportunistic insiders
+
+**Cohen, Malloy and Pomorski (2012)** offered a simple way to separate informative trades from habitual ones. They classified as routine those insiders who had traded in the same calendar month over several consecutive years, a pattern consistent with annual bonuses, vesting dates or regular diversification, and as opportunistic those with a comparable history but no such pattern. Routine trades had essentially no power to predict returns; the predictive power sat with opportunistic trades. Much of the information earlier studies found in insider trading, in other words, appears to come from trades that break an insider's usual pattern.
+
+The test is easy to approximate by hand. If a director buys every March, another March purchase says little; a first purchase in years says more.
+
+## Rule 10b5-1 plans and the 2022 amendments
+
+Rule 10b5-1 gives insiders an affirmative defense against insider-trading liability for trades made under a binding contract, instruction or written plan adopted when they were not aware of material nonpublic information. Plans let insiders schedule trades, most often sales, that execute later, even when the insider may hold sensitive information.
+
+Concerns grew that some insiders used plans opportunistically, for example by trading soon after adoption or running several plans at once. In December 2022 the SEC adopted amendments, which took effect in 2023. Among them:
+
+- **Cooling-off periods.** Directors and officers may not trade under a new or modified plan until the later of 90 days after adoption or two business days after the company discloses its results on Form 10-Q or 10-K for the quarter of adoption, subject to a maximum of 120 days. Other persons, apart from the company itself, face 30 days.
+- **Certifications.** Directors and officers must certify, when adopting a plan, that they are not aware of material nonpublic information and are adopting it in good faith.
+- **Overlapping and single-trade plans.** The defense is generally unavailable for overlapping plans, and single-trade plans are limited to one in any 12-month period.
+- **Disclosure.** Form 4 now has a checkbox indicating whether a transaction was made under a plan intended to satisfy Rule 10b5-1(c). Companies must disclose quarterly whether directors and officers adopted or terminated plans, and gifts must be reported on Form 4 within two business days.
+
+A plan trade executes a decision taken months earlier, so it says less about what the insider knows today. The checkbox makes such trades easier to spot; our panel does not yet read it.
+
+## Small caps versus large caps
+
+In Lakonishok and Lee's data, the information in insider trades was concentrated in smaller companies. Small companies have less analyst coverage, so the gap between what insiders and the market know is wider, and an insider's purchase is larger relative to the company's value and trading volume.
+
+The same features cut the other way for anyone following insiders. Small stocks have wider spreads and thinner trading, so acting on a filing costs more, the point behind Seyhun's results on trading costs. In very large companies, insider purchases are small relative to the company and the stock is closely studied, so the typical purchase has said less. A large-cap purchase can still matter for what it means to the buyer, such as a director committing a meaningful share of personal wealth. The filing shows the holding after the trade, but not the buyer's net worth.
+
+## How our Insider panel works
+
+<Callout type="method" title="How the Insider filings panel works">
+
+- **Source.** SEC EDGAR's feed of the most recently filed Form 4s. Roughly every half hour we take the latest few dozen filings, read each one's structured data and extract every Table I transaction.
+- **Fields.** Ticker, issuer, insider and role, the transaction code with a plain-English label, shares, price, value (shares × price) and trade date, with a link to the filing.
+- **Ordering.** Code P purchases first, then everything else by dollar value; up to 40 rows, filterable to buys or sales.
+
+</Callout>
+
+Its limits matter as much:
+
+- **Latest batch only.** The panel has no memory. A purchase filed in the morning can roll off by the afternoon, and the panel cannot see clusters across days, net buying over months or an insider's past pattern.
+- **No adjustment for plan trades.** We do not read the Rule 10b5-1 checkbox or the footnotes, so a scheduled purchase looks the same as a discretionary one.
+- **Table I only.** Derivative transactions in Table II, such as option grants, are not shown.
+- **Mechanical values.** Rows without a price, such as most grants and gifts, show no value, and one decision executed at several prices can appear as several rows.
+- **Every P is labeled an open-market buy.** Code P also covers private purchases, such as buying in a company offering; the footnotes say which.
+
+When EDGAR does not respond, the panel switches to clearly labeled sample data.
+
+## How we read a purchase
+
+<Callout type="warning" title="A filing is not a trade signal">
+
+The studies above describe average outcomes across many companies, not the result of any single purchase. Insiders can be early, wrong or buying for reasons unrelated to the outlook. We treat a purchase on our panel as a reason to read the filing and the company more closely, never as a reason to trade on its own.
+
+</Callout>
+
+1. **Is it code P?** Grants, exercises, withholdings and gifts are not purchases.
+2. **Who bought?** An officer or director differs from a 10% holder such as a fund, whose motives and horizon differ again.
+3. **How big is it for them?** Compare the purchase with the holding after the trade.
+4. **Was it planned?** Check the Rule 10b5-1 checkbox and the footnotes.
+5. **Is it routine?** Look for a calendar pattern in the insider's filing history.
+6. **Are others buying?** Check the company's recent Form 4s for a cluster.
+7. **What is the context?** Note the recent price path, the company's size and liquidity, and where it sits in its reporting calendar.
+
+For the options side of the dashboard, see [Reading Options Flow Without Fooling Yourself](/insights/reading-options-flow). To hear about new open-market purchases without watching the panel, set up [insider-buying alerts](/briefings#alerts).
+
+## References
+
+- Cohen, L., Malloy, C., and Pomorski, L. (2012). "Decoding Inside Information." *Journal of Finance*, 67(3).
+- Lakonishok, J., and Lee, I. (2001). "Are Insider Trades Informative?" *Review of Financial Studies*, 14(1).
+- Seyhun, H. N. (1986). "Insiders' Profits, Costs of Trading, and Market Efficiency." *Journal of Financial Economics*, 16(2).
