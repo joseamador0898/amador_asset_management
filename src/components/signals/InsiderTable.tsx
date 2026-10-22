@@ -64,7 +64,7 @@ export function InsiderTable({ trades }: { trades: InsiderTrade[] }) {
                   <span
                     className={cn(
                       "rounded px-1.5 py-0.5 text-[0.6rem] font-semibold",
-                      t.side === "buy" ? "bg-up/15 text-up" : t.side === "sell" ? "bg-down/15 text-down" : "bg-paper/10 text-paper/60",
+                      t.side === "buy" ? "bg-up/15 text-up" : t.side === "sell" ? "bg-down/10 text-down" : "bg-paper/10 text-paper/60",
                     )}
                   >
                     {t.label}

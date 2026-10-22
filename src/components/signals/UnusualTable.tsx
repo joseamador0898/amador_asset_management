@@ -70,7 +70,7 @@ export function UnusualTable({ contracts }: { contracts: OptionsContract[] }) {
               <tr key={c.contract} className="border-b border-term-line/60 hover:bg-term-3">
                 <td className="px-5 py-2.5 font-semibold text-paper">{c.ticker}</td>
                 <td className="px-2 py-2.5">
-                  <span className={cn("mr-2 rounded px-1.5 py-0.5 text-[0.6rem] font-semibold", c.type === "C" ? "bg-up/15 text-up" : "bg-down/15 text-down")}>
+                  <span className={cn("mr-2 rounded px-1.5 py-0.5 text-[0.6rem] font-semibold", c.type === "C" ? "bg-up/15 text-up" : "bg-down/10 text-down")}>
                     {c.type === "C" ? "CALL" : "PUT"}
                   </span>
                   <span className="text-paper/80">
