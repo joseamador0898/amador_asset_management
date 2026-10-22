@@ -1,6 +1,6 @@
 import "server-only";
-import { USER_AGENT } from "../http";
-import type { GsCommodityForecast, GsMacro, MacroSeries } from "../types";
+import { USER_AGENT, sleep } from "../http";
+import type { GsCommodityForecast, GsFxForecast, GsMacro, MacroSeries } from "../types";
 
 /*
  * Goldman Sachs Marquee (the data platform behind gs_quant), via its REST API.
@@ -19,7 +19,11 @@ export function gsEnabled() {
   return (process.env.SIGNALS_GS ?? "").toLowerCase() === "on" && Boolean(process.env.GS_CLIENT_ID && process.env.GS_CLIENT_SECRET);
 }
 
+// Access tokens last about an hour; reuse one instead of authenticating on every refresh.
+let cachedToken: { value: string; exp: number } | null = null;
+
 async function token(): Promise<string | null> {
+  if (cachedToken && Date.now() < cachedToken.exp) return cachedToken.value;
   try {
     const res = await fetch(TOKEN_URL, {
       method: "POST",
@@ -37,26 +41,41 @@ async function token(): Promise<string | null> {
       console.warn(`[signals] marquee auth -> HTTP ${res.status}`);
       return null;
     }
-    return ((await res.json()) as { access_token?: string }).access_token ?? null;
+    const json = (await res.json()) as { access_token?: string; expires_in?: number };
+    if (!json.access_token) return null;
+    cachedToken = { value: json.access_token, exp: Date.now() + Math.max(60, (json.expires_in ?? 3600) - 120) * 1000 };
+    return json.access_token;
   } catch (err) {
     console.warn(`[signals] marquee auth -> ${(err as Error).name}`);
     return null;
   }
 }
 
+/** Marquee request that backs off and retries when rate-limited (HTTP 429). */
+async function gsFetch(url: string, init: RequestInit, timeoutMs: number): Promise<Response> {
+  for (let attempt = 0; ; attempt++) {
+    const res = await fetch(url, { ...init, signal: AbortSignal.timeout(timeoutMs), cache: "no-store" });
+    if (res.status !== 429 || attempt === 3) return res;
+    const retryAfter = Number(res.headers.get("retry-after"));
+    await sleep(Math.min(Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : 1000 * 2 ** attempt, 8000) + Math.random() * 500);
+  }
+}
+
 async function query(bearer: string, dataset: string, where: Record<string, string[]>, days: number): Promise<Row[]> {
   try {
-    const res = await fetch(`${API}/${dataset}/query`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${bearer}`, "Content-Type": "application/json", "User-Agent": USER_AGENT },
-      body: JSON.stringify({
-        where,
-        startDate: new Date(Date.now() - days * 864e5).toISOString().slice(0, 10),
-        endDate: new Date().toISOString().slice(0, 10),
-      }),
-      signal: AbortSignal.timeout(12000),
-      cache: "no-store",
-    });
+    const res = await gsFetch(
+      `${API}/${dataset}/query`,
+      {
+        method: "POST",
+        headers: { Authorization: `Bearer ${bearer}`, "Content-Type": "application/json", "User-Agent": USER_AGENT },
+        body: JSON.stringify({
+          where,
+          startDate: new Date(Date.now() - days * 864e5).toISOString().slice(0, 10),
+          endDate: new Date().toISOString().slice(0, 10),
+        }),
+      },
+      12000,
+    );
     if (!res.ok) {
       console.warn(`[signals] marquee ${dataset} -> HTTP ${res.status}`);
       return [];
@@ -101,11 +120,11 @@ const COMMODITIES: Array<{ name: string; label: string; unit: string }> = [
 
 async function commodityForecasts(bearer: string): Promise<GsCommodityForecast[]> {
   try {
-    const res = await fetch(`${API}/COMMODITIESRESEARCHFORECASTS/coverage?limit=100`, {
-      headers: { Authorization: `Bearer ${bearer}`, "User-Agent": USER_AGENT },
-      signal: AbortSignal.timeout(10000),
-      cache: "no-store",
-    });
+    const res = await gsFetch(
+      `${API}/COMMODITIESRESEARCHFORECASTS/coverage?limit=100`,
+      { headers: { Authorization: `Bearer ${bearer}`, "User-Agent": USER_AGENT } },
+      10000,
+    );
     if (!res.ok) return [];
     const coverage = ((await res.json()) as { results?: Array<{ assetId: string; name: string }> }).results ?? [];
     const out = await Promise.all(
@@ -134,18 +153,51 @@ async function commodityForecasts(bearer: string): Promise<GsCommodityForecast[]
   }
 }
 
+// GIR FX forecasts for the pairs our readers ask about most (Marquee names them like "USDMXN").
+const FX_PAIRS = ["EURUSD", "USDJPY", "GBPUSD", "USDMXN", "USDCAD", "USDBRL", "USDCNY"];
+
+async function fxForecasts(bearer: string): Promise<GsFxForecast[]> {
+  try {
+    const res = await gsFetch(
+      `${API}/FXFORECASTS/coverage?limit=100`,
+      { headers: { Authorization: `Bearer ${bearer}`, "User-Agent": USER_AGENT } },
+      10000,
+    );
+    if (!res.ok) return [];
+    const coverage = ((await res.json()) as { results?: Array<{ assetId: string; name?: string; bbid?: string }> }).results ?? [];
+    const wanted = FX_PAIRS.map((p) => ({ pair: p, asset: coverage.find((c) => c.name === p || c.bbid === p) })).filter((w) => w.asset);
+    if (!wanted.length) return [];
+    const rows = await query(bearer, "FXFORECASTS", { assetId: wanted.map((w) => w.asset!.assetId) }, 21);
+    return wanted
+      .map(({ pair, asset }) => {
+        const mine = rows.filter((r) => r.assetId === asset!.assetId);
+        const lastDate = mine.map((r) => String(r.date)).sort().at(-1);
+        if (!lastDate) return null;
+        const pick = (period: string) => {
+          const v = mine.find((r) => String(r.date) === lastDate && r.relativePeriod === period)?.fxForecast;
+          return typeof v === "number" ? v : null;
+        };
+        return { pair: `${pair.slice(0, 3)}/${pair.slice(3)}`, threeMonth: pick("3m"), twelveMonth: pick("12m"), date: lastDate };
+      })
+      .filter((x): x is GsFxForecast => x !== null && (x.threeMonth !== null || x.twelveMonth !== null));
+  } catch {
+    return [];
+  }
+}
+
 export async function fetchGsMacro(): Promise<GsMacro | null> {
   if (!gsEnabled()) return null;
   const bearer = await token();
   if (!bearer) return null;
 
-  const [fci, cai, map, rai, social, commodities] = await Promise.all([
+  const [fci, cai, map, rai, social, commodities, fx] = await Promise.all([
     query(bearer, "FCI", { geographyId: ["US"] }, 420),
     query(bearer, "CAI", { geographyId: ["US"], metricName: ["CAI_HEADLINE"] }, 900),
     query(bearer, "MAP", { geographyId: ["US"], metricName: ["map_21d_ma"] }, 420),
     query(bearer, "RAI", { geographyId: ["GLagg"], metricName: ["rai_headline"] }, 420),
     query(bearer, "GS_SOCIAL_MEDIA_ECONOMIC_SENTIMENT_INDEX_V1_STANDARD", { geographyId: ["US"], metricName: ["sentiment_index"] }, 420),
     commodityForecasts(bearer),
+    fxForecasts(bearer),
   ]);
 
   const tiles = [
@@ -157,6 +209,6 @@ export async function fetchGsMacro(): Promise<GsMacro | null> {
     series(social, "metricValue", { id: "GS_SOCIAL", label: "GS Social Sentiment", unit: "index", decimals: 2, description: "Goldman Sachs US social-media economic sentiment index" }, 30, "1M"),
   ].filter((t): t is MacroSeries => t !== null);
 
-  if (!tiles.length && !commodities.length) return null;
-  return { tiles, commodities };
+  if (!tiles.length && !commodities.length && !fx.length) return null;
+  return { tiles, commodities, fx };
 }

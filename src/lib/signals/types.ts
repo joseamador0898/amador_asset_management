@@ -117,4 +117,38 @@ export type GsCommodityForecast = {
   date: string; // forecast publication date
 };
 
-export type GsMacro = { tiles: MacroSeries[]; commodities: GsCommodityForecast[] };
+export type GsFxForecast = {
+  pair: string; // e.g. "USD/MXN"
+  threeMonth: number | null;
+  twelveMonth: number | null;
+  date: string;
+};
+
+export type GsMacro = { tiles: MacroSeries[]; commodities: GsCommodityForecast[]; fx: GsFxForecast[] };
+
+export type SignalAlert = {
+  id: string;
+  level: "high" | "medium" | "info";
+  direction: "up" | "down" | "neutral";
+  title: string;
+  detail: string;
+  source: string;
+  date: string;
+};
+
+export type WorldMarket = {
+  country: string;
+  code: string; // ISO country code shown as a label
+  region: "Americas" | "Europe" | "Asia-Pacific" | "Middle East & Africa";
+  indexName: string;
+  indexLevel: number | null; // local index level (delayed, Yahoo Finance)
+  indexChangePct: number | null;
+  etf: string; // US-listed country ETF (real-time, Alpaca IEX)
+  etfPrice: number | null;
+  etfChangePct: number | null;
+  etfTime: string | null;
+};
+
+export type LiveQuote = { symbol: string; label: string; group: string; price: number; changePct: number; time: string | null };
+
+export type LiveBoard = { world: WorldMarket[]; quotes: LiveQuote[]; asOf: string; live: boolean };

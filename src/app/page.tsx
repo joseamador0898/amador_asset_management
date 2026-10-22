@@ -11,8 +11,11 @@ import { TickerTape } from "@/components/signals/TickerTape";
 import { MacroGrid } from "@/components/signals/MacroGrid";
 import { Predictions } from "@/components/signals/Predictions";
 import { SourceBadge } from "@/components/signals/Panel";
+import { AlertList } from "@/components/signals/AlertList";
+import { WorldMarketsLive } from "@/components/signals/WorldMarketsLive";
 import { getAllArticles } from "@/lib/insights";
-import { getMacro, getPredictions, getQuotes } from "@/lib/signals";
+import { getGsMacro, getLiveBoard, getMacro, getPredictions, getQuotes } from "@/lib/signals";
+import { buildGsAlerts } from "@/lib/signals/alerts";
 import { fund } from "@/lib/site";
 
 const SERVICES = [
@@ -40,7 +43,7 @@ const SERVICES = [
   {
     n: "04",
     title: "Signals & Alerts",
-    body: "A live market terminal and email alerts: unusual options activity, insider buying, macro data and prediction-market odds.",
+    body: "A live market terminal and email alerts: Goldman Sachs macro indicators, real-time world markets, unusual options activity, insider buying and prediction-market odds.",
     href: "/signals",
     cta: "Open Signals",
   },
@@ -63,7 +66,7 @@ const PRINCIPLES = [
 const FACTS = [
   { value: "8", label: "asset universes in our DHRP-8 research benchmark" },
   { value: "10", label: "seeds per model: our minimum evidence standard" },
-  { value: "5", label: "live data sources powering Amador Signals" },
+  { value: "7", label: "live data sources powering Amador Signals" },
   { value: "1", label: `flagship in preparation: the ${fund.shortName}` },
 ];
 
@@ -72,22 +75,35 @@ async function HomeTape() {
 }
 
 async function SignalsPreview() {
-  const [macro, predictions] = await Promise.all([getMacro(), getPredictions()]);
+  const [gs, macro, predictions, board] = await Promise.all([getGsMacro(), getMacro(), getPredictions(), getLiveBoard()]);
+  const alerts = gs ? buildGsAlerts(gs.data) : [];
   return (
     <div className="grid gap-5 lg:grid-cols-3">
+      {/* Goldman Sachs indicators first when the licensed feed is on; FRED otherwise. */}
       <div className="term-panel overflow-hidden lg:col-span-2">
         <div className="flex items-center justify-between border-b border-term-line px-5 py-3.5">
-          <p className="text-sm font-semibold text-paper">Macro dashboard</p>
-          <SourceBadge source={macro.source} />
+          <p className="text-sm font-semibold text-paper">{gs ? "Goldman Sachs macro lens" : "Macro dashboard"}</p>
+          <SourceBadge source={gs ? gs.source : macro.source} />
         </div>
-        <MacroGrid series={macro.data} limit={8} />
+        {gs ? (
+          <MacroGrid series={gs.data.tiles} gridClassName="grid-cols-2 sm:grid-cols-3 lg:grid-cols-5" />
+        ) : (
+          <MacroGrid series={macro.data} limit={8} />
+        )}
       </div>
       <div className="term-panel overflow-hidden">
         <div className="flex items-center justify-between border-b border-term-line px-5 py-3.5">
-          <p className="text-sm font-semibold text-paper">Prediction markets</p>
-          <SourceBadge source={predictions.source} />
+          <p className="text-sm font-semibold text-paper">{alerts.length ? "Signal alerts" : "Prediction markets"}</p>
+          <SourceBadge source={gs && alerts.length ? gs.source : predictions.source} />
         </div>
-        <Predictions markets={predictions.data} limit={3} />
+        {alerts.length ? <AlertList alerts={alerts} limit={3} /> : <Predictions markets={predictions.data} limit={3} />}
+      </div>
+      <div className="term-panel overflow-hidden lg:col-span-3">
+        <div className="flex items-center justify-between border-b border-term-line px-5 py-3.5">
+          <p className="text-sm font-semibold text-paper">World markets</p>
+          <SourceBadge source={{ provider: "Alpaca Markets", live: board.live, asOf: board.asOf }} />
+        </div>
+        <WorldMarketsLive initial={board} compact />
       </div>
     </div>
   );
@@ -255,7 +271,7 @@ export default function HomePage() {
               eyebrow="Amador Signals"
               tone="light"
               title="The market, on one screen."
-              intro="Macro data, unusual options activity, insider filings and prediction-market odds, each with its source and its delay."
+              intro="Goldman Sachs macro indicators and alerts, live world markets, options flow, insider filings and prediction-market odds, each with its source and its delay."
             />
             <ButtonLink href="/signals" variant="light">
               Open the terminal

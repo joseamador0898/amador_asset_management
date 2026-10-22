@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { BellRing, CalendarClock, FileText, LineChart, Newspaper, Scale, Waves } from "lucide-react";
+import { CircleArrowLink } from "@/components/ui/Button";
 import { PageHero, SectionHeader } from "@/components/ui/Section";
 import { Reveal } from "@/components/ui/Reveal";
 import { SubscribeForm } from "@/components/forms/SubscribeForm";
+import { AlertList } from "@/components/signals/AlertList";
+import { MorningNote } from "@/components/signals/MorningNote";
+import { getGsMacro } from "@/lib/signals";
+import { buildGsAlerts } from "@/lib/signals/alerts";
 import { fund } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -17,10 +23,41 @@ const PRODUCTS = [
   { icon: FileText, name: "Weekly Memo", cadence: "Sundays", body: "One framework or research idea, explained properly, the long-form thinking behind how we build portfolios." },
   { icon: Waves, name: "Unusual Options Activity", cadence: "Daily digest after the close", body: "The largest contracts trading far above open interest, with context: hedge, spread or directional?" },
   { icon: BellRing, name: "Insider Buying", cadence: "As filed · daily digest", body: "Open-market purchases from SEC Form 4 filings, cluster buys flagged, sales and routine grants filtered out." },
-  { icon: Scale, name: "Macro & Prediction Markets", cadence: "Around FOMC, CPI and jobs", body: "The data, consensus and what prediction markets imply, before and after each major release." },
+  { icon: Scale, name: "Macro & Prediction Markets", cadence: "When triggered · around FOMC, CPI and jobs", body: "Alerts on Goldman Sachs financial conditions, growth nowcast and data surprises, plus what prediction markets imply around each major release." },
   { icon: LineChart, name: "Research Papers", cadence: "When published", body: "New Amador research, like our Deep HRP work, with a plain-language summary and the full paper." },
   { icon: CalendarClock, name: `${fund.shortName} Updates`, cadence: "Milestones only", body: "Launch timeline, investor events and offering availability, for eligible investors who opt in." },
 ];
+
+/** Live alerts from the Goldman Sachs feed, with the AI commentary built on them. Hidden when the feed is off. */
+async function LatestAlerts() {
+  const gs = await getGsMacro();
+  if (!gs) return null;
+  const alerts = buildGsAlerts(gs.data);
+  if (!alerts.length) return null;
+  return (
+    <section className="border-b border-line">
+      <div className="container-x grid gap-12 py-20 md:py-24 lg:grid-cols-12">
+        <div className="lg:col-span-4">
+          <p className="eyebrow text-brass">Latest alerts</p>
+          <h2 className="display mt-5 text-4xl md:text-5xl">What the alerts are flagging now.</h2>
+          <p className="mt-5 leading-relaxed text-muted">
+            Rule-based alerts on Goldman Sachs macro indicators and GIR forecasts, refreshed through the day and ranked by
+            priority.
+          </p>
+          <CircleArrowLink href="/signals" label="Open Signals" className="mt-8" />
+        </div>
+        <div className="space-y-8 lg:col-span-8">
+          <MorningNote tone="light" />
+          <AlertList alerts={alerts} tone="light" limit={5} />
+          <p className="text-[0.66rem] leading-relaxed text-muted">
+            Goldman Sachs data © Goldman Sachs. Forecasts are GIR&apos;s, not Amador&apos;s. Informational only; not investment
+            advice.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 export default function BriefingsPage() {
   return (
@@ -34,6 +71,10 @@ export default function BriefingsPage() {
         }
         intro="Choose exactly what reaches your inbox: a morning brief, a weekly memo, or event-driven alerts from Amador Signals. No noise, no tips, and one-click unsubscribe."
       />
+
+      <Suspense fallback={null}>
+        <LatestAlerts />
+      </Suspense>
 
       <section>
         <div className="container-x py-20 md:py-28">

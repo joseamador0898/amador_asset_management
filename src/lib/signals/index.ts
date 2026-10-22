@@ -6,6 +6,7 @@ import type {
   Feed,
   GsMacro,
   InsiderTrade,
+  LiveBoard,
   MacroSeries,
   OptionsPulse,
   PredictionMarket,
@@ -21,6 +22,8 @@ import { fetchSecInsiders } from "./providers/sec";
 import { fetchUwCongress, fetchUwDarkPool, fetchUwMarketTide } from "./providers/unusualwhales";
 import { generateBrief } from "./providers/gemini";
 import { fetchGsMacro } from "./providers/gsquant";
+import { fetchLiveBoard } from "./providers/live";
+import { buildGsAlerts } from "./alerts";
 import { fmt } from "@/lib/utils";
 
 const now = () => new Date().toISOString();
@@ -30,7 +33,7 @@ export async function getQuotes(): Promise<Feed<Quote[]>> {
   cacheLife("signals");
   const live = await fetchAlpacaQuotes();
   return live
-    ? { data: live, source: { provider: "Alpaca Markets (15-min delayed)", live: true, url: "https://alpaca.markets", asOf: now() } }
+    ? { data: live, source: { provider: "Alpaca Markets (real-time IEX)", live: true, url: "https://alpaca.markets", asOf: now() } }
     : { data: sampleQuotes, source: { provider: "Sample data", live: false, note: "Set APCA_API_KEY_ID / APCA_API_SECRET_KEY for live quotes.", asOf: now() } };
 }
 
@@ -110,13 +113,39 @@ export async function getGsMacro(): Promise<Feed<GsMacro> | null> {
     : null;
 }
 
-/** Gemini-written summary of markets, macro and prediction markets. Refreshed hourly. */
-export async function getBrief(): Promise<{ text: string; asOf: string; model: string } | null> {
+/** Live board for first paint; the client then polls /api/markets/live. */
+export async function getLiveBoard(): Promise<LiveBoard> {
+  "use cache";
+  cacheLife("signals");
+  return fetchLiveBoard();
+}
+
+/**
+ * Analyst commentary: a Gemini-written summary led by Goldman Sachs indicators
+ * and GIR forecasts (when enabled), then markets, macro and prediction markets.
+ * Refreshed hourly.
+ */
+export async function getBrief(): Promise<{ text: string; asOf: string; model: string; gs: boolean } | null> {
   "use cache";
   cacheLife("hours");
-  const [quotes, macro, predictions] = await Promise.all([fetchAlpacaQuotes(), fetchFredMacro(), fetchPolymarket(5)]);
-  if (!quotes && !macro && !predictions) return null;
+  const [gs, quotes, macro, predictions] = await Promise.all([fetchGsMacro(), fetchAlpacaQuotes(), fetchFredMacro(), fetchPolymarket(5)]);
+  if (!gs && !quotes && !macro && !predictions) return null;
   const lines: string[] = [];
+  if (gs) {
+    lines.push(
+      "Goldman Sachs indicators (lead with these): " +
+        gs.tiles.map((t) => `${t.label} ${t.value.toFixed(t.decimals)}${t.unit === "%" ? "%" : ""} (${t.change >= 0 ? "+" : ""}${t.change.toFixed(t.decimals)} vs ${t.changeLabel})`).join("; "),
+    );
+    if (gs.commodities.length)
+      lines.push(
+        "Goldman Sachs GIR commodity forecasts: " +
+          gs.commodities.map((c) => `${c.label} ${c.quarterLabel} $${c.quarter ?? "n/a"}, 12-month $${c.twelveMonth ?? "n/a"} (${c.unit})`).join("; "),
+      );
+    if (gs.fx.length)
+      lines.push("Goldman Sachs GIR FX forecasts: " + gs.fx.map((f) => `${f.pair} 3-month ${f.threeMonth ?? "n/a"}, 12-month ${f.twelveMonth ?? "n/a"}`).join("; "));
+    const alerts = buildGsAlerts(gs).filter((a) => a.level !== "info");
+    if (alerts.length) lines.push("Alerts triggered: " + alerts.map((a) => a.title).join("; "));
+  }
   if (quotes) lines.push("Markets (daily % change): " + quotes.map((q) => `${q.label} ${fmt.pct(q.changePct)}`).join("; "));
   if (macro)
     lines.push(
@@ -129,5 +158,5 @@ export async function getBrief(): Promise<{ text: string; asOf: string; model: s
         predictions.map((p) => `${p.title}: ${p.outcomes.slice(0, 2).map((o) => `${o.label} ${(o.probability * 100).toFixed(0)}%`).join(", ")}`).join(" | "),
     );
   const text = await generateBrief(lines.join("\n"));
-  return text ? { text, asOf: now(), model: process.env.GEMINI_MODEL || "gemini-2.5-flash" } : null;
+  return text ? { text, asOf: now(), model: process.env.GEMINI_MODEL || "gemini-2.5-flash", gs: Boolean(gs) } : null;
 }

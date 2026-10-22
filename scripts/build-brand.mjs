@@ -159,6 +159,104 @@ const tile = (W, bg, fg, bar, scale = 0.6, barH = 4, rounded = false) => {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="${W}" height="${W}"><rect width="64" height="64" ${rounded ? 'rx="12"' : ""} fill="${bg}"/>${mark(off, off, scale, fg, bar, barH)}</svg>\n`;
 };
 
+const TAGLINE = "Built for every season of the market.";
+
+/**
+ * Social banner on ink: reverse lockup, tagline and URL centered in `safe` (the
+ * region every device shows), the logo's brass horizon running out to both edges,
+ * and a faint nautilus on the right.
+ */
+function banner(W, H, safe) {
+  const lock = horizontal(C.ivory, C.brassLight, C.brassLight);
+  const tag = textPath(serifItalic, TAGLINE, 40, 0);
+  const url = textPath(sans, "AMADORAM.COM", 14, 0.36);
+  const gap1 = 44, gap2 = 30;
+  const bw = Math.max(lock.w, tag.width, url.width);
+  const bh = lock.h + gap1 + tag.capHeight + gap2 + url.capHeight;
+  const s = Math.min((safe.w * 0.9) / bw, (safe.h * 0.84) / bh);
+  const bx = safe.x + (safe.w - bw * s) / 2;
+  const by = safe.y + (safe.h - bh * s) / 2;
+  const lx = (bw - lock.w) / 2;
+  const t1 = textPath(serifItalic, TAGLINE, 40, 0, (bw - tag.width) / 2, lock.h + gap1 + tag.capHeight);
+  const u1 = textPath(sans, "AMADORAM.COM", 14, 0.36, (bw - url.width) / 2, lock.h + gap1 + tag.capHeight + gap2 + url.capHeight);
+  // The mark's horizon bar sits at 41–45 of its 64-unit box (120 units tall here).
+  const barY = by + ((43 * 120) / 64) * s;
+  const barH = Math.max(1.5, ((2 * 120) / 64) * s * 0.5);
+  const left = bx + lx * s - 28 * s;
+  const right = bx + (lx + lock.w) * s + 28 * s;
+  // Nautilus sized to the safe area and kept clear of the text block.
+  const n = Math.min(H * 1.3, safe.h * 2.6);
+  const nx = Math.max(W - n * 0.62, bx + bw * s + 0.02 * W);
+  const ny = safe.y + safe.h / 2 - n / 2;
+  const body =
+    `<rect width="${W}" height="${H}" fill="${C.ink}"/>` +
+    `<g opacity="0.13" transform="translate(${nx.toFixed(1)} ${ny.toFixed(1)}) scale(${(n / 200).toFixed(4)})">${nautilusMark(C.ivory, C.brassLight)}</g>` +
+    `<rect x="0" y="${(barY - barH / 2).toFixed(2)}" width="${left.toFixed(2)}" height="${barH.toFixed(2)}" fill="${C.brass}" opacity="0.55"/>` +
+    `<rect x="${right.toFixed(2)}" y="${(barY - barH / 2).toFixed(2)}" width="${(W - right).toFixed(2)}" height="${barH.toFixed(2)}" fill="${C.brass}" opacity="0.55"/>` +
+    `<g transform="translate(${bx.toFixed(2)} ${by.toFixed(2)}) scale(${s.toFixed(5)})"><g transform="translate(${lx.toFixed(2)} 0)">${lock.body}</g>` +
+    `<path d="${t1.d}" fill="${C.ivory}" fill-opacity="0.82"/><path d="${u1.d}" fill="${C.brassLight}"/></g>`;
+  return svg(W, H, body);
+}
+
+/**
+ * Business card at 300 dpi with 1/8" bleed: 3.75 x 2.25 in = 1125 x 675 px (trim
+ * 1050 x 600). Type sizes are set in points (1 pt = 300/72 px) so they print legibly.
+ */
+const PT = 300 / 72;
+
+function cardFront() {
+  const W = 1125, Hh = 675;
+  const lock = stacked(C.ivory, C.brassLight, C.brassLight);
+  const s = 350 / lock.h;
+  return svg(W, Hh, `<rect width="${W}" height="${Hh}" fill="${C.ink}"/><g transform="translate(${((W - lock.w * s) / 2).toFixed(2)} ${((Hh - lock.h * s) / 2).toFixed(2)}) scale(${s.toFixed(5)})">${lock.body}</g>`);
+}
+
+// Founder name and role, read from the site config so the card matches the website.
+const siteTs = fs.readFileSync(path.join(root, "src", "lib", "site.ts"), "utf8");
+const founder = siteTs.match(/founder:\s*\{\s*name:\s*"([^"]+)",\s*role:\s*"([^"]+)"/);
+if (!founder) throw new Error("founder name/role not found in src/lib/site.ts");
+
+// The back carries the monogram only: the full lockup's second line would print below 3 pt here.
+function cardBack() {
+  const W = 1125, Hh = 675, x = 112.5; // 1/8" bleed + 1/4" margin
+  const name = textPath(serif, founder[1], 13 * PT, 0.01, x, 345);
+  const role = textPath(sans, founder[2].toUpperCase(), 6.5 * PT, 0.16, x + 2, 400);
+  const url = textPath(sans, "AMADORAM.COM", 7 * PT, 0.3, x + 2, 560);
+  const tagW = textPath(serifItalic, TAGLINE, 7.5 * PT, 0).width;
+  const tag = textPath(serifItalic, TAGLINE, 7.5 * PT, 0, W - x - tagW, 560);
+  return svg(
+    W,
+    Hh,
+    `<rect width="${W}" height="${Hh}" fill="${C.ivory}"/>` +
+      mark(x - 6, 96, 100 / 64, C.ink, C.brass) +
+      `<path d="${name.d}" fill="${C.ink}"/><path d="${role.d}" fill="${C.brass}"/>` +
+      `<rect x="0" y="470" width="${W}" height="2.5" fill="${C.brass}" opacity="0.6"/>` +
+      `<path d="${url.d}" fill="${C.ink}" fill-opacity="0.78"/><path d="${tag.d}" fill="#6B665C"/>`,
+  );
+}
+
+/** ICO container holding PNG images (supported by every current browser). */
+function ico(pngs) {
+  const header = Buffer.alloc(6 + 16 * pngs.length);
+  header.writeUInt16LE(0, 0);
+  header.writeUInt16LE(1, 2);
+  header.writeUInt16LE(pngs.length, 4);
+  let offset = header.length;
+  pngs.forEach(({ size, data }, i) => {
+    const e = 6 + 16 * i;
+    header.writeUInt8(size >= 256 ? 0 : size, e);
+    header.writeUInt8(size >= 256 ? 0 : size, e + 1);
+    header.writeUInt8(0, e + 2);
+    header.writeUInt8(0, e + 3);
+    header.writeUInt16LE(1, e + 4);
+    header.writeUInt16LE(32, e + 6);
+    header.writeUInt32LE(data.length, e + 8);
+    header.writeUInt32LE(offset, e + 12);
+    offset += data.length;
+  });
+  return Buffer.concat([header, ...pngs.map((p) => p.data)]);
+}
+
 const files = {};
 // SVG masters
 files["amador-mark.svg"] = svg(64, 64, mark(0, 0, 1, C.ink, C.brass));
@@ -208,11 +306,26 @@ const report = [
   png("nautilus-fund-lockup-1600.png", fit(F, 1600, 420, 24), 1600),
   png("logo-horizontal-2000.png", fit(H, 2000, 420, 20), 2000),
   png("logo-horizontal-reverse-2000.png", fit(HR, 2000, 420, 20), 2000),
+  // Social banners, content kept inside each network's safe area (profile photos and mobile crops).
+  png("linkedin-banner-1584x396.png", banner(1584, 396, { x: 380, y: 40, w: 1100, h: 316 }), 1584),
+  png("linkedin-company-cover-1128x191.png", banner(1128, 191, { x: 230, y: 14, w: 790, h: 163 }), 1128),
+  png("x-header-1500x500.png", banner(1500, 500, { x: 250, y: 90, w: 1000, h: 320 }), 1500),
+  png("youtube-banner-2560x1440.png", banner(2560, 1440, { x: 507, y: 509, w: 1546, h: 423 }), 2560),
+  // Email signature (shown at 300 x 75; white so it reads in light and dark mail clients).
+  png("email-signature-logo-600x150.png", fit(H, 600, 150, 16, C.white), 600),
+  // Business cards at 300 dpi with bleed, for print services.
+  png("business-card-front-1125x675.png", cardFront(), 1125),
+  png("business-card-back-1125x675.png", cardBack(), 1125),
 ];
 
 // App icons used by Next.js metadata conventions.
 fs.copyFileSync(path.join(OUT_PNG, "apple-touch-icon-180.png"), path.join(root, "src", "app", "apple-icon.png"));
 fs.writeFileSync(path.join(root, "src", "app", "icon.svg"), tile(64, C.ink, C.ivory, C.brassLight, 0.66, 5, true));
+const favicon = [16, 32, 48].map((size) => ({
+  size,
+  data: new Resvg(tile(size, C.ink, C.ivory, C.brassLight, size < 32 ? 0.78 : 0.7, 5, true), { fitTo: { mode: "width", value: size } }).render().asPng(),
+}));
+fs.writeFileSync(path.join(root, "src", "app", "favicon.ico"), ico(favicon));
 
 for (const r of report) console.log(`${r.name.padEnd(48)} ${(r.bytes / 1024).toFixed(1)} KB`);
 console.log(`\nSVG masters: ${Object.keys(files).length} files in public/brand`);

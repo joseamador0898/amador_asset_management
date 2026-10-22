@@ -16,9 +16,11 @@ export async function generateBrief(facts: string): Promise<string | null> {
   if (!key) return null;
   const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
   const prompt = [
-    "You write the 'Morning Note' for Amador Asset Management's public market dashboard.",
-    "Using ONLY the data below, write 3 short bullet points (max 28 words each) describing what stands out across markets,",
-    "rates/macro, options activity, insider filings and prediction markets.",
+    "You write the analyst commentary for Amador Asset Management's market dashboard.",
+    "Using ONLY the data below, write 4 short bullet points (max 30 words each).",
+    "If Goldman Sachs indicators or GIR forecasts are present, the first two bullets must cover them",
+    "(financial conditions, growth nowcast, data surprises, risk appetite, forecasts), attributing them to Goldman Sachs.",
+    "The remaining bullets cover markets, rates and prediction markets.",
     "Rules: no investment advice, no recommendations, no predictions, no numbers or facts that are not in the data,",
     "neutral institutional tone, plain text bullets starting with '- '.",
     "",

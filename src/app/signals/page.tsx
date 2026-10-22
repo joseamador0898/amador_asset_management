@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
 import { BellRing } from "lucide-react";
-import { getCongress, getDarkPool, getInsiders, getMacro, getMarketTide, getOptionsPulse, getPredictions, getQuotes } from "@/lib/signals";
+import { getCongress, getDarkPool, getInsiders, getLiveBoard, getMacro, getMarketTide, getOptionsPulse, getPredictions, getQuotes } from "@/lib/signals";
 import { Panel } from "@/components/signals/Panel";
 import { TickerTape } from "@/components/signals/TickerTape";
 import { MacroGrid } from "@/components/signals/MacroGrid";
@@ -13,13 +13,14 @@ import { Predictions } from "@/components/signals/Predictions";
 import { MarketTide } from "@/components/signals/MarketTide";
 import { CongressTable, DarkPoolTable } from "@/components/signals/PartnerTables";
 import { MorningNote } from "@/components/signals/MorningNote";
-import { GsMacroPanel } from "@/components/signals/GsMacroPanel";
+import { GsAlertsPanel, GsMacroPanel } from "@/components/signals/GsMacroPanel";
+import { WorldMarketsLive } from "@/components/signals/WorldMarketsLive";
 import { ButtonLink } from "@/components/ui/Button";
 
 export const metadata: Metadata = {
   title: "Signals: live market dashboard",
   description:
-    "Amador Signals: cross-asset quotes, macro dashboard, unusual options activity, SEC insider filings and prediction-market odds in one terminal.",
+    "Amador Signals: Goldman Sachs macro indicators and forecasts, signal alerts, live world markets, unusual options activity, SEC insider filings and prediction-market odds in one terminal.",
   alternates: { canonical: "/signals" },
 };
 
@@ -29,6 +30,20 @@ function Skeleton({ className = "h-64" }: { className?: string }) {
 
 async function Tape() {
   return <TickerTape feed={await getQuotes()} />;
+}
+
+async function WorldPanel() {
+  const board = await getLiveBoard();
+  return (
+    <Panel
+      title="World markets"
+      subtitle="Local index levels and US-listed country ETFs, refreshed every 15 seconds"
+      source={{ provider: "Alpaca Markets (real-time IEX) and Yahoo Finance (index levels, delayed)", live: board.live, url: "https://alpaca.markets", asOf: board.asOf, note: "Set APCA_API_KEY_ID / APCA_API_SECRET_KEY for live prices." }}
+      className="lg:col-span-3"
+    >
+      <WorldMarketsLive initial={board} />
+    </Panel>
+  );
 }
 
 async function MacroPanel() {
@@ -104,8 +119,9 @@ export default function SignalsPage() {
             <p className="eyebrow text-brass-light">Amador Signals</p>
             <h1 className="display mt-5 text-5xl md:text-6xl">The market, on one screen.</h1>
             <p className="mt-5 text-base leading-relaxed text-paper/65">
-              Cross-asset prices, the macro backdrop, unusual options activity, insider filings and prediction-market odds,
-              refreshed through the day. Built for context, not for calls: every panel shows its source and its delay.
+              Goldman Sachs macro indicators and forecasts, rule-based alerts, live world markets, unusual options activity,
+              insider filings and prediction-market odds. Built for context, not for calls: every panel shows its source and its
+              delay.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
@@ -124,17 +140,27 @@ export default function SignalsPage() {
       </Suspense>
 
       <div className="container-x space-y-5 py-8">
+        {/* Goldman Sachs first: alerts, macro lens, then the analyst commentary built on them. */}
+        <div className="grid gap-5 lg:grid-cols-3">
+          <Suspense fallback={null}>
+            <GsAlertsPanel />
+          </Suspense>
+          <Suspense fallback={null}>
+            <GsMacroPanel />
+          </Suspense>
+        </div>
+
         <Suspense fallback={null}>
           <MorningNote />
         </Suspense>
 
         <div className="grid gap-5 lg:grid-cols-3">
-          <Suspense fallback={<Skeleton className="h-80 lg:col-span-3" />}>
-            <MacroPanel />
+          <Suspense fallback={<Skeleton className="h-96 lg:col-span-3" />}>
+            <WorldPanel />
           </Suspense>
 
-          <Suspense fallback={null}>
-            <GsMacroPanel />
+          <Suspense fallback={<Skeleton className="h-80 lg:col-span-3" />}>
+            <MacroPanel />
           </Suspense>
 
           <Suspense fallback={<Skeleton className="h-96 lg:col-span-3" />}>

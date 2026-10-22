@@ -2,8 +2,8 @@ import "server-only";
 import { getJson } from "../http";
 import type { Quote } from "../types";
 
-// Read-only market data from Alpaca's free plan: 15-minute delayed SIP stock
-// snapshots (IEX as fallback) and crypto snapshots. Never touches trading APIs.
+// Read-only market data from Alpaca's free plan: real-time IEX stock snapshots
+// (delayed SIP as fallback) and crypto snapshots. Never touches trading APIs.
 const STOCKS: Array<Omit<Quote, "price" | "changePct">> = [
   { symbol: "SPY", label: "S&P 500", group: "Equities" },
   { symbol: "QQQ", label: "Nasdaq 100", group: "Equities" },
@@ -49,8 +49,8 @@ export async function fetchAlpacaQuotes(): Promise<Quote[] | null> {
   const stockUrl = (feed: string) =>
     `https://data.alpaca.markets/v2/stocks/snapshots?symbols=${STOCKS.map((s) => s.symbol).join(",")}&feed=${feed}`;
   const [stocks, crypto] = await Promise.all([
-    // 15-minute delayed consolidated (SIP) prices; fall back to the IEX feed.
-    getJson<Record<string, Snapshot>>(stockUrl("delayed_sip"), { headers }).then((r) => r ?? getJson<Record<string, Snapshot>>(stockUrl("iex"), { headers })),
+    // Real-time IEX prices (free plan); fall back to 15-minute delayed consolidated (SIP).
+    getJson<Record<string, Snapshot>>(stockUrl("iex"), { headers }).then((r) => r ?? getJson<Record<string, Snapshot>>(stockUrl("delayed_sip"), { headers })),
     getJson<{ snapshots: Record<string, Snapshot> }>(
       `https://data.alpaca.markets/v1beta3/crypto/us/snapshots?symbols=${encodeURIComponent(CRYPTO.map((s) => s.symbol).join(","))}`,
       { headers },
