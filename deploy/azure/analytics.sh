@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 # amadoram.com visitor statistics on Azure Application Insights, as code (adapted from Juricio's deploy/azure/analitica.sh).
 # Idempotent: it detects what already exists and skips it, never deletes anything, and can be run any number of times.
+# The reports are Application Insights' own views (Usage: Users, Sessions, Events, Funnels, Retention; Performance; Logs).
 #
-#   bash deploy/azure/analytics.sh               # resource group, workspace, Application Insights, retention, both workbooks
-#   bash deploy/azure/analytics.sh workbooks     # create or update the English and Spanish visitor workbooks only
+#   bash deploy/azure/analytics.sh               # resource group, workspace, Application Insights and table retention
 #   bash deploy/azure/analytics.sh vm-env        # put the browser connection string in the VM's env file (value not printed)
 #   bash deploy/azure/analytics.sh status        # show what exists and the retention (changes nothing)
 #   bash deploy/azure/analytics.sh all --dry-run # print what it would do
 #
 # Needs the Azure CLI signed in to the right subscription (az login; az account show). On Windows it runs in Git Bash.
-# The telemetry uses Juricio's field names (tipo_trafico, motivo, ...), so these workbooks and Juricio's read both sites.
+# The telemetry uses Juricio's field names (tipo_trafico, motivo, ambiente, ...), so the same filters and queries work on both sites.
 set -Eeuo pipefail
 export MSYS_NO_PATHCONV=1   # Git Bash: keep /subscriptions/... from being turned into a disk path
 
@@ -22,20 +22,13 @@ DAILY_CAP_GB=0.5
 VM=${AMADOR_VM:-luigi@68.155.151.1}
 APP_TABLES=(AppAvailabilityResults AppBrowserTimings AppDependencies AppEvents AppExceptions AppMetrics AppPageViews
   AppPerformanceCounters AppRequests AppSystemEvents AppTraces)
-# Fixed workbook resource names: running again updates them instead of creating duplicates.
-WORKBOOKS=(
-  "f5fa55e5-a548-4467-86d7-c85e91941130|Amador visitors|workbook-visitors.en.json"
-  "043c4ff3-0818-462d-9e6c-2004bb8cb6ad|Visitantes de Amador|workbook-visitors.es.json"
-)
-HERE=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
 die() { printf 'ERROR: %s\n' "$*" >&2; exit 1; }
-DRY=0 ; CMD="" ; TMP=""
-trap '[ -z "$TMP" ] || rm -rf "$TMP"' EXIT
+DRY=0 ; CMD=""
 for arg in "$@"; do
   case "$arg" in
     --dry-run) DRY=1 ;;
-    -h|--help) sed -n '2,13p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,12p' "$0"; exit 0 ;;
     -*) die "unknown option: $arg" ;;
     *) [ -z "$CMD" ] || die "one command per call"; CMD=$arg ;;
   esac
@@ -44,8 +37,6 @@ CMD=${CMD:-all}
 
 run() { if [ "$DRY" = 1 ]; then printf '   [dry run] %s\n' "$*"; else "$@"; fi; }
 exists() { "$@" -o none >/dev/null 2>&1; }
-winpath() { if command -v cygpath >/dev/null 2>&1; then cygpath -m "$1"; else printf '%s' "$1"; fi; }
-component_id() { az monitor app-insights component show --app "$COMPONENT" -g "$RG" --query id -o tsv; }
 
 ensure_extension() {
   exists az extension show -n application-insights || run az extension add -n application-insights --only-show-errors
@@ -95,61 +86,6 @@ ensure_retention() {
   return $failed
 }
 
-# ARM template per workbook: the workbook JSON goes in as a variable, with fallbackResourceIds pointing at amador-web.
-template() {
-  cat <<'HEAD'
-{
-  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-  "parameters": {
-    "workbookId": { "type": "string" },
-    "workbookDisplayName": { "type": "string" },
-    "workbookSourceId": { "type": "string" }
-  },
-  "variables": {
-    "workbook":
-HEAD
-  cat "$1"
-  cat <<'TAIL'
-    ,
-    "workbookData": "[union(variables('workbook'), createObject('fallbackResourceIds', createArray(parameters('workbookSourceId'))))]"
-  },
-  "resources": [
-    {
-      "name": "[parameters('workbookId')]",
-      "type": "microsoft.insights/workbooks",
-      "location": "[resourceGroup().location]",
-      "apiVersion": "2022-04-01",
-      "kind": "shared",
-      "properties": {
-        "displayName": "[parameters('workbookDisplayName')]",
-        "serializedData": "[string(variables('workbookData'))]",
-        "version": "1.0",
-        "sourceId": "[parameters('workbookSourceId')]",
-        "category": "workbook"
-      }
-    }
-  ]
-}
-TAIL
-}
-
-ensure_workbooks() {
-  ensure_extension
-  local source="<id of $COMPONENT>" entry id name file
-  [ "$DRY" = 1 ] || source=$(component_id) || die "no $COMPONENT yet: run the default command first"
-  TMP=$(mktemp -d)
-  for entry in "${WORKBOOKS[@]}"; do
-    IFS='|' read -r id name file <<< "$entry"
-    [ -f "$HERE/$file" ] || die "missing $file"
-    template "$HERE/$file" > "$TMP/$id.json"
-    printf '== workbook "%s": create or update\n' "$name"
-    run az deployment group create -g "$RG" -n "workbook-${id:0:8}" --template-file "$(winpath "$TMP/$id.json")" \
-      --parameters "workbookId=$id" "workbookDisplayName=$name" "workbookSourceId=$source" -o none
-  done
-  printf '   Portal: Application Insights > %s > Workbooks\n' "$COMPONENT"
-}
-
 # The browser only needs the instrumentation key and the ingestion endpoint (no Live Metrics endpoint).
 vm_env() {
   ensure_extension
@@ -171,14 +107,12 @@ status() {
   az monitor log-analytics workspace show -g "$RG" -n "$WORKSPACE" \
     --query "{workspace:name, retentionDays:retentionInDays, dailyCapGb:workspaceCapping.dailyQuotaGb}" -o tsv 2>/dev/null || true
   az monitor app-insights component show --app "$COMPONENT" -g "$RG" --query "{component:name, kind:kind}" -o tsv 2>/dev/null || true
-  az resource list -g "$RG" --resource-type microsoft.insights/workbooks --query "[].name" -o tsv 2>/dev/null || true
 }
 
 case "$CMD" in
-  all) ensure_group; ensure_workspace; ensure_appinsights; ensure_retention || true; ensure_workbooks ;;
-  workbooks) ensure_workbooks ;;
+  all) ensure_group; ensure_workspace; ensure_appinsights; ensure_retention ;;
   retention) ensure_retention ;;
   vm-env) vm_env ;;
   status) status ;;
-  *) die "unknown command: $CMD (all, workbooks, retention, vm-env, status)" ;;
+  *) die "unknown command: $CMD (all, retention, vm-env, status)" ;;
 esac

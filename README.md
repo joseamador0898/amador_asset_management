@@ -150,10 +150,10 @@ Visitor statistics run on Azure Application Insights, set up the same way as Jur
 | Piece | Where |
 |---|---|
 | Azure | Resource group `AMADOR-MX` (Mexico Central): Log Analytics workspace `amador-logs` (30-day retention, 0.5 GB/day cap) behind Application Insights `amador-web` |
-| Reports | Azure portal → Application Insights `amador-web` → Workbooks → **Amador visitors** (English) or **Visitantes de Amador** (Spanish): visitors, sessions, pages, countries, referrers and AI assistants, devices, bots |
+| Reports | Azure portal, signed in with the Microsoft account that owns the subscription → Application Insights `amador-web`: Usage (Users, Sessions, Events, Funnels, User Flows, Retention), Performance and Logs |
 | Site | `src/components/analytics/Analytics.tsx` and `src/lib/analytics.ts`; Microsoft's SDK is vendored in `public/vendor/` |
 
-Privacy by design: no cookies, Do Not Track and Global Privacy Control respected, pages recorded as route templates, referrers as host names only, and bot or automated visits labeled (the workbooks show people only by default). The telemetry keeps Juricio's field names, so either site's workbooks can read the other's resource.
+Privacy by design: no cookies, Do Not Track and Global Privacy Control respected, pages recorded as route templates, referrers as host names only. Bot and automated visits are labeled, not dropped: to see people only in Users or Sessions, add the filter `tipo_trafico = persona` (and `ambiente = produccion` to leave out local tests). The telemetry keeps Juricio's field names, so the same filters and queries work on both sites.
 
 To keep your own visits out, open amadoram.com/?noanalytics=1 once in each browser you use (`?noanalytics=0` turns statistics back on). The browser connection string reaches the build through `NEXT_PUBLIC_APPINSIGHTS_CONNECTION_STRING`: `bash deploy/azure/analytics.sh vm-env` writes it to the VM, then redeploy.
 
