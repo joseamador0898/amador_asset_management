@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Inter, JetBrains_Mono, Newsreader } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { Analytics } from "@/components/analytics/Analytics";
 import { site } from "@/lib/site";
 import "./globals.css";
 
@@ -70,6 +71,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <Footer />
+        <Analytics />
         {adsenseClient && (
           <Script
             async

@@ -143,6 +143,20 @@ After editing `/etc/caddy/amador.caddy`, validate as the `caddy` user, never as 
 
 GitHub Actions (`.github/workflows/ci.yml`) runs lint, typecheck, content checks and a production build on every push and pull request.
 
+## Analytics
+
+Visitor statistics run on Azure Application Insights, set up the same way as Juricio's by `deploy/azure/analytics.sh` (idempotent; `status` shows what exists).
+
+| Piece | Where |
+|---|---|
+| Azure | Resource group `AMADOR-MX` (Mexico Central): Log Analytics workspace `amador-logs` (30-day retention, 0.5 GB/day cap) behind Application Insights `amador-web` |
+| Reports | Azure portal → Application Insights `amador-web` → Workbooks → **Amador visitors** (English) or **Visitantes de Amador** (Spanish): visitors, sessions, pages, countries, referrers and AI assistants, devices, bots |
+| Site | `src/components/analytics/Analytics.tsx` and `src/lib/analytics.ts`; Microsoft's SDK is vendored in `public/vendor/` |
+
+Privacy by design: no cookies, Do Not Track and Global Privacy Control respected, pages recorded as route templates, referrers as host names only, and bot or automated visits labeled (the workbooks show people only by default). The telemetry keeps Juricio's field names, so either site's workbooks can read the other's resource.
+
+To keep your own visits out, open amadoram.com/?noanalytics=1 once in each browser you use (`?noanalytics=0` turns statistics back on). The browser connection string reaches the build through `NEXT_PUBLIC_APPINSIGHTS_CONNECTION_STRING`: `bash deploy/azure/analytics.sh vm-env` writes it to the VM, then redeploy.
+
 ## Pre-launch checklist
 
 - [ ] **Securities counsel review** of `/fund`, `/legal/*` and all fund-related copy. Public promotion of a private fund depends on the offering exemption (e.g. Rule 506(b) prohibits general solicitation; 506(c) allows it with verified accredited investors).

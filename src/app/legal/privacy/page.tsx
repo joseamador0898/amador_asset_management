@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Privacy Notice", alternates: { canon
 
 export default function PrivacyPage() {
   return (
-    <LegalPage title="Privacy Notice" updated="October 19, 2026" current="/legal/privacy">
+    <LegalPage title="Privacy Notice" updated="October 22, 2026" current="/legal/privacy">
       <p>
         This notice explains how {site.name} (&ldquo;Amador&rdquo;, &ldquo;we&rdquo;) collects and uses personal information
         through this website.
@@ -26,9 +26,32 @@ export default function PrivacyPage() {
         </li>
         <li>
           <strong>Browser storage:</strong> if you acknowledge the investor notice on the fund page, that choice is stored in
-          your browser&apos;s local storage. We do not use advertising cookies or cross-site tracking.
+          your browser&apos;s local storage, as is the anonymous identifier described under Analytics. We do not use cookies
+          for analytics, advertising cookies or cross-site tracking.
         </li>
       </ul>
+
+      <h2>Analytics</h2>
+      <p>
+        We measure visits with Microsoft Azure Application Insights to learn which pages are read and how fast they load. It
+        is set up to collect as little as possible:
+      </p>
+      <ul>
+        <li>No cookies. A random identifier kept in your browser&apos;s local storage, renewed at least every 395 days, lets us
+          count returning visitors without knowing who they are.</li>
+        <li>Pages are recorded as templates (for example, /insights/:slug), never as full addresses, search terms or anything
+          you type. Of the site that sent you, only its domain is kept.</li>
+        <li>Browser, operating system, device type and an approximate location (country, region and city) that Microsoft
+          derives from your IP address, which is not kept in full.</li>
+        <li>Analytics data is deleted after 30 days.</li>
+      </ul>
+      <p>
+        If your browser sends Do Not Track or Global Privacy Control, nothing is recorded. You can also turn analytics off in
+        your browser at any time by visiting{" "}
+        {/* A full page load on purpose: the analytics script reads the opt-out from the address when a page loads. */}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+        <a href="/?noanalytics=1">amadoram.com/?noanalytics=1</a>.
+      </p>
 
       <h2>How we use it</h2>
       <ul>
@@ -40,9 +63,9 @@ export default function PrivacyPage() {
 
       <h2>Service providers</h2>
       <p>
-        We use service providers to host the site, send email, manage subscriber lists, schedule meetings and route form
-        submissions to our team (for example, a hosting platform, an email-delivery service, a scheduling tool and workflow
-        automation). They process information on our behalf under their own security and privacy commitments.
+        We use service providers to host the site, measure visits, send email, manage subscriber lists, schedule meetings and
+        route form submissions to our team (for example, Microsoft Azure for hosting and analytics, an email-delivery service,
+        a scheduling tool and workflow automation). They process information on our behalf under their own security and privacy commitments.
       </p>
       <p>
         Embedded videos load from YouTube&apos;s privacy-enhanced domain only after you press play, at which point YouTube&apos;s
