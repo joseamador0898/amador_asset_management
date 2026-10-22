@@ -118,13 +118,30 @@ The logo (designed on a Claude Design canvas) is an **A drawn as a sail on a bra
 | `png/google-ads-logo-square-1200.png`, `png/google-ads-icon-square-1200*.png` | Google Ads square logo (1:1) |
 | `png/google-ads-logo-landscape-1200x300.png` | Google Ads landscape logo (4:1) |
 | `png/social-avatar-1080.png` | YouTube, X, LinkedIn, Instagram avatar |
+| `png/linkedin-banner-1584x396.png`, `png/linkedin-company-cover-1128x191.png` | LinkedIn profile background and company page cover |
+| `png/x-header-1500x500.png`, `png/youtube-banner-2560x1440.png` | X header and YouTube channel art (logo inside each safe area) |
+| `png/email-signature-logo-600x150.png` | Email signature logo; insert at 300 × 75 |
+| `png/business-card-front-1125x675.png`, `png/business-card-back-1125x675.png` | Business cards, 300 dpi with ⅛ in bleed |
 | `nautilus-fund-lockup*.svg`, `png/nautilus-fund-lockup-1600.png` | Nautilus Fund sub-brand |
 
 Palette: Ink `#0A0E16` · Ivory `#F7F5F0` · Brass `#A8834A` · Light brass `#C9A96E` · Deep sea `#0F3B47` (fund) · Oxblood `#7D2433` (research).
 
 ## Deploying
 
-The simplest host is **Vercel**: import the GitHub repository, add the environment variables above, and deploy. Each push to `main` redeploys. GitHub Actions (`.github/workflows/ci.yml`) runs lint, typecheck, content checks and a production build on every push and pull request.
+**amadoram.com** runs on the Azure VM it shares with juricio (`68.155.151.1`), isolated from it:
+
+| Piece | Where |
+|---|---|
+| App | `amador-web.service` (`deploy/amador-web.service`): `next start` on `127.0.0.1:8781` as the `amador` user, capped at 1.2 GB RAM and 1.2 CPUs |
+| Code | `/opt/amador/releases/<date>-<sha>`, with `/opt/amador/current` pointing at the live one; Node 24 in `/opt/node` |
+| Secrets | `/etc/amador/amador.env` (root:amador, 0640): read-only market-data keys and `NEXT_PUBLIC_SITE_URL` |
+| Web server | juricio's Caddy imports `/etc/caddy/amador.caddy` (`deploy/amador.caddy`): HTTPS, `www` → apex, logs in `/var/log/caddy/amador.log` |
+
+To ship the latest `main`, run `deploy/deploy.sh` from a machine with SSH access. It builds a new release while the current one keeps serving, switches the symlink, restarts the service and keeps the three newest releases. Logs: `journalctl -u amador-web`. Until email delivery is configured, form submissions are written there.
+
+After editing `/etc/caddy/amador.caddy`, validate as the `caddy` user, never as root: a root-run validate creates the log file root-owned and the reload then fails. Use `sudo -u caddy bash -c 'set -a; . /etc/caddy/juricio.env; caddy validate --config /etc/caddy/Caddyfile'`, then `sudo systemctl reload caddy`. A failed reload keeps the old config running.
+
+GitHub Actions (`.github/workflows/ci.yml`) runs lint, typecheck, content checks and a production build on every push and pull request.
 
 ## Pre-launch checklist
 

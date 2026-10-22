@@ -1,0 +1,44 @@
+# /etc/systemd/system/amador-web.service
+# amadoram.com: Next.js on 127.0.0.1:8781, behind Caddy (deploy/amador.caddy).
+# Shares the VM with juricio, so it runs as its own user with capped memory and CPU.
+[Unit]
+Description=Amador Asset Management website (Next.js, 127.0.0.1:8781)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=amador
+Group=amador
+WorkingDirectory=/opt/amador/current
+EnvironmentFile=/etc/amador/amador.env
+Environment=NEXT_TELEMETRY_DISABLED=1
+ExecStart=/opt/node/bin/node /opt/amador/current/node_modules/next/dist/bin/next start -H 127.0.0.1 -p 8781
+Restart=always
+RestartSec=5
+Nice=5
+MemoryHigh=900M
+MemoryMax=1200M
+CPUQuota=120%
+TasksMax=256
+UMask=0027
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/amador
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+ProtectClock=true
+ProtectHostname=true
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+LockPersonality=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target
