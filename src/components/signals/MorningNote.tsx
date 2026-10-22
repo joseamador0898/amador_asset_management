@@ -28,7 +28,7 @@ export async function MorningNote({ tone = "dark" }: { tone?: "dark" | "light" }
           </li>
         ))}
       </ul>
-      <p className={`mt-4 text-[0.66rem] leading-relaxed ${dark ? "text-paper/35" : "text-muted"}`}>
+      <p className={`mt-4 text-[0.66rem] leading-relaxed ${dark ? "text-paper/60" : "text-muted"}`}>
         Written by an AI model ({brief.model}) from the data on this page, not by a human analyst · {formatAsOf(brief.asOf)}.
         May contain errors. Not investment advice.
       </p>

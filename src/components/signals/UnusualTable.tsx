@@ -31,7 +31,7 @@ export function UnusualTable({ contracts }: { contracts: OptionsContract[] }) {
             </button>
           ))}
         </div>
-        <label className="flex items-center gap-2 font-mono text-[0.62rem] uppercase tracking-wider text-paper/45">
+        <label className="flex items-center gap-2 font-mono text-[0.62rem] uppercase tracking-wider text-paper/60">
           Sort
           <select
             value={sort}
@@ -46,7 +46,7 @@ export function UnusualTable({ contracts }: { contracts: OptionsContract[] }) {
       </div>
       <div className="term-scroll mt-3 overflow-x-auto">
         <table className="w-full min-w-[720px] text-left font-mono text-[0.72rem] tabular">
-          <thead className="text-[0.6rem] uppercase tracking-wider text-paper/40">
+          <thead className="text-[0.6rem] uppercase tracking-wider text-paper/60">
             <tr className="border-b border-term-line">
               <th className="px-5 py-2 font-normal">Ticker</th>
               <th className="px-2 py-2 font-normal">Contract</th>
@@ -61,7 +61,7 @@ export function UnusualTable({ contracts }: { contracts: OptionsContract[] }) {
           <tbody>
             {rows.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-5 py-6 text-center text-paper/45">
+                <td colSpan={8} className="px-5 py-6 text-center text-paper/60">
                   No contracts cleared the unusual-activity screen this session.
                 </td>
               </tr>
@@ -88,7 +88,7 @@ export function UnusualTable({ contracts }: { contracts: OptionsContract[] }) {
           </tbody>
         </table>
       </div>
-      <p className="px-5 py-3 text-[0.68rem] leading-relaxed text-paper/40">
+      <p className="px-5 py-3 text-[0.68rem] leading-relaxed text-paper/60">
         Screen: ≥1,000 contracts, volume ≥2× open interest, est. premium ≥$500K. Delayed data; not a recommendation.
       </p>
     </div>

@@ -16,7 +16,7 @@ export default function NotFound() {
             Read insights
           </ButtonLink>
         </div>
-        <p className="mt-10 text-sm text-paper/40">
+        <p className="mt-10 text-sm text-paper/60">
           Looking for live data? Try <Link href="/signals" className="underline underline-offset-2">Signals</Link>.
         </p>
       </div>

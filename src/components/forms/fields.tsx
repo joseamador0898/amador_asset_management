@@ -55,7 +55,7 @@ export function Field({
         {props.required && <span aria-hidden> *</span>}
       </label>
       <input id={id} name={name} aria-invalid={!!error || undefined} aria-describedby={error ? `${id}-err` : undefined} className={inputCls(tone, !!error)} {...props} />
-      {hint && !error && <p className={cn("mt-1.5 text-xs", tone === "dark" ? "text-paper/40" : "text-muted")}>{hint}</p>}
+      {hint && !error && <p className={cn("mt-1.5 text-xs", tone === "dark" ? "text-paper/60" : "text-muted")}>{hint}</p>}
       {error && (
         <p id={`${id}-err`} className="mt-1.5 text-xs text-down">
           {error}

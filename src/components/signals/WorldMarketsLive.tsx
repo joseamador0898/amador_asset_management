@@ -10,7 +10,7 @@ const COMPACT = ["US", "MX", "CA", "BR", "GB", "DE", "JP", "CN"];
 const time = (iso: string) =>
   new Date(iso).toLocaleTimeString("en-US", { timeZone: "America/New_York", hour: "numeric", minute: "2-digit", second: "2-digit" });
 const num = (v: number, max = 2) => v.toLocaleString("en-US", { minimumFractionDigits: max, maximumFractionDigits: max });
-const tone = (v: number | null) => (v === null ? "text-paper/40" : v > 0 ? "text-up" : v < 0 ? "text-down" : "text-paper/60");
+const tone = (v: number | null) => (v === null ? "text-paper/60" : v > 0 ? "text-up" : v < 0 ? "text-down" : "text-paper/60");
 const pct = (v: number | null) => (v === null ? "–" : `${v > 0 ? "+" : ""}${v.toFixed(2)}%`);
 
 /**
@@ -43,7 +43,7 @@ export function WorldMarketsLive({ initial, compact = false }: { initial: LiveBo
 
   return (
     <div>
-      <div className="flex flex-wrap items-center justify-between gap-2 px-5 pt-4 font-mono text-[0.62rem] uppercase tracking-wider text-paper/45">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-5 pt-4 font-mono text-[0.62rem] uppercase tracking-wider text-paper/60">
         <span className="flex items-center gap-2">
           <span className={cn("h-1.5 w-1.5 rounded-full", board.live ? "animate-pulse-dot bg-up" : "bg-amber")} aria-hidden />
           {board.live ? "Live" : "Waiting for data"} · updated {time(board.asOf)} ET
@@ -56,7 +56,7 @@ export function WorldMarketsLive({ initial, compact = false }: { initial: LiveBo
         if (!list.length) return null;
         return (
           <div key={region} className="px-5 pb-2 pt-3">
-            {!compact && <p className="mb-2 text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-paper/45">{region}</p>}
+            {!compact && <p className="mb-2 text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-paper/60">{region}</p>}
             <ul className={cn("grid gap-px bg-term-line", compact ? "grid-cols-2 md:grid-cols-4" : "sm:grid-cols-2 xl:grid-cols-3")}>
               {list.map((w) => (
                 <li key={w.code} className="flex items-center justify-between gap-3 bg-term-2 px-3 py-3">
@@ -66,7 +66,7 @@ export function WorldMarketsLive({ initial, compact = false }: { initial: LiveBo
                     </span>
                     <div className="min-w-0">
                       <p className="truncate text-sm text-paper">{w.country}</p>
-                      <p className="truncate font-mono text-[0.6rem] text-paper/40">
+                      <p className="truncate font-mono text-[0.6rem] text-paper/60">
                         {w.indexName}
                         {w.indexLevel !== null && <span className="text-paper/60"> {num(w.indexLevel)}</span>}
                       </p>
@@ -74,7 +74,7 @@ export function WorldMarketsLive({ initial, compact = false }: { initial: LiveBo
                   </div>
                   <div className="shrink-0 text-right font-mono tabular">
                     <p className={cn("text-sm", tone(w.indexChangePct ?? w.etfChangePct))}>{pct(w.indexChangePct ?? w.etfChangePct)}</p>
-                    <p className="text-[0.6rem] text-paper/45">
+                    <p className="text-[0.6rem] text-paper/60">
                       {w.etf} {w.etfPrice !== null ? `$${num(w.etfPrice)}` : "–"}{" "}
                       <span className={tone(w.etfChangePct)}>{pct(w.etfChangePct)}</span>
                     </p>
@@ -88,7 +88,7 @@ export function WorldMarketsLive({ initial, compact = false }: { initial: LiveBo
 
       {!compact && board.quotes.length > 0 && (
         <div className="px-5 pb-4 pt-3">
-          <p className="mb-2 text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-paper/45">US indices, sectors and assets · real-time</p>
+          <p className="mb-2 text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-paper/60">US indices, sectors and assets · real-time</p>
           <ul className="grid grid-cols-2 gap-px bg-term-line sm:grid-cols-4 lg:grid-cols-7">
             {board.quotes.map((q) => (
               <li key={q.symbol} className="bg-term-2 px-3 py-2.5">

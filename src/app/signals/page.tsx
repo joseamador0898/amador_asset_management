@@ -205,7 +205,7 @@ export default function SignalsPage() {
           </ButtonLink>
         </section>
 
-        <section className="grid gap-6 border-t border-term-line pt-8 text-xs leading-relaxed text-paper/45 md:grid-cols-3">
+        <section className="grid gap-6 border-t border-term-line pt-8 text-xs leading-relaxed text-paper/60 md:grid-cols-3">
           <p>
             <span className="font-semibold text-paper/70">Sources.</span> Quotes: Alpaca Markets (IEX). Macro: FRED®, Federal
             Reserve Bank of St. Louis. Options: Cboe delayed quotes (~15 min). Insider filings: SEC EDGAR. Prediction markets:

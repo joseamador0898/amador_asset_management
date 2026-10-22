@@ -80,7 +80,7 @@ export function Panel({
         )}
       </div>
       {source && (
-        <footer className="border-t border-term-line px-5 py-2.5 font-mono text-[0.62rem] uppercase tracking-wider text-paper/35">
+        <footer className="border-t border-term-line px-5 py-2.5 font-mono text-[0.62rem] uppercase tracking-wider text-paper/60">
           {source.live ? (
             <>
               Source:{" "}

@@ -23,7 +23,7 @@ export function MacroGrid({
       {items.map((s) => {
         const flat = Math.abs(s.change) < Math.pow(10, -s.decimals) / 2;
         const up = s.change > 0;
-        const color = flat ? (dark ? "text-paper/40" : "text-muted") : up ? "text-up" : "text-down";
+        const color = flat ? (dark ? "text-paper/60" : "text-muted") : up ? "text-up" : "text-down";
         return (
           <li key={s.id} className={cn("flex flex-col gap-2 p-4 sm:p-5", dark ? "bg-term-2" : "bg-paper")} title={s.description}>
             <div className="flex items-baseline justify-between gap-2">

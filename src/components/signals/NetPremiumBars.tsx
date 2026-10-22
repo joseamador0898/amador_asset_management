@@ -6,7 +6,7 @@ export function NetPremiumBars({ tickers }: { tickers: TickerFlow[] }) {
   const max = Math.max(1, ...tickers.flatMap((t) => [t.callPremium, t.putPremium]));
   return (
     <div className="px-5 py-4">
-      <div className="mb-3 flex justify-between font-mono text-[0.6rem] uppercase tracking-wider text-paper/40">
+      <div className="mb-3 flex justify-between font-mono text-[0.6rem] uppercase tracking-wider text-paper/60">
         <span>← Put premium</span>
         <span>Call premium →</span>
       </div>
@@ -26,7 +26,7 @@ export function NetPremiumBars({ tickers }: { tickers: TickerFlow[] }) {
           </li>
         ))}
       </ul>
-      <p className="mt-4 text-[0.68rem] leading-relaxed text-paper/40">
+      <p className="mt-4 text-[0.68rem] leading-relaxed text-paper/60">
         Net = estimated call premium minus put premium traded today (volume × last price × 100). Premium is not direction: many
         large trades are hedges or spreads.
       </p>

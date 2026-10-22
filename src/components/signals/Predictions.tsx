@@ -25,7 +25,7 @@ export function Predictions({ markets, tone = "dark", limit }: { markets: Predic
               </li>
             ))}
           </ul>
-          <p className={cn("mt-2 font-mono text-[0.6rem] uppercase tracking-wider", dark ? "text-paper/35" : "text-muted")}>
+          <p className={cn("mt-2 font-mono text-[0.6rem] uppercase tracking-wider", dark ? "text-paper/60" : "text-muted")}>
             24h volume {fmt.usdCompact(m.volume24h)}
           </p>
         </li>

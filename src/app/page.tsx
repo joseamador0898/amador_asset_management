@@ -150,7 +150,7 @@ export default function HomePage() {
           <div className="lg:col-span-6">
             <figure className="relative">
               <Dendrogram className="w-full text-paper/80" />
-              <figcaption className="mt-4 flex items-center justify-between border-t border-line-dark pt-4 font-mono text-[0.62rem] uppercase tracking-wider text-paper/40">
+              <figcaption className="mt-4 flex items-center justify-between border-t border-line-dark pt-4 font-mono text-[0.62rem] uppercase tracking-wider text-paper/60">
                 <span>How sixteen markets cluster by correlation</span>
                 <span>Illustrative</span>
               </figcaption>
@@ -257,7 +257,7 @@ export default function HomePage() {
                   Register interest
                 </ButtonLink>
               </div>
-              <p className="mt-8 max-w-lg text-[0.7rem] leading-relaxed text-paper/45">
+              <p className="mt-8 max-w-lg text-[0.7rem] leading-relaxed text-paper/60">
                 Pre-launch. Not an offer to sell or a solicitation of an offer to buy any security. Any offering will be made
                 only to eligible investors through definitive offering documents.
               </p>
@@ -312,7 +312,7 @@ export default function HomePage() {
         <div className="container-x py-20 md:py-24">
           <div className="grid gap-10 bg-brass p-10 md:grid-cols-12 md:items-center md:p-14">
             <div className="md:col-span-8">
-              <p className="eyebrow text-ink/70">Consultations</p>
+              <p className="eyebrow text-ink">Consultations</p>
               <p className="display mt-5 text-4xl text-ink md:text-5xl">A second opinion on your portfolio, from first principles.</p>
             </div>
             <div className="md:col-span-4 md:text-right">

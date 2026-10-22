@@ -48,7 +48,7 @@ export async function GsMacroPanel() {
             <div className="bg-term-2 p-5">
               <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-paper/55">GIR commodity forecasts</p>
               <table className="mt-3 w-full font-mono text-xs tabular">
-                <thead className="text-[0.6rem] uppercase tracking-wider text-paper/40">
+                <thead className="text-[0.6rem] uppercase tracking-wider text-paper/60">
                   <tr className="border-b border-term-line">
                     <th className="py-2 text-left font-normal">Commodity</th>
                     <th className="py-2 text-right font-normal">{commodities[0].quarterLabel}</th>
@@ -59,7 +59,7 @@ export async function GsMacroPanel() {
                   {commodities.map((c) => (
                     <tr key={c.label} className="border-b border-term-line/60">
                       <td className="py-2.5 font-sans text-paper/85">
-                        {c.label} <span className="text-[0.6rem] text-paper/40">{c.unit}</span>
+                        {c.label} <span className="text-[0.6rem] text-paper/60">{c.unit}</span>
                       </td>
                       <td className="py-2.5 text-right text-paper">{money(c.quarter)}</td>
                       <td className="py-2.5 text-right text-brass-light">{money(c.twelveMonth)}</td>
@@ -67,7 +67,7 @@ export async function GsMacroPanel() {
                   ))}
                 </tbody>
               </table>
-              <p className="mt-3 text-[0.62rem] text-paper/40">
+              <p className="mt-3 text-[0.62rem] text-paper/60">
                 Spot forecasts published {formatDate(commodities[0].date, { month: "short", day: "numeric", year: "numeric" })}.
               </p>
             </div>
@@ -76,7 +76,7 @@ export async function GsMacroPanel() {
             <div className="bg-term-2 p-5">
               <p className="text-[0.66rem] font-semibold uppercase tracking-[0.14em] text-paper/55">GIR FX forecasts</p>
               <table className="mt-3 w-full font-mono text-xs tabular">
-                <thead className="text-[0.6rem] uppercase tracking-wider text-paper/40">
+                <thead className="text-[0.6rem] uppercase tracking-wider text-paper/60">
                   <tr className="border-b border-term-line">
                     <th className="py-2 text-left font-normal">Pair</th>
                     <th className="py-2 text-right font-normal">3 months</th>
@@ -93,14 +93,14 @@ export async function GsMacroPanel() {
                   ))}
                 </tbody>
               </table>
-              <p className="mt-3 text-[0.62rem] text-paper/40">
+              <p className="mt-3 text-[0.62rem] text-paper/60">
                 Published {formatDate(fx[0].date, { month: "short", day: "numeric", year: "numeric" })}.
               </p>
             </div>
           )}
         </div>
       </div>
-      <p className="border-t border-term-line px-5 py-2.5 text-[0.62rem] leading-relaxed text-paper/40">
+      <p className="border-t border-term-line px-5 py-2.5 text-[0.62rem] leading-relaxed text-paper/60">
         Goldman Sachs data shown for research context; © Goldman Sachs. Forecasts are GIR&apos;s, not Amador&apos;s, and are not
         recommendations. Higher FCI readings mean tighter financial conditions; the activity nowcast is an annualized growth pace.
       </p>

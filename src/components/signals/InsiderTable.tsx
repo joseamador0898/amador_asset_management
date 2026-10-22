@@ -25,11 +25,11 @@ export function InsiderTable({ trades }: { trades: InsiderTrade[] }) {
             </button>
           ))}
         </div>
-        <p className="font-mono text-[0.62rem] uppercase tracking-wider text-paper/45">{buys} open-market buys in latest filings</p>
+        <p className="font-mono text-[0.62rem] uppercase tracking-wider text-paper/60">{buys} open-market buys in latest filings</p>
       </div>
       <div className="term-scroll mt-3 max-h-[420px] overflow-auto">
         <table className="w-full min-w-[700px] text-left font-mono text-[0.72rem] tabular">
-          <thead className="sticky top-0 bg-term-2 text-[0.6rem] uppercase tracking-wider text-paper/40">
+          <thead className="sticky top-0 bg-term-2 text-[0.6rem] uppercase tracking-wider text-paper/60">
             <tr className="border-b border-term-line">
               <th className="px-5 py-2 font-normal">Ticker</th>
               <th className="px-2 py-2 font-normal">Insider</th>
@@ -43,7 +43,7 @@ export function InsiderTable({ trades }: { trades: InsiderTrade[] }) {
           <tbody>
             {rows.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-5 py-6 text-center text-paper/45">
+                <td colSpan={7} className="px-5 py-6 text-center text-paper/60">
                   None in the latest batch of filings.
                 </td>
               </tr>
@@ -54,11 +54,11 @@ export function InsiderTable({ trades }: { trades: InsiderTrade[] }) {
                   <a href={t.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-paper hover:underline">
                     {t.ticker}
                   </a>
-                  <p className="max-w-[10rem] truncate font-sans text-[0.62rem] text-paper/40">{t.issuer}</p>
+                  <p className="max-w-[10rem] truncate font-sans text-[0.62rem] text-paper/60">{t.issuer}</p>
                 </td>
                 <td className="px-2 py-2.5">
                   <p className="max-w-[11rem] truncate text-paper/85">{t.insider}</p>
-                  <p className="max-w-[11rem] truncate font-sans text-[0.62rem] text-paper/40">{t.role}</p>
+                  <p className="max-w-[11rem] truncate font-sans text-[0.62rem] text-paper/60">{t.role}</p>
                 </td>
                 <td className="px-2 py-2.5">
                   <span

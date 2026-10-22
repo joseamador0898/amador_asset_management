@@ -58,7 +58,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-line-dark">
-        <div className="container-x space-y-6 py-10 text-[0.72rem] leading-relaxed text-paper/45">
+        <div className="container-x space-y-6 py-10 text-[0.72rem] leading-relaxed text-paper/60">
           <p>
             {site.name} publishes research, data and educational content for informational purposes only. Nothing on this
             website is investment, legal or tax advice, or an offer to sell or a solicitation of an offer to buy any

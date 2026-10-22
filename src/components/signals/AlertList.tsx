@@ -36,7 +36,7 @@ export function AlertList({ alerts, tone = "dark", limit }: { alerts: SignalAler
                 </span>
               </div>
               <p className={cn("mt-1 text-[0.82rem] leading-relaxed", dark ? "text-paper/65" : "text-muted")}>{a.detail}</p>
-              <p className={cn("mt-1 font-mono text-[0.6rem] uppercase tracking-wider", dark ? "text-paper/35" : "text-muted/80")}>
+              <p className={cn("mt-1 font-mono text-[0.6rem] uppercase tracking-wider", dark ? "text-paper/60" : "text-muted")}>
                 {a.source} · {formatDate(a.date, { month: "short", day: "numeric", year: "numeric" })}
               </p>
             </div>

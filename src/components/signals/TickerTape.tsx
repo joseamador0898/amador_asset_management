@@ -26,7 +26,7 @@ export function TickerTape({ feed, className }: { feed: Feed<Quote[]>; className
             {quotes.map((q) => (
               <Item key={`${copy}-${q.symbol}`} q={q} />
             ))}
-            <li className="flex shrink-0 items-center px-6 font-mono text-[0.62rem] uppercase tracking-wider text-paper/35">
+            <li className="flex shrink-0 items-center px-6 font-mono text-[0.62rem] uppercase tracking-wider text-paper/60">
               {feed.source.live ? feed.source.provider : "Sample quotes"}
             </li>
           </ul>
