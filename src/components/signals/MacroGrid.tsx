@@ -32,12 +32,12 @@ export function MacroGrid({
             </div>
             <p className={cn("font-mono text-2xl tabular", dark ? "text-paper" : "text-ink")}>
               {s.value.toFixed(s.decimals)}
-              <span className={cn("ml-1 text-xs", dark ? "text-paper/45" : "text-muted")}>{s.unit === "index" ? "" : s.unit}</span>
+              <span className={cn("ml-1 text-xs", dark ? "text-paper/65" : "text-muted")}>{s.unit === "index" ? "" : s.unit}</span>
             </p>
             <Sparkline points={s.points} className={cn("h-10 w-full", color)} label={`${s.label} trend`} />
-            <p className={cn("flex justify-between font-mono text-[0.66rem]", dark ? "text-paper/45" : "text-muted")}>
+            <p className={cn("flex justify-between font-mono text-[0.66rem]", dark ? "text-paper/65" : "text-muted")}>
               <span className={color}>
-                {flat ? "±0" : `${up ? "+" : ""}${s.change.toFixed(s.decimals)}`} <span className="opacity-80">{s.changeLabel}</span>
+                {flat ? "±0" : `${up ? "+" : ""}${s.change.toFixed(s.decimals)}`} {s.changeLabel}
               </span>
               <span>{formatDate(s.date, { month: "short", day: "numeric", year: "2-digit" })}</span>
             </p>

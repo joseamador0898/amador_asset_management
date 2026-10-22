@@ -50,7 +50,7 @@ export function ArticleCard({ article, variant = "default" }: { article: Article
         </p>
         <h3 className="mt-3 font-serif text-[1.65rem] font-light leading-[1.15] group-hover:text-ink/75">{article.title}</h3>
         <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-muted">{article.dek}</p>
-        <p className="mt-auto pt-6 text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-ink/55">
+        <p className="mt-auto pt-6 text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-ink/70">
           {formatDate(article.date, { month: "short", day: "numeric", year: "numeric" })} · {article.readingMinutes} min
         </p>
       </div>
