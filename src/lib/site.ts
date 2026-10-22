@@ -10,13 +10,15 @@ export const site = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   description:
     "Amador Asset Management is an independent investment firm built on research, risk discipline and transparency: portfolio research, live market signals, investor education and the forthcoming Amador Nautilus Fund.",
-  // Public contact email is optional; when unset, pages route people to the forms.
-  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "",
+  // Public contact email (contact page and footer). NEXT_PUBLIC_CONTACT_EMAIL overrides it.
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "info@amadoram.com",
   // TODO: confirm the city shown publicly.
   location: "Chicago, Illinois",
   founder: {
     name: "Jose Luis Amador Jaime",
     role: "Founder & Chief Investment Officer",
+    // Used on the business card and email signature (npm run brand), not shown on the site.
+    email: "jose@amadoram.com",
   },
   socials: [
     // TODO: add the real handles. Empty hrefs are hidden automatically.

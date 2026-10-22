@@ -23,6 +23,7 @@ const serif = loadFont("@fontsource/newsreader", "newsreader-latin-500-normal.wo
 const serifRegular = loadFont("@fontsource/newsreader", "newsreader-latin-400-normal.woff");
 const serifItalic = loadFont("@fontsource/newsreader", "newsreader-latin-300-italic.woff");
 const sans = loadFont("@fontsource/inter", "inter-latin-600-normal.woff");
+const sansRegular = loadFont("@fontsource/inter", "inter-latin-400-normal.woff");
 
 /**
  * A glyph's outline in SVG path syntax, transformed from font units (y up) to
@@ -211,19 +212,20 @@ function cardFront() {
   return svg(W, Hh, `<rect width="${W}" height="${Hh}" fill="${C.ink}"/><g transform="translate(${((W - lock.w * s) / 2).toFixed(2)} ${((Hh - lock.h * s) / 2).toFixed(2)}) scale(${s.toFixed(5)})">${lock.body}</g>`);
 }
 
-// Founder name and role, read from the site config so the card matches the website.
+// Founder name, role and email, read from the site config so the card matches the website.
 const siteTs = fs.readFileSync(path.join(root, "src", "lib", "site.ts"), "utf8");
-const founder = siteTs.match(/founder:\s*\{\s*name:\s*"([^"]+)",\s*role:\s*"([^"]+)"/);
-if (!founder) throw new Error("founder name/role not found in src/lib/site.ts");
+const founderMatch = siteTs.match(/founder:\s*\{\s*name:\s*"([^"]+)",\s*role:\s*"([^"]+)",[\s\S]*?email:\s*"([^"]+)"/);
+if (!founderMatch) throw new Error("founder name/role/email not found in src/lib/site.ts");
+const founder = { name: founderMatch[1], role: founderMatch[2], email: founderMatch[3] };
 
 // The back carries the monogram only: the full lockup's second line would print below 3 pt here.
 function cardBack() {
   const W = 1125, Hh = 675, x = 112.5; // 1/8" bleed + 1/4" margin
-  const name = textPath(serif, founder[1], 13 * PT, 0.01, x, 345);
-  const role = textPath(sans, founder[2].toUpperCase(), 6.5 * PT, 0.16, x + 2, 400);
-  const url = textPath(sans, "AMADORAM.COM", 7 * PT, 0.3, x + 2, 560);
-  const tagW = textPath(serifItalic, TAGLINE, 7.5 * PT, 0).width;
-  const tag = textPath(serifItalic, TAGLINE, 7.5 * PT, 0, W - x - tagW, 560);
+  const name = textPath(serif, founder.name, 13 * PT, 0.01, x, 345);
+  const role = textPath(sans, founder.role.toUpperCase(), 6.5 * PT, 0.16, x + 2, 400);
+  const email = textPath(sansRegular, founder.email, 8 * PT, 0.01, x + 1, 560);
+  const urlW = textPath(sans, "AMADORAM.COM", 7 * PT, 0.3).width;
+  const url = textPath(sans, "AMADORAM.COM", 7 * PT, 0.3, W - x - urlW, 560);
   return svg(
     W,
     Hh,
@@ -231,8 +233,34 @@ function cardBack() {
       mark(x - 6, 96, 100 / 64, C.ink, C.brass) +
       `<path d="${name.d}" fill="${C.ink}"/><path d="${role.d}" fill="${C.brass}"/>` +
       `<rect x="0" y="470" width="${W}" height="2.5" fill="${C.brass}" opacity="0.6"/>` +
-      `<path d="${url.d}" fill="${C.ink}" fill-opacity="0.78"/><path d="${tag.d}" fill="#6B665C"/>`,
+      `<path d="${email.d}" fill="${C.ink}"/><path d="${url.d}" fill="${C.ink}" fill-opacity="0.78"/>`,
   );
+}
+
+/**
+ * HTML email signature (tables and inline styles, which mail clients keep). Open
+ * https://amadoram.com/brand/email-signature.html, select it and paste it into the
+ * mail client's signature settings; the logo loads from the website.
+ */
+function emailSignatureHtml() {
+  const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;");
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Amador email signature</title>
+</head>
+<body style="margin:0;padding:32px;background:#ffffff;">
+<table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;font-family:Arial,Helvetica,sans-serif;color:#0A0E16;">
+  <tr><td style="padding:0 0 2px 0;font-size:15px;font-weight:bold;">${esc(founder.name)}</td></tr>
+  <tr><td style="padding:0 0 12px 0;font-size:13px;color:#3D4250;">${esc(founder.role)}</td></tr>
+  <tr><td style="padding:0 0 10px 0;"><a href="https://amadoram.com"><img src="https://amadoram.com/brand/png/email-signature-logo-600x150.png" width="300" height="75" alt="Amador Asset Management" style="display:block;border:0;"></a></td></tr>
+  <tr><td style="font-size:13px;line-height:20px;"><a href="mailto:${founder.email}" style="color:#0A0E16;text-decoration:none;">${founder.email}</a>&nbsp;&nbsp;·&nbsp;&nbsp;<a href="https://amadoram.com" style="color:#8A6A3A;text-decoration:none;">amadoram.com</a></td></tr>
+</table>
+</body>
+</html>
+`;
 }
 
 /** ICO container holding PNG images (supported by every current browser). */
@@ -326,6 +354,7 @@ const favicon = [16, 32, 48].map((size) => ({
   data: new Resvg(tile(size, C.ink, C.ivory, C.brassLight, size < 32 ? 0.78 : 0.7, 5, true), { fitTo: { mode: "width", value: size } }).render().asPng(),
 }));
 fs.writeFileSync(path.join(root, "src", "app", "favicon.ico"), ico(favicon));
+fs.writeFileSync(path.join(OUT_SVG, "email-signature.html"), emailSignatureHtml());
 
 for (const r of report) console.log(`${r.name.padEnd(48)} ${(r.bytes / 1024).toFixed(1)} KB`);
 console.log(`\nSVG masters: ${Object.keys(files).length} files in public/brand`);

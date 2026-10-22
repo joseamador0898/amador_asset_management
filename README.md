@@ -120,7 +120,7 @@ The logo (designed on a Claude Design canvas) is an **A drawn as a sail on a bra
 | `png/social-avatar-1080.png` | YouTube, X, LinkedIn, Instagram avatar |
 | `png/linkedin-banner-1584x396.png`, `png/linkedin-company-cover-1128x191.png` | LinkedIn profile background and company page cover |
 | `png/x-header-1500x500.png`, `png/youtube-banner-2560x1440.png` | X header and YouTube channel art (logo inside each safe area) |
-| `png/email-signature-logo-600x150.png` | Email signature logo; insert at 300 × 75 |
+| `email-signature.html`, `png/email-signature-logo-600x150.png` | Email signature (name, title, jose@amadoram.com): open amadoram.com/brand/email-signature.html, copy it and paste it into your mail client's signature settings |
 | `png/business-card-front-1125x675.png`, `png/business-card-back-1125x675.png` | Business cards, 300 dpi with ⅛ in bleed |
 | `nautilus-fund-lockup*.svg`, `png/nautilus-fund-lockup-1600.png` | Nautilus Fund sub-brand |
 
