@@ -3,7 +3,11 @@ import Link from "next/link";
 import { LegalPage } from "@/components/legal/LegalPage";
 import { site } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Terms of Use", alternates: { canonical: "/legal/terms" } };
+export const metadata: Metadata = {
+  title: "Terms of Use",
+  description: "The terms for using the Amador Asset Management website, including Amador Signals data, research content, consultations and briefings.",
+  alternates: { canonical: "/legal/terms" },
+};
 
 export default function TermsPage() {
   return (

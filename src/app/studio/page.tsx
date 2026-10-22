@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { Mic, Play } from "lucide-react";
 import { PageHero, SectionHeader } from "@/components/ui/Section";
 import { ButtonLink } from "@/components/ui/Button";
@@ -6,7 +7,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { VideoFacade } from "@/components/studio/VideoFacade";
 import { ArticleCover } from "@/components/insights/ArticleCover";
 import { SubscribeForm } from "@/components/forms/SubscribeForm";
-import { clips, featuredVideo, podcast, series } from "@/content/studio";
+import { clips, featuredVideo, podcast, series, studioLive } from "@/content/studio";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -18,6 +19,8 @@ export const metadata: Metadata = {
 const covers = ["waves", "rings", "bars", "grid", "nautilus", "dendrogram"] as const;
 
 export default function StudioPage() {
+  // Until a video or clip is published, Studio is a 404: no "Coming soon" pages for crawlers or ad reviewers.
+  if (!studioLive) notFound();
   return (
     <>
       <PageHero

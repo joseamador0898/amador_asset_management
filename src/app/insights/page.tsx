@@ -4,6 +4,7 @@ import { ArticleCard } from "@/components/insights/ArticleCard";
 import { InsightsBrowser } from "@/components/insights/InsightsBrowser";
 import { PageHero } from "@/components/ui/Section";
 import { SubscribeForm } from "@/components/forms/SubscribeForm";
+import { JsonLd, pageGraph } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "Insights: research, frameworks and memos",
@@ -20,6 +21,7 @@ export default function InsightsPage() {
 
   return (
     <>
+      <JsonLd data={pageGraph("CollectionPage", "Insights", "/insights")} />
       <PageHero
         eyebrow="Insights"
         title={

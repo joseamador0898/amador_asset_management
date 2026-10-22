@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cacheLife } from "next/cache";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
@@ -13,7 +13,7 @@ import { mdxComponents } from "@/components/mdx/MdxComponents";
 import { ArticleCover } from "@/components/insights/ArticleCover";
 import { ArticleCard, categoryColor } from "@/components/insights/ArticleCard";
 import { SubscribeForm } from "@/components/forms/SubscribeForm";
-import { site } from "@/lib/site";
+import { JsonLd, articleGraph } from "@/lib/structured-data";
 import { cn, formatDate } from "@/lib/utils";
 import "katex/dist/katex.min.css";
 
@@ -31,34 +31,42 @@ export async function generateMetadata({ params }: PageProps<"/insights/[slug]">
   return {
     title: meta.title,
     description: meta.dek,
-    alternates: { canonical: `/insights/${meta.slug}` },
-    openGraph: { type: "article", title: meta.title, description: meta.dek, publishedTime: meta.date, authors: [meta.author] },
+    keywords: meta.tags,
+    // The markdown twin (/insights/<slug>.md) is the same text for AI tools and agents.
+    alternates: { canonical: `/insights/${meta.slug}`, types: { "text/markdown": `/insights/${meta.slug}.md` } },
+    openGraph: {
+      type: "article",
+      url: `/insights/${meta.slug}`,
+      title: meta.title,
+      description: meta.dek,
+      publishedTime: meta.date,
+      modifiedTime: meta.updated ?? meta.date,
+      authors: [meta.author],
+      section: meta.category,
+      tags: meta.tags,
+    },
+    twitter: { card: "summary_large_image", title: meta.title, description: meta.dek },
   };
 }
 
-async function Article({ params }: Pick<PageProps<"/insights/[slug]">, "params">) {
-  const { slug } = await params;
-  const article = getArticle(slug);
-  if (!article) notFound();
-  const { meta, content } = article;
+/**
+ * The whole article, cached: the MDX compiles once per build. With every slug from generateStaticParams, the page awaits
+ * params at the top level (no Suspense), so the article is in the prerendered HTML in place. Behind a Suspense boundary it
+ * was appended as a hidden segment after an empty <main>: crawlers that do not run JavaScript saw no article, and swapping
+ * it in shifted the layout.
+ */
+async function ArticleBody({ slug }: { slug: string }) {
+  "use cache";
+  cacheLife("days");
+  const { meta, content } = getArticle(slug)!;
   const headings = getHeadings(content);
   const related = getRelated(meta);
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: meta.title,
-    description: meta.dek,
-    datePublished: meta.date,
-    dateModified: meta.updated ?? meta.date,
-    author: { "@type": "Person", name: meta.author },
-    publisher: { "@type": "Organization", name: site.name },
-    mainEntityOfPage: `${site.url}/insights/${meta.slug}`,
-  };
+  const wordCount = content.split(/\s+/).filter(Boolean).length;
 
   return (
     <article>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }} />
+      <JsonLd data={articleGraph(meta, wordCount)} />
       <header className="border-b border-line">
         <div className="container-x pb-12 pt-10 md:pb-16 md:pt-14">
           <Link href="/insights" className="inline-flex items-center gap-2 text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-muted hover:text-ink">
@@ -162,10 +170,8 @@ async function Article({ params }: Pick<PageProps<"/insights/[slug]">, "params">
   );
 }
 
-export default function ArticlePage(props: PageProps<"/insights/[slug]">) {
-  return (
-    <Suspense fallback={<div className="container-x min-h-[60vh] py-24" aria-busy="true" />}>
-      <Article params={props.params} />
-    </Suspense>
-  );
+export default async function ArticlePage({ params }: PageProps<"/insights/[slug]">) {
+  const { slug } = await params;
+  if (!getArticle(slug)) notFound();
+  return <ArticleBody slug={slug} />;
 }

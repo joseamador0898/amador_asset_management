@@ -8,7 +8,7 @@ export const categoryColor: Record<string, string> = {
   Frameworks: "text-sea",
   Risk: "text-brass",
   Markets: "text-ink",
-  Signals: "text-sea-light",
+  Signals: "text-[#2f6b77]",
   Education: "text-muted",
 };
 

@@ -1,0 +1,119 @@
+---
+title: "Financial Conditions Indexes, Explained"
+dek: "What financial conditions indexes measure, how the Chicago Fed, the St. Louis Fed and Goldman Sachs build theirs, and how to read a level and a change without reading too much into either."
+date: "2026-10-22"
+category: "Signals"
+author: "Jose Luis Amador Jaime"
+tags: ["financial conditions", "financial stress", "monetary policy", "credit spreads", "macro indicators", "signals"]
+featured: false
+cover: "grid"
+---
+
+A financial conditions index (FCI) condenses how easy it is to borrow, raise capital and take risk into one number, built from interest rates, credit spreads, equity prices, the dollar and market volatility. On the most widely followed U.S. indexes, higher means tighter: the Chicago Fed's National Financial Conditions Index (NFCI) is scaled so that zero is its average since 1971 and one unit is one standard deviation, so positive readings are tighter than average and negative ones looser. The level shows where conditions stand against history, the change shows which way they are moving, and neither is a forecast on its own.
+
+Two such indexes appear on our [Signals dashboard](/signals).
+
+## What does a financial conditions index measure?
+
+The Federal Reserve steers one overnight rate, but households and companies borrow at mortgage rates, bond yields and bank lending terms, and spend in response to stock prices and the exchange rate. Financial conditions are that whole set of prices and terms, the channel through which policy reaches the economy. Most FCIs combine five kinds of input:
+
+- **Interest rates.** Expected policy rates, Treasury yields and the mortgage and corporate rates priced off them. Higher rates tighten.
+- **Credit spreads.** The extra yield borrowers pay over Treasuries for default and liquidity risk. Wider spreads tighten.
+- **Equity prices.** Higher stock prices raise wealth and cheapen equity capital. Falling prices tighten.
+- **The dollar.** A stronger trade-weighted dollar weighs on U.S. exporters and on foreign borrowers who owe dollars. A stronger dollar tightens.
+- **Volatility.** Implied volatility prices insurance and gauges uncertainty; because many investors size risk to it, a jump can force them to carry less. Higher volatility tightens.
+
+## Why do policymakers and investors watch them?
+
+Because the policy rate is not the whole story. Hatzius, Hooper, Mishkin, Schoenholtz and Watson (2010) noted that several widely used FCIs showed conditions staying accommodative through the Fed's 2004–06 rate increases, then extremely restrictive in late 2008 even with the federal funds rate at zero. An FCI, they suggested, can serve as one guide to how restrictive policy really is.
+
+For investors, the stakes are in the tails. Adrian, Boyarchenko and Giannone (2019) found that when the NFCI signals tighter conditions, the distribution of future U.S. GDP growth shifts: its center falls and its lower tail lengthens, while its upper end barely moves.
+
+## How are the main indexes built?
+
+Hatzius and co-authors describe two broad designs: weighted sums, which weight each variable by its estimated impact on real GDP, and principal components, which extract the common movement in a group of variables.
+
+### The Chicago Fed's NFCI and ANFCI
+
+The NFCI is a weighted average of 105 measures spanning money markets, debt and equity markets and the traditional and "shadow" banking systems, from spreads and implied volatilities to debt issuance, leverage and surveys of bank lending standards. Brave and Butters (2011) estimate the weights with a dynamic factor model that mixes weekly, monthly and quarterly series, so each weight reflects how much an indicator explains the common swings in all of them. The index has risk, credit and leverage subindexes and is released on Wednesdays at 8:30 a.m. ET with data through the previous Friday. Its whole history is revised slightly each week as new data arrive and the weights are re-estimated.
+
+The adjusted index, the ANFCI, first removes from each indicator the variation attributable to economic activity and inflation. A positive ANFCI means conditions are tighter than current growth and inflation would typically imply.
+
+### The St. Louis Fed Financial Stress Index
+
+Stress is narrower than conditions: acute strain in markets rather than the overall cost of finance. The St. Louis Fed Financial Stress Index (STLFSI), introduced by Kliesen and Smith (2010), applies principal components to 18 weekly series: seven interest rates, six yield spreads and five other indicators. Zero represents normal conditions and positive values above-average stress. Kliesen and Smith saw stress indexes as mainly coincident, though rising stress can foreshadow economic turmoil. FRED now publishes the fourth version, STLFSI4.
+
+### Goldman Sachs' FCI
+
+Goldman Sachs' FCI is proprietary, so we rely on its published description. Hatzius and co-authors described it as a weighted sum of a short-term interest rate, a long-term corporate borrowing cost, the exchange rate and a stock market variable, with weights set using the Federal Reserve Board's FRB/US model and Goldman Sachs' own modeling. A rise means tighter conditions; the current inputs and weights are not public.
+
+## A worked example: five inputs, one number
+
+The arithmetic is simple even when the estimation is not. Standardize each input against its history, sign it so that positive means tighter, weight it and add:
+
+$$
+\text{FCI}_t = \sum_i w_i \, s_i \, z_{i,t}, \qquad z_{i,t} = \frac{x_{i,t} - \bar{x}_i}{\sigma_i}
+$$
+
+Here $\bar{x}_i$ and $\sigma_i$ are the historical mean and standard deviation of input $i$, $w_i$ is its weight, and $s_i$ is +1 if a higher value tightens conditions and −1 if it eases them. All numbers are illustrative.
+
+| Input (illustrative) | Reading | Mean | Std. dev. | Signed z | Weight | Contribution |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 10-year Treasury yield (%) | 4.5 | 4.0 | 1.0 | +0.50 | 0.30 | +0.15 |
+| High-yield spread (pp) | 3.0 | 5.0 | 2.0 | −1.00 | 0.25 | −0.25 |
+| Stock index, 12-month change (%) | +20 | +8 | 15 | −0.80 | 0.20 | −0.16 |
+| Trade-weighted dollar, 12-month change (%) | +4 | 0 | 5 | +0.80 | 0.10 | +0.08 |
+| Equity implied volatility (points) | 14 | 20 | 10 | −0.60 | 0.15 | −0.09 |
+| **Index** | | | | | **1.00** | **−0.27** |
+
+<Chart title="Illustrative only: contributions to a five-input FCI (positive = tighter)" caption="Invented inputs and weights; not market data or the weights of any published index." decimals={2} data={[{ label: "Rates", value: 0.15 }, { label: "Credit spreads", value: -0.25 }, { label: "Equities", value: -0.16 }, { label: "Dollar", value: 0.08 }, { label: "Volatility", value: -0.09 }, { label: "Index", value: -0.27, highlight: true }]} />
+
+The index reads −0.27, modestly looser than average, even though the 10-year yield is above its mean and the dollar is strong: tight spreads, rising stocks and low volatility more than offset them. That is how conditions can stay easy while rates rise.
+
+Now suppose that over the next month the spread widens to 4.0 percentage points and implied volatility rises to 25, all else unchanged. The credit contribution rises by 0.125 and the volatility contribution by 0.165, lifting the index 0.29 to +0.02. The level says conditions are about average; the change says they tightened sharply; the decomposition says credit and volatility did it, not rates.
+
+## How should you read a level and a change?
+
+- **Check the convention.** Higher means tighter or more stressed on each index above, but baselines differ: the NFCI's zero is its average since 1971, the STLFSI's marks normal conditions, and Goldman's index has its own scale, so watch its changes. A negative NFCI means looser than a long-run average that includes severe crises, which is not the same as loose.
+- **Look for persistence.** The NFCI averages more than a hundred indicators and moves gradually, so a move sustained over several weeks says more than a single print.
+- **Decompose the move.** A tightening led by higher yields after a policy decision is transmission working as intended; one led by wider spreads and higher volatility is closer to stress and should also lift the STLFSI.
+- **Compare the NFCI with the ANFCI.** A negative NFCI with a positive ANFCI means conditions are loose by historical standards but tight for the current economy.
+
+## Reading the financial conditions tiles on Signals
+
+<Callout type="method" title="How the Signals tiles are defined">
+
+- **Financial Conditions (NFCI)**, in the macro dashboard: the Chicago Fed's NFCI from FRED. The change is against the prior weekly reading (labeled "prior"), the sparkline covers about two years, and the date is the Friday that ends the reference week, not the Wednesday release. FRED serves the latest vintage, so the prior reading already reflects revisions.
+- **GS Fin. Conditions**, in the Goldman Sachs macro lens when it is displayed: Goldman Sachs' FCI, where higher means tighter. The change is against about a month earlier (labeled "1M"). Our rule-based alerts call a one-month move of 0.25 or more a tightening or easing, and 0.5 or more high priority: fixed thresholds for attention, not forecasts.
+- **Colors show direction only.** Green marks a rise and red a fall, so on both tiles green means tighter.
+
+</Callout>
+
+The tiles use different scales, so compare direction, not levels. If Treasury yields in the same panel jumped while the NFCI barely moved, spreads, equities or volatility probably offset them. The dashboard is information, not a recommendation.
+
+## Using financial conditions in a portfolio process
+
+We treat FCIs as context, not trade signals.
+
+- **What is priced in.** Very loose conditions usually mean tight spreads and low volatility, which leave little cushion if news disappoints. [The Amador Framework](/insights/the-amador-framework) asks this question before any position.
+- **The financing a strategy needs.** Leverage, volatility targets and liquidity assumptions depend on financing staying available, failure modes discussed in [Four Economic Seasons](/insights/four-seasons-of-the-economy). A broad tightening summarizes that environment.
+- **Review triggers, not trades.** A sharp tightening should prompt a review of liquidity, correlation and stress-test assumptions agreed in advance, not an improvised trade.
+
+## Limitations
+
+- **Causality runs both ways.** Conditions respond to the economy and policy as well as driving them, and adjusted indexes such as the ANFCI strip out that feedback only as well as their models allow.
+- **The link to growth is unstable.** Hatzius and co-authors found that individual financial indicators helped predict activity, but 31 of their 40 stability tests rejected a constant relationship. FCIs helped most in periods of unusual stress; in the 1990s some did worse than a benchmark using only the economy's own past. Lacking a structural foundation, they noted, FCIs can lose their usefulness when the policy regime changes.
+- **Hindsight shapes design.** The same authors acknowledged that their own index's closer fit with future activity partly reflected variables chosen after observing the 2007–09 crisis.
+- **Trends and versions.** Indexes built from levels inherit their trends: Goldman's drifted downward in the 2010 comparison for that reason, and the St. Louis Fed's 2020 revision switched to changes in rates and stock prices to remove that bias (Kliesen and McCracken). Methods and histories change, so compare like with like.
+- **Loose is not safe.** Brave and Butters (2012) found the NFCI a robust predictor of financial stress up to a year ahead, with leverage among the key signals of imbalances, so check the leverage subindex even when the headline is calm.
+
+## Sources
+
+- Adrian, T., Boyarchenko, N., and Giannone, D. (2019). "Vulnerable Growth." *American Economic Review*, 109(4), 1263–1289.
+- Brave, S., and Butters, R. A. (2011). "Monitoring Financial Stability: A Financial Conditions Index Approach." *Economic Perspectives*, Federal Reserve Bank of Chicago, 35(1), 22–43.
+- Brave, S., and Butters, R. A. (2012). "Diagnosing the Financial System: Financial Conditions and Financial Stress." *International Journal of Central Banking*, 8(2), 191–239.
+- Federal Reserve Bank of Chicago. "National Financial Conditions Index (NFCI)." Current data and background, chicagofed.org.
+- Federal Reserve Bank of St. Louis. "St. Louis Fed Financial Stress Index (STLFSI4)." FRED series notes.
+- Hatzius, J., Hooper, P., Mishkin, F. S., Schoenholtz, K. L., and Watson, M. W. (2010). "Financial Conditions Indexes: A Fresh Look after the Financial Crisis." NBER Working Paper 16150.
+- Kliesen, K. L., and McCracken, M. W. (2020). "The St. Louis Fed's Financial Stress Index, Version 2.0." *On the Economy*, Federal Reserve Bank of St. Louis, March 26.
+- Kliesen, K. L., and Smith, D. C. (2010). "Measuring Financial Market Stress." *Economic Synopses*, No. 2, Federal Reserve Bank of St. Louis.

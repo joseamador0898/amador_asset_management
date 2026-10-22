@@ -21,6 +21,10 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },
+  // Markdown twins of the articles for AI assistants: /insights/<slug>.md.
+  async rewrites() {
+    return [{ source: "/insights/:slug.md", destination: "/insights-md/:slug" }];
+  },
   turbopack: {
     rules: {
       "*.css": {

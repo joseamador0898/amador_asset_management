@@ -1,0 +1,133 @@
+---
+title: "Rebalancing: The Free Lunch You Have to Work For"
+dek: "Rebalancing keeps a portfolio's risk where you chose to put it; the return bonus it can add is real but small and conditional, and a sensible policy trades only when drift is large enough to matter."
+date: "2026-10-22"
+category: "Frameworks"
+author: "Jose Luis Amador Jaime"
+tags: ["portfolio rebalancing", "asset allocation", "diversification return", "tolerance bands", "tax efficiency", "risk management"]
+featured: false
+cover: "rings"
+---
+
+Portfolio rebalancing means trading a portfolio back toward its target weights after markets have pushed it away, and its main job is risk control, not extra return. Left alone, a stock-and-bond portfolio tends to drift toward stocks and becomes riskier than the one you chose. The so-called rebalancing bonus is real arithmetic but small and conditional, and the evidence suggests that having a sensible policy, and following it, matters far more than whether you rebalance monthly, quarterly or annually.
+
+Diversification is often called investing's only free lunch. Rebalancing keeps a portfolio eating it, but the lunch has a bill: trading costs, taxes and the discipline to buy what has just fallen.
+
+## What is portfolio rebalancing?
+
+Assets earn different returns, so a portfolio's weights drift. After a strong year for stocks, a 60/40 stock-and-bond portfolio may sit at 65/35 though nothing about the investor has changed. Rebalancing sells some of what has gained relative to the rest and buys what has lagged: it is contrarian by construction. Every policy makes three choices: when to check, how much drift to tolerate, and how far back to trade.
+
+## Why rebalance at all?
+
+Assets with higher expected returns usually carry more risk, so a never-rebalanced portfolio drifts toward them and becomes a different, riskier portfolio. Vanguard's study of a 60/40 U.S. stock-and-bond portfolio from 1926 through 2009 shows the trade-off (Jaconetti, Kinniry and Zilbering, 2010):
+
+<KeyStats items={[
+  { value: "84%", label: "Average stock weight if never rebalanced; it ended at 98%" },
+  { value: "14.4%", label: "Volatility if never rebalanced, versus 12.1% rebalanced monthly" },
+  { value: "9.1%", label: "Annualized return if never rebalanced, versus 8.5% rebalanced monthly" },
+  { value: "1,008", label: "Rebalancing events if monthly, versus 83 if annual" }
+]} />
+
+The extra return came from drifting toward an all-stock portfolio, which the investor could have chosen on day one. As the authors conclude, rebalancing exists to control risk relative to the target, not to maximize return. Monthly, quarterly and annual schedules produced nearly identical returns (8.5% to 8.6%) and volatility (11.9% to 12.2%) with very different amounts of trading.
+
+## Does rebalancing boost returns?
+
+The claim rests on real arithmetic. Compound growth is roughly the average return minus half the variance, the volatility drag behind [the Kelly criterion](/insights/kelly-is-a-ceiling). A diversified portfolio held at fixed weights has less variance than its assets on average, so it compounds faster than their weighted average.
+
+<Callout type="method" title="The arithmetic of the bonus">
+
+For constant weights $w_i$, a portfolio's long-run compound growth rate is approximately
+
+$$
+g_p \approx \sum_i w_i \, g_i + \frac{1}{2}\left(\sum_i w_i \, \sigma_i^{2} - \sigma_p^{2}\right)
+$$
+
+where $g_i$ and $\sigma_i^{2}$ are each asset's compound growth rate and variance and $\sigma_p^{2}$ is the portfolio's variance. Booth and Fama (1992) called the second term the diversification return. It is never negative for a long-only portfolio and is larger when assets are more volatile and less correlated: for two assets held 50/50 with equal volatility $\sigma$ and correlation $\rho$, it equals $\sigma^{2}(1 - \rho)/4$.
+
+</Callout>
+
+In what Luenberger (1998) calls volatility pumping, a stock doubles or halves each period with equal odds and cash earns nothing, so the stock's typical path goes nowhere. Held half in stock and half in cash, rebalanced each period, wealth multiplies by 1.5 or 0.75, a typical growth rate of $\sqrt{1.5 \times 0.75} - 1 \approx 6.1\%$ per period. Erb and Harvey (2006) simulated forty uncorrelated assets, each with 30% volatility and zero compound excess return; an equal-weight portfolio rebalanced annually compounded at about 4.3% a year, close to the formula's 4.4%.
+
+### What the bonus claims leave out
+
+**The benchmark is not buy-and-hold.** The bonus is measured against the weighted average of the assets' growth rates, not against buy-and-hold, which earns its own extra return as winners grow into a larger share and change its risk (Willenbrock, 2011). Constant-mix strategies buy as prices fall and sell as they rise, effectively selling portfolio insurance: they do best in volatile, trendless markets and lag buy-and-hold when trends persist (Perold and Sharpe, 1988). Even in the pumping example, the stock alone has the higher average return, 25% a period against 12.5%; rebalancing improves the typical path, not the average.
+
+**The size depends on conditions most portfolios lack.** A large bonus takes many volatile, weakly correlated assets; a stock-and-bond mix has one volatile asset and one quiet one:
+
+<Chart
+  title="Approximate diversification return, % a year (illustrative)"
+  caption="Assumed inputs, not forecasts. 60/40: 16% and 5% volatility, correlation 0.2. Two assets: 20% volatility each, 50/50. Forty assets: uncorrelated, 30% volatility, equal weights."
+  decimals={2}
+  data={[
+    { label: "60/40 stocks/bonds", value: 0.30, highlight: true },
+    { label: "Two assets, ρ = 0.5", value: 0.50 },
+    { label: "Two assets, ρ = 0", value: 1.00 },
+    { label: "40 assets, 30% vol", value: 4.39 },
+  ]}
+/>
+
+## Calendar or threshold rebalancing: which is better?
+
+| Approach | How it works | Trade-off |
+| --- | --- | --- |
+| Calendar | Trade back to target on a schedule, such as yearly | Simple; trades trivial drift, misses drift between dates |
+| Threshold (tolerance band) | Trade when a weight leaves a band around its target | Trades only when needed; needs frequent monitoring |
+| Hybrid | Check on a schedule; trade only if a band is breached | Most of the risk control with few trades |
+
+The evidence rules out extremes more than it crowns a winner. Vanguard's 2010 study found no optimal frequency or threshold and concluded that, for most diversified stock-and-bond portfolios, checking annually or semiannually and rebalancing once an allocation drifts five percentage points balances risk control against cost.
+
+Bands earn their keep in fast markets. For its daily-monitored target-date funds, Vanguard's research favors a two-point band and, when it is breached, a trade back to 1.75 points from target (Zhang and colleagues, 2024). In its hypothetical 60/40 example from March 2020, monthly rebalancing could have allowed drift of about 7 percentage points and quarterly about 10, against about 2 for the band.
+
+- **Absolute or relative bands.** Five points suits a 60% allocation but not a 5% one, which could vanish or double first. A common rule of thumb uses five percentage points or a quarter of the target weight, whichever is smaller: 55% to 65% for a 60% allocation, 7.5% to 12.5% for a 10% one.
+- **To target or partway.** With costs proportional to trade size, the optimal policy has a no-trade zone and trades only back to its edge (Davis and Norman, 1990). Vanguard's 2010 paper gives the practical rule: trade to target when costs are mostly fixed per trade, to the band edge when they scale with the trade, as spreads and taxes do, and in between when both apply.
+
+## What does rebalancing cost?
+
+Even with zero commissions, trades pay bid-ask spreads, and large ones move prices; Vanguard's 2024 model has these costs rising with volatility and trade size. For most individuals the bigger cost is tax. In a U.S. taxable account, selling an appreciated asset realizes a capital gain, taxed at ordinary rates if held one year or less and at lower long-term rates if held longer (IRS Publication 550). Trades inside IRAs and 401(k) plans are not taxed when they occur. This is general information, not tax advice.
+
+Use the cheapest tools first:
+
+- **Cash flows.** Send contributions, dividends and interest to the underweight asset, and take withdrawals from the overweight one. In Vanguard's 2010 study, a 60/40 portfolio rebalanced only by redirecting dividends and interest averaged a 61% stock weight with no rebalancing trades, though the authors caution that such high yields may not recur.
+- **Where and what to sell.** Sell in tax-advantaged accounts where possible; in taxable ones, sell lots with losses or the highest cost basis first. A loss is disallowed if you buy substantially identical securities within 30 days before or after the sale (the wash-sale rule).
+
+### A worked example (illustrative)
+
+A \$100,000 portfolio targets 60/40. In a year, stocks return 30% and bonds 5% (illustrative figures), leaving \$78,000 in stocks and \$42,000 in bonds: 65/35. With the chart's assumed volatilities, portfolio volatility rises from about 10.2% to 10.9%; a 30% stock decline with bonds flat would now cost 19.5%, not 18%. Assume a cost basis of \$52,000 on the stocks, so a third of each dollar sold is gain, taxed at an illustrative 15%:
+
+| Approach | Trade | New mix | Tax due now |
+| --- | --- | --- | ---: |
+| Full rebalance, taxable account | Sell \$6,000 of stocks, buy bonds | 60/40 | \$300 |
+| Halfway back, taxable account | Sell \$3,000 of stocks, buy bonds | 62.5/37.5 | \$150 |
+| New money | Put a \$10,000 contribution into bonds | 60/40 | \$0 |
+
+The \$300 is 0.25% of the portfolio, most of a year's theoretical bonus under the chart's assumptions (about 0.3%, or \$360). Paying it is not a pure loss, since the gain would probably be taxed eventually, but it gives up deferral. The tax is certain; the bonus is not.
+
+## How should you set a rebalancing policy?
+
+Write these down while nothing is at stake:
+
+1. **The target.** Rebalancing enforces an allocation; it cannot choose one.
+2. **Bands sized to each allocation.** Five percentage points for large allocations, a quarter of the target weight for small ones; wider where trading is costly or taxable.
+3. **A review schedule.** Check semiannually or annually and trade only when a band is breached; tighter bands need frequent, preferably automated, monitoring.
+4. **How far to trade.** To target when costs are mostly fixed; to the band edge or partway when spreads and taxes dominate. Use cash flows before sales.
+5. **The hard case.** In Vanguard's 84-year sample, an annually checked 60/40 portfolio with a five-point band called for buying stocks only seven times (1930, 1931, 1937, 1974, 2000, 2002 and 2008), each after a year of very poor stock returns. The policy exists for those moments.
+
+## What the evidence does not show
+
+- **A universal optimum.** Vanguard's 2024 case for tight, daily-monitored bands rests on simulated returns and modeled costs for large funds, and may not transfer to an individual's taxable account.
+- **A return edge over buy-and-hold.** In Vanguard's long sample, never rebalancing earned more. Expecting rebalancing to beat buy-and-hold on return means expecting relative prices to mean-revert: a market view, not a law.
+- **Broad evidence.** The studies cited here rely on one long U.S. history or on model simulations. Rebalancing comparisons are backtests and deserve the scrutiny described in [how to read a backtest like a skeptic](/insights/read-a-backtest-like-a-skeptic).
+- **Stable inputs.** The bonus depends on volatilities and correlations that shift; [the stock-bond correlation](/insights/correlation-is-not-constant) has varied over time.
+- **A case for single securities.** Volatility pumping assumes an asset can recover. Buying more of a stock on its way to zero is not harvesting volatility; it is adding to a loss.
+
+## Sources
+
+- Booth, D. G., and Fama, E. F. (1992). "Diversification Returns and Asset Contributions." *Financial Analysts Journal*, 48(3), 26–32.
+- Davis, M. H. A., and Norman, A. R. (1990). "Portfolio Selection with Transaction Costs." *Mathematics of Operations Research*, 15(4), 676–713.
+- Erb, C. B., and Harvey, C. R. (2006). "The Strategic and Tactical Value of Commodity Futures." *Financial Analysts Journal*, 62(2), 69–97.
+- Internal Revenue Service (2025). *Publication 550: Investment Income and Expenses*.
+- Jaconetti, C. M., Kinniry, F. M., Jr., and Zilbering, Y. (2010). *Best Practices for Portfolio Rebalancing*. Vanguard Research.
+- Luenberger, D. G. (1998). *Investment Science*. Oxford University Press.
+- Perold, A. F., and Sharpe, W. F. (1988). "Dynamic Strategies for Asset Allocation." *Financial Analysts Journal*, 44(1), 16–27.
+- Willenbrock, S. (2011). "Diversification Return, Portfolio Rebalancing, and the Commodity Return Puzzle." *Financial Analysts Journal*, 67(4), 42–49.
+- Zhang, Y., Ahluwalia, H., Daga, A., and Zi, Y. (2024). *The Rebalancing Edge: Optimizing Target-Date Fund Rebalancing through Threshold-Based Strategies*. Vanguard Research.

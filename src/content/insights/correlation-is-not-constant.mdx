@@ -1,0 +1,119 @@
+---
+title: "Correlation Is Not Constant: Diversification When You Need It Most"
+dek: "Correlations tend to rise in sell-offs, and the stock-bond correlation changes sign with the macro regime, so durable portfolios are built for a range of correlations rather than a single estimate."
+date: "2026-10-22"
+category: "Research"
+author: "Jose Luis Amador Jaime"
+tags: ["correlation", "stock-bond correlation", "diversification", "risk parity", "portfolio construction", "macro regimes"]
+featured: false
+cover: "grid"
+---
+
+Correlation is not a fixed property of two assets. Correlations among risky assets tend to rise in sell-offs, and the correlation between stocks and high-quality government bonds has changed sign with the macroeconomic regime: negative through most of the low-inflation decades before 2022, positive when inflation risk dominated, as in 2022. The practical response is to build portfolios whose risk stays acceptable across a range of correlations, not just at one estimate.
+
+## Why does correlation matter so much for portfolio risk?
+
+For two assets with weights $w_1, w_2$, volatilities $\sigma_1, \sigma_2$ and correlation $\rho$, portfolio variance is
+
+$$
+\sigma_p^2 = w_1^2\sigma_1^2 + w_2^2\sigma_2^2 + 2\,w_1 w_2\,\rho\,\sigma_1\sigma_2
+$$
+
+With a correlation of 1, portfolio volatility is simply the weighted average of the two volatilities. All of the risk reduction below that average comes from correlation below 1, so diversification is only as reliable as the correlations behind it.
+
+Correlation also sets a floor. With $n$ equally weighted assets of equal volatility $\sigma$ and average pairwise correlation $\bar{\rho}$, portfolio volatility is $\sigma\sqrt{1/n + (1 - 1/n)\,\bar{\rho}}$, which approaches $\sigma\sqrt{\bar{\rho}}$ as $n$ grows. Adding holdings cannot push risk below that floor; only lower correlation can. For assets with 20% volatility, an average correlation of 0.3 puts the floor near 11% and 0.7 puts it near 17% (illustrative). When correlations rise in a sell-off, the floor rises with them.
+
+## Why do correlations rise in sell-offs?
+
+Three forces tend to push correlations up when prices fall. A single shock, such as a recession scare or a jump in risk aversion, overwhelms asset-specific news. Forced selling links otherwise unrelated assets, as investors facing margin calls or redemptions sell what they can; Brunnermeier and Pedersen (2009) show how market and funding liquidity can reinforce each other in spirals that drain liquidity from many securities at once. In March 2020, even US Treasuries sold off briefly in the scramble for cash. And volatility targets and risk limits can tell many portfolios to cut exposure at the same moment.
+
+The asymmetry is well documented. Longin and Solnik (2001), studying the five largest equity markets from 1959 to 1996, found that correlations among large negative monthly returns were much higher than a normal distribution implies, while those among large positive returns were not. Ang and Chen (2002) found correlations between US stocks and the aggregate market much greater for downside moves, especially extreme ones, than for upside moves. Chua, Kritzman and Page (2009) found correlations across a wide range of assets significantly asymmetric, typically higher on the downside: the opposite of what investors want.
+
+<Callout type="note" title="Contagion or interdependence?">
+
+Part of the measured rise is statistical. Forbes and Rigobon (2002) showed that measured correlation depends on volatility. If one market drives another and the first market's variance rises by a factor of $1 + \delta$, with nothing else changing, the measured correlation rises from $\rho$ to $\rho\sqrt{(1 + \delta)/(1 + \delta\rho^2)}$: 0.50 becomes about 0.76 when that variance quadruples. Adjusting for this bias, they found virtually no increase in correlations during the 1987 US crash, the 1994 Mexican devaluation and the 1997 Asian crisis, though later work disputes the adjustment's assumptions (Corsetti, Pericoli and Sbracia, 2005).
+
+For a portfolio, the label matters less than the lesson: when assets share a source of risk, correlations measured in calm markets understate those that prevail once that source turns volatile.
+
+</Callout>
+
+## What drives the stock-bond correlation?
+
+Mainly the balance between growth news and inflation news. Stocks and nominal bonds share a discount rate but not a cash-flow exposure. A weaker economy lowers expected earnings, which hurts stocks, and lowers expected inflation and policy rates, which helps bonds: growth news pushes them apart. Higher inflation raises yields, which hurts bonds, and raises the rate at which equity cash flows are discounted, which hurts stocks: inflation news pushes them together.
+
+Brixton, Brooks, Hecht, Ilmanen, Maloney and McQuinn (2023) find this pattern in the data and argue that the correlation's sign depends less on the level of inflation than on its volatility relative to growth. Campbell, Pflueger and Viceira (2020) estimate that the comovement of US inflation and the output gap turned from negative to positive around 2001. When inflation rises as the economy weakens, bonds lose value in the same bad times as stocks; when it falls, bonds gain. In their model, that shift, working through time-varying risk premia, accounts for the bond-stock correlation turning from positive to negative.
+
+US stock and Treasury returns tended to move together through much of the 1970s, 1980s and 1990s, then mostly in opposite directions for two decades after about 2000. Campbell, Sunderam and Viceira (2017) find their covariance unusually high in the early 1980s and negative in the 2000s, especially in the downturns of 2000–02 and 2007–09. As their title puts it, nominal bonds can be inflation bets or deflation hedges.
+
+In 2022 the correlation switched back. US consumer price inflation reached a four-decade high, the Federal Reserve raised its policy rate by more than four percentage points within the year, and US stocks and investment-grade bonds both posted double-digit losses. For portfolios that counted on bonds to offset equity losses, the hedge became a second source of the same risk.
+
+## How much does a correlation shift change portfolio risk?
+
+More than intuition suggests, and most where bonds carry a large share of the risk. Take illustrative annualized volatilities of 16% for stocks and 6% for bonds, and compare a 60/40 portfolio with a risk-balanced one that weights each asset in inverse proportion to its volatility (about 27% stocks and 73% bonds), so each carries the same standalone risk.
+
+| Stock-bond correlation | 60/40 volatility | Risk-balanced volatility |
+| --- | ---: | ---: |
+| −0.4 | 8.9% | 4.8% |
+| 0.0 | 9.9% | 6.2% |
+| +0.4 | 10.8% | 7.3% |
+
+A move from −0.4 to +0.4 raises the 60/40 portfolio's volatility by about a fifth and the risk-balanced portfolio's by about half. In the 60/40 mix, stocks dominate the risk; in the risk-balanced mix, bonds carry half of it, so the relationship between the two halves largely sets the total.
+
+## What does this mean for risk parity?
+
+Risk parity is more exposed to the stock-bond correlation than a traditional mix, because bonds carry a large share of its risk and it often uses leverage, as [Four Economic Seasons](/insights/four-seasons-of-the-economy) explains. With two assets, equal risk contributions imply inverse-volatility weights whatever the correlation (with more assets, correlations enter the weights too). The correlation does not change the two-asset mix; it changes how much risk the mix carries, and so the leverage a volatility target requires.
+
+<Chart
+  title="Illustrative only: volatility of a portfolio levered for 10% at a −0.4 correlation (%)"
+  caption="Illustrative, not data or a forecast. Two-asset risk-balanced portfolio, asset volatilities unchanged: 10% × √((1 + ρ) ÷ 0.6)."
+  decimals={1}
+  data={[
+    { label: "Correlation −0.4", value: 10.0 },
+    { label: "Correlation −0.2", value: 11.5 },
+    { label: "Correlation 0.0", value: 12.9 },
+    { label: "Correlation +0.2", value: 14.1 },
+    { label: "Correlation +0.4", value: 15.3, highlight: true },
+  ]}
+/>
+
+Because the two assets carry equal risk, volatility scales by $\sqrt{(1 + \rho_{\text{new}})/(1 + \rho_{\text{old}})}$ whatever their individual volatilities. Levered about 2.1 times to reach 10% at a correlation of −0.4, the portfolio runs at about 15% at +0.4. A [volatility-targeting](/insights/volatility-targeting-explained) process will eventually cut the leverage, but its estimates lag, so the cut tends to come after the losses.
+
+## How do you build a portfolio that does not rely on one correlation estimate?
+
+No estimator reliably calls regime changes, so the aim is a portfolio whose risk stays acceptable across the plausible range. The practices we find most useful:
+
+1. **Size for stressed correlations, not average ones.** Recompute risk with the stock-bond correlation clearly positive and risky-asset correlations near 1, and set leverage so the portfolio stays within its limits in both cases. This has a cost: in the example above, a portfolio sized for 10% at +0.4 runs at about 6.5% at −0.4, giving up risk, and with it expected return, in benign regimes.
+2. **Estimate correlation more than one way.** Compare a long-window estimate, a fast-moving one such as an exponentially weighted average, and one drawn only from turbulent periods, which the turbulence measure of Kritzman and Li (2010) can identify. Shrinkage toward a structured target (Ledoit and Wolf, 2004) tames noise in large matrices. A portfolio that looks acceptable under only one estimate depends on that estimate.
+3. **Diversify the diversifiers.** Nominal government bonds hedge growth shocks, not inflation shocks. Pair them with exposures that have tended to respond to inflation surprises, such as inflation-linked bonds and commodities, each with risks of its own, and with return sources that do not depend on the stock-bond relationship.
+4. **Prefer allocation rules that degrade gracefully.** Optimizers that invert a covariance matrix amplify errors in correlation estimates. [Hierarchical risk parity](/insights/hierarchical-risk-parity-explained) avoids the inversion, although its tree is still built from correlations measured in one regime.
+5. **Watch for regime change without pretending to forecast it.** Track rolling correlations over several horizons, and treat a change in sign as a reason to rerun stress tests, not as a trading signal.
+
+## Limitations
+
+- **Correlation is linear and average.** A single coefficient says little about joint behavior in the tails, where the evidence above finds the largest departures from normality.
+- **Estimates depend on window and frequency.** Short windows are noisy and long windows blend regimes. Daily correlations across time zones are biased down by non-overlapping trading hours.
+- **Macro explanations are partial.** Baele, Bekaert and Inghelbrecht (2010) found that macroeconomic fundamentals explain little of stock-bond correlations, with liquidity proxies playing a larger role; Brixton and coauthors' framework fits long-term variation better than short-term swings.
+- **History is a small sample.** The modern record holds only a few long stock-bond regimes, so any estimate of how often the sign flips rests on very few episodes.
+- **Volatility is not loss.** Outcomes also depend on the path of returns, fat tails, liquidity and financing costs.
+
+## Key takeaways
+
+- Correlations tend to rise in sell-offs, so calm-market estimates overstate diversification.
+- The stock-bond correlation is negative when growth news dominates and positive when inflation news does, as in 2022.
+- A positive stock-bond correlation raises risk most for risk-balanced and levered portfolios.
+- Size for stressed correlations, diversify the hedges and prefer estimates and allocation rules that degrade gracefully.
+
+## Sources
+
+- Ang, A., and Chen, J. (2002). "Asymmetric Correlations of Equity Portfolios." *Journal of Financial Economics*, 63(3).
+- Baele, L., Bekaert, G., and Inghelbrecht, K. (2010). "The Determinants of Stock and Bond Return Comovements." *Review of Financial Studies*, 23(6).
+- Brixton, A., Brooks, J., Hecht, P., Ilmanen, A., Maloney, T., and McQuinn, N. (2023). "A Changing Stock-Bond Correlation: Drivers and Implications." *Journal of Portfolio Management*, 49(4).
+- Brunnermeier, M. K., and Pedersen, L. H. (2009). "Market Liquidity and Funding Liquidity." *Review of Financial Studies*, 22(6).
+- Campbell, J. Y., Pflueger, C., and Viceira, L. M. (2020). "Macroeconomic Drivers of Bond and Equity Risks." *Journal of Political Economy*, 128(8).
+- Campbell, J. Y., Sunderam, A., and Viceira, L. M. (2017). "Inflation Bets or Deflation Hedges? The Changing Risks of Nominal Bonds." *Critical Finance Review*, 6(2).
+- Chua, D. B., Kritzman, M., and Page, S. (2009). "The Myth of Diversification." *Journal of Portfolio Management*, 36(1).
+- Corsetti, G., Pericoli, M., and Sbracia, M. (2005). "'Some Contagion, Some Interdependence': More Pitfalls in Tests of Financial Contagion." *Journal of International Money and Finance*, 24(8).
+- Forbes, K. J., and Rigobon, R. (2002). "No Contagion, Only Interdependence: Measuring Stock Market Comovements." *Journal of Finance*, 57(5).
+- Kritzman, M., and Li, Y. (2010). "Skulls, Financial Turbulence, and Risk Management." *Financial Analysts Journal*, 66(5).
+- Ledoit, O., and Wolf, M. (2004). "Honey, I Shrunk the Sample Covariance Matrix." *Journal of Portfolio Management*, 30(4).
+- Longin, F., and Solnik, B. (2001). "Extreme Correlation of International Equity Markets." *Journal of Finance*, 56(2).

@@ -1,0 +1,144 @@
+---
+title: "The Arithmetic of Drawdowns: Why Losses Hurt More Than Gains Help"
+dek: "A recovery is earned on a smaller base, so a 50% loss needs a 100% gain; the same arithmetic explains volatility drag, sequence risk and why sizing starts from the drawdown you can survive."
+date: "2026-10-22"
+category: "Risk"
+author: "Jose Luis Amador Jaime"
+tags: ["drawdowns", "maximum drawdown", "volatility drag", "sequence-of-returns risk", "position sizing", "risk management"]
+featured: false
+cover: "waves"
+---
+
+A portfolio that loses 50% needs a 100% gain to get back to where it started, because the recovery is earned on the half that is left. In general, a loss of a fraction $d$ requires a gain of $d/(1-d)$, so the required gain grows faster than the loss: about 11% after a 10% decline, 25% after 20% and 900% after 90%. The same asymmetry is why volatility lowers compound returns, why the order of returns matters once money is withdrawn, and why the depth of drawdowns deserves as much attention as the average return.
+
+Figures labeled illustrative below are invented to show the arithmetic; they are not forecasts.
+
+## Why does a 50% loss need a 100% gain to recover?
+
+Suppose \$100 falls 50% to \$50. A 50% gain brings it back only to \$75; returning to \$100 takes another \$50, or 100% of what remains. Formally, if wealth falls by a fraction $d$, the gain $x$ that restores it satisfies $(1 - d)(1 + x) = 1$, so
+
+$$
+x = \frac{d}{1 - d}
+$$
+
+For small losses, $x$ and $d$ are nearly equal; as losses deepen, the required gain accelerates, and a total loss can never be recovered. The table adds time, assuming for illustration that the portfolio compounds at a steady 7% a year from the trough, so recovery takes $-\ln(1 - d)/\ln(1.07)$ years.
+
+| Loss from peak | Gain needed to recover | Years at 7% a year (illustrative) |
+| ---: | ---: | ---: |
+| 10% | 11.1% | 1.6 |
+| 20% | 25.0% | 3.3 |
+| 30% | 42.9% | 5.3 |
+| 40% | 66.7% | 7.6 |
+| 50% | 100.0% | 10.2 |
+| 75% | 300.0% | 20.5 |
+| 90% | 900.0% | 34.0 |
+
+At a given rate of return, doubling a drawdown more than doubles the time needed to recover from it: 3.3 years for 20%, 7.6 years for 40%.
+
+On a closing basis, the S&P 500 price index fell about 57% from October 9, 2007, to March 9, 2009, so it needed a gain of about 131% to regain its high, which it first did on March 28, 2013, more than five years after the peak.
+
+<PullQuote>A loss is measured against what you had. The recovery is earned on what is left.</PullQuote>
+
+## What is volatility drag?
+
+The same asymmetry operates every period, not only in crashes. An investment that gains 25% one year and loses 20% the next averages 2.5% a year, yet \$100 becomes \$125 and then \$100 again: its compound return is zero. A 50% gain followed by a 50% loss averages 0% and leaves \$75, a compound return of about −13.4% a year.
+
+The gap between the arithmetic average and the geometric, or compound, return is called volatility drag, or variance drain (Messmore, 1995). With average return $\mu$ and volatility $\sigma$, the compound growth rate $g$ is approximately
+
+$$
+g \approx \mu - \frac{\sigma^{2}}{2}
+$$
+
+The relation is exact in continuous time with constant volatility, and a good approximation for annual returns when volatility is moderate (Booth and Fama, 1992). It explains the first example: returns of +25% and −20% have a standard deviation of 22.5%, so the drag is about 2.5 percentage points, the whole average.
+
+<Chart
+  title="Approximate compound growth at an 8% average return (% a year)"
+  caption="Illustrative, using g ≈ μ − σ²/2. At 20% volatility the drag takes a quarter of the average return; at 40%, all of it."
+  decimals={1}
+  data={[
+    { label: "0% volatility", value: 8.0 },
+    { label: "10% volatility", value: 7.5 },
+    { label: "20% volatility", value: 6.0, highlight: true },
+    { label: "30% volatility", value: 3.5 },
+    { label: "40% volatility", value: 0.0 },
+  ]}
+/>
+
+Because the drag grows with the square of volatility, doubling volatility quadruples it.
+
+## What is sequence-of-returns risk?
+
+For an investor who neither adds nor withdraws money, the order of returns does not matter: final wealth is the product $(1 + r_1)(1 + r_2)\cdots(1 + r_T)$, which is the same in any order.
+
+Cash flows change that. A fixed withdrawal after a decline sells more of the portfolio at low prices, and the money taken out cannot share in the recovery. The table follows two hypothetical investors who each start with \$1,000,000 and withdraw \$50,000 at the end of every year. They earn the same five returns in opposite order, so their average (3.0%) and compound (about 1.3% a year) returns are identical; balances are after withdrawals (illustrative).
+
+| Year | Losses first | Balance | Gains first | Balance |
+| --- | ---: | ---: | ---: | ---: |
+| 1 | −25% | \$700,000 | +25% | \$1,200,000 |
+| 2 | −10% | \$580,000 | +15% | \$1,330,000 |
+| 3 | +10% | \$588,000 | +10% | \$1,413,000 |
+| 4 | +15% | \$626,200 | −10% | \$1,221,700 |
+| 5 | +25% | \$732,750 | −25% | \$866,275 |
+
+Without withdrawals, both would end with about \$1,067,000. With them, the investor who met the losses first ends about \$134,000 poorer, despite withdrawing the same \$250,000. Put differently, after a 50% decline, a withdrawal set at 4% of the original balance is 8% of what remains.
+
+Sequence risk is therefore greatest around retirement, when the balance is largest: a saver's late losses strike the most money, and a retiree's early losses are locked in by withdrawals. Bengen (1994), testing withdrawal rates on historical U.S. returns from 1926, found that how long a given rate lasted depended heavily on the starting year.
+
+## Maximum drawdown and time to recovery as risk measures
+
+Volatility treats gains and losses alike and ignores their order; drawdown measures follow the path. The most common are:
+
+- **Maximum drawdown:** the largest percentage decline from a running peak to a later trough.
+- **Time to recovery:** the time from the trough until the previous peak is regained; measured from the peak, it is the drawdown's full duration.
+- **Time under water:** the share of time spent below a previous peak.
+
+The Calmar ratio (Young, 1991) divides annualized return by maximum drawdown, conventionally over the previous 36 months. Conditional drawdown (Chekhlov, Uryasev and Zabarankin, 2005) averages the deepest drawdowns rather than relying on the single worst, and can serve as a constraint in portfolio optimization.
+
+<Callout type="method" title="Computing drawdowns">
+Start from portfolio values $V_t$, preferably total return and net of costs. Track the running peak $M_t = \max_{s \le t} V_s$; the drawdown at each date is $D_t = 1 - V_t / M_t$, and the maximum drawdown is the largest $D_t$. The recovery date is the first date after the trough on which $V_t$ regains the preceding peak. Report unrecovered drawdowns as open, with their length to date, rather than dropping them.
+</Callout>
+
+Drawdowns, more than volatility, force decisions: a deep one invites abandoning a strategy near the bottom, and leverage or redemptions can force sales at the worst prices. A long-run return that requires holding through an intolerable drawdown exists only on paper.
+
+## What this means for portfolio construction and sizing
+
+These principles are general education, not recommendations for any investor.
+
+**Start from the drawdown you can live through.** Set the largest decline the portfolio can suffer without forcing a sale or a change of plan, and size exposures so that a severe but plausible scenario stays within it. If a risky asset could plausibly fall 50% and the tolerable portfolio loss is 20%, a position above 40% breaches the limit unless other holdings would rise in that scenario (illustrative).
+
+**Diversify to raise compound growth.** Because the drag depends on portfolio variance, combining assets that do not move in lockstep lifts a [rebalanced](/insights/rebalancing-a-free-lunch-you-work-for) portfolio's compound return above the weighted average of its parts' compound returns; Booth and Fama (1992) call the difference the diversification return. Two assets with an 8% average return and 30% volatility each compound at about 3.5% alone. Held 50/50, rebalanced and uncorrelated, they compound at about 5.75%, because portfolio volatility falls to about 21% (illustrative).
+
+**Treat leverage as a drawdown multiplier.** At twice leverage, a 25% fall in the underlying asset becomes a 50% loss that needs a 100% gain, before financing costs. Leverage scales the average return linearly and the drag quadratically, so compound growth peaks at a finite exposure, which is why we treat [the Kelly criterion as a ceiling, not a target](/insights/kelly-is-a-ceiling).
+
+**Decide in advance how exposure responds to losses.** Grossman and Zhou (1993) showed that, in their continuous-time model, an investor whose wealth must never fall below a fixed fraction of its running peak should hold risky assets in proportion to the cushion above that floor, so exposure falls as a drawdown deepens. Such rules cap drawdowns by construction, at a cost: they sell after declines, can lag sharp rebounds, and a price gap can breach the floor.
+
+**Separate near-term spending from long-term risk.** Funding upcoming withdrawals from low-volatility assets means a drawdown need not force sales of depressed holdings.
+
+## The limits of drawdown measures
+
+**One path, one number.** Maximum drawdown records the worst episode in one realized history. Strategies with identical risk can show very different maximum drawdowns by luck, and the worst drawdown in a sample is not the worst possible.
+
+**It grows with the length of the record.** In the Brownian-motion model commonly used for prices, expected maximum drawdown rises with the sample length: roughly with its logarithm when the drift is positive, and with its square root when it is zero (Magdon-Ismail et al., 2004). A three-year record and a thirty-year one cannot be compared without adjustment. Backtests are worse, since the version that survives development tends to be the one with mild drawdowns; see [how to read a backtest like a skeptic](/insights/read-a-backtest-like-a-skeptic).
+
+**The series matters.** Monthly data hide intramonth troughs, appraisal-based or infrequent prices smooth drawdowns away, price indexes omit dividends, and nominal figures ignore inflation and deflation. The Dow Jones Industrial Average fell about 89% from September 1929 to July 1932, and its price index did not regain the 1929 closing high until November 1954. Counting dividends and the deflation of the early 1930s, Hulbert (2009) estimated that an investor who bought stocks at the 1929 peak had broken even by late 1936.
+
+**Recovery time depends on the future.** It reflects the returns that happened to follow the trough, not only the risk taken, and is undefined while a drawdown is open.
+
+## Key takeaways
+
+- A loss of $d$ requires a gain of $d/(1-d)$: 25% after a 20% loss, 100% after 50%, 900% after 90%.
+- Compound growth is roughly the average return minus half the variance, so volatility lowers long-run wealth.
+- Without cash flows, the order of returns does not matter; with withdrawals, early losses do lasting damage.
+- Drawdown measures describe the path investors live through, but they come from one history, grow with its length and depend on how the series is measured.
+- Size from a tolerable drawdown, diversify to reduce the drag, treat leverage as a drawdown multiplier and decide in advance how exposure responds to losses.
+
+## Sources
+
+- Bengen, W. P. (1994). "Determining Withdrawal Rates Using Historical Data." *Journal of Financial Planning*, October.
+- Booth, D. G., and Fama, E. F. (1992). "Diversification Returns and Asset Contributions." *Financial Analysts Journal*, 48(3).
+- Chekhlov, A., Uryasev, S., and Zabarankin, M. (2005). "Drawdown Measure in Portfolio Optimization." *International Journal of Theoretical and Applied Finance*, 8(1).
+- Grossman, S. J., and Zhou, Z. (1993). "Optimal Investment Strategies for Controlling Drawdowns." *Mathematical Finance*, 3(3).
+- Hulbert, M. (2009). "25 Years to Bounce Back? Try 4½." *The New York Times*, April 26.
+- Magdon-Ismail, M., Atiya, A. F., Pratap, A., and Abu-Mostafa, Y. S. (2004). "On the Maximum Drawdown of a Brownian Motion." *Journal of Applied Probability*, 41(1).
+- Messmore, T. (1995). "Variance Drain." *Journal of Portfolio Management*, 21(4).
+- Young, T. W. (1991). "Calmar Ratio: A Smoother Tool." *Futures*, October.

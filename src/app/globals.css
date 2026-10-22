@@ -265,3 +265,11 @@
   }
   [data-reveal] { opacity: 1; transform: none; }
 }
+
+/* Brass text: the brand brass (#a8834a) is about 3:1 on ivory, under the 4.5:1 small text needs (WCAG AA), so text set
+   in brass uses a deeper shade. Fills, borders and the logo keep the brand brass. text-brass is only used on light grounds. */
+@layer utilities {
+  .text-brass {
+    color: #80603a;
+  }
+}

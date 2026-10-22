@@ -232,6 +232,8 @@ export function sdkConfig(connectionString: string) {
     enableUnhandledPromiseRejectionTracking: false, disableCorrelationHeaders: true, enableCorsCorrelation: false,
     enableRequestHeaderTracking: false, enableResponseHeaderTracking: false, enableAjaxPerfTracking: false,
     enableAutoRouteTracking: true, autoTrackPageVisitTime: true,
+    // pagehide and visibilitychange still flush; the deprecated unload listener would block the back/forward cache.
+    disablePageUnloadEvents: ["unload"],
     samplingPercentage: 100, maxBatchInterval: 3000, loggingLevelConsole: 0, loggingLevelTelemetry: 0,
     featureOptIn: { SdkStats: { mode: 2 }, iKeyUsage: { mode: 2 } },
     extensionConfig: { AppInsightsCfgSyncPlugin: { blkCdnCfg: true, syncMode: 0, cfgUrl: "" } },

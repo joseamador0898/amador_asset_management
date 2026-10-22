@@ -3,6 +3,8 @@
  * Edit names, contact details and navigation here; every page reads from it.
  */
 
+import { studioLive } from "@/content/studio";
+
 export const site = {
   name: "Amador Asset Management",
   shortName: "Amador",
@@ -43,18 +45,21 @@ export const fund = {
 
 export type NavItem = { label: string; href: string; description?: string };
 
-export const mainNav: NavItem[] = [
+// Studio shows in the navigation once it has published media (content/studio.ts).
+const withStudio = (items: NavItem[]) => items.filter((i) => i.href !== "/studio" || studioLive);
+
+export const mainNav: NavItem[] = withStudio([
   { label: "Firm", href: "/firm", description: "Who we are and how we think" },
   { label: "Approach", href: "/approach", description: "Process, risk and research" },
   { label: "Insights", href: "/insights", description: "Frameworks, research and memos" },
   { label: "Studio", href: "/studio", description: "Clips, explainers and episodes" },
   { label: "Signals", href: "/signals", description: "Live market dashboard" },
   { label: "Nautilus Fund", href: "/fund", description: "Our forthcoming flagship" },
-];
+]);
 
 export const utilityNav: NavItem[] = [
   { label: "Briefings & Alerts", href: "/briefings" },
-  { label: "Investor Portal", href: "/fund#register" },
+  { label: "Register interest", href: "/fund#register" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -70,12 +75,12 @@ export const footerNav: { title: string; items: NavItem[] }[] = [
   },
   {
     title: "Research",
-    items: [
+    items: withStudio([
       { label: "Insights", href: "/insights" },
       { label: "Studio", href: "/studio" },
       { label: "Signals", href: "/signals" },
       { label: "Briefings & Alerts", href: "/briefings" },
-    ],
+    ]),
   },
   {
     title: "Fund",

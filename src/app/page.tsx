@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
@@ -17,8 +18,11 @@ import { getAllArticles } from "@/lib/insights";
 import { getGsMacro, getLiveBoard, getMacro, getPredictions, getQuotes } from "@/lib/signals";
 import { buildGsAlerts } from "@/lib/signals/alerts";
 import { fund } from "@/lib/site";
+import { studioLive } from "@/content/studio";
 
-const SERVICES = [
+export const metadata: Metadata = { alternates: { canonical: "/" } };
+
+const ALL_SERVICES = [
   {
     n: "01",
     title: fund.name,
@@ -55,6 +59,8 @@ const SERVICES = [
     cta: "Watch & listen",
   },
 ];
+const SERVICES = ALL_SERVICES.filter((s) => s.href !== "/studio" || studioLive);
+const COUNT_WORDS = ["", "one", "two", "three", "four", "five", "six"];
 
 const PRINCIPLES = [
   { title: "Risk before return", body: "We size for the storm, not the forecast. Every position starts with what it can lose." },
@@ -190,7 +196,7 @@ export default function HomePage() {
       {/* What we do */}
       <section>
         <div className="container-x py-20 md:py-28">
-          <SectionHeader eyebrow="What we do" title="One firm, five ways to work with us." />
+          <SectionHeader eyebrow="What we do" title={`One firm, ${COUNT_WORDS[SERVICES.length]} ways to work with us.`} />
           <ol className="mt-14 border-t border-ink">
             {SERVICES.map((s, i) => (
               <Reveal as="li" key={s.n} delay={i * 60} className="border-b border-line">

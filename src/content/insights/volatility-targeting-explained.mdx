@@ -1,0 +1,126 @@
+---
+title: "Volatility Targeting: Sizing for the Weather, Not the Forecast"
+dek: "Scaling exposure inversely to recent volatility keeps risk steadier and trims extreme returns, but whether it improves risk-adjusted returns depends on the asset class, the implementation and how honestly it is tested."
+date: "2026-10-22"
+category: "Frameworks"
+author: "Jose Luis Amador Jaime"
+tags: ["volatility targeting", "risk management", "position sizing", "portfolio construction", "tail risk"]
+featured: false
+cover: "bars"
+---
+
+Volatility targeting sizes a position by dividing a chosen level of risk by a recent estimate of volatility, so exposure shrinks when markets turn turbulent and grows when they calm. Because volatility clusters, the rule keeps risk steadier and, in long historical studies, has made extreme returns less frequent across asset classes; its effect on risk-adjusted returns is mixed, clearest in equities and credit and weaker in real-time tests. It reacts to volatility rather than predicting it, so it is best treated as a risk-management rule, not a source of return.
+
+## What is volatility targeting?
+
+Most portfolios hold fixed weights and let risk float. Volatility targeting fixes the risk, say 10% annualized volatility, and lets the holding float: exposure rises after calm periods and falls after turbulent ones.
+
+It is a time-series rule that resizes one portfolio over time. Inverse-volatility weighting, the simplest form of risk parity, is a cross-sectional rule that sets the relative weights of several assets. The two are often combined: balance risk across assets, then scale the whole portfolio to a target. The same logic sits inside many risk-parity portfolios, volatility-controlled indices and trend-following programs.
+
+## The formula, with a worked example
+
+Exposure, as a multiple of capital, is the target divided by the current volatility estimate, usually with a leverage cap:
+
+$$
+w_t = \min\left(\frac{\sigma_{\text{target}}}{\hat{\sigma}_t},\, L_{\max}\right)
+$$
+
+The estimate $\hat{\sigma}_t$ must use only information available before the trade. It is typically built from daily returns, annualized by multiplying by $\sqrt{252}$, and often computed as an exponentially weighted moving average (EWMA) of squared daily returns $r_t$:
+
+$$
+\hat{\sigma}_t^{2} = \lambda\,\hat{\sigma}_{t-1}^{2} + (1 - \lambda)\,r_t^{2}
+$$
+
+**Worked example (illustrative numbers, not data).** Target 10%, cap 1.5 times capital, a \$1,000,000 account, $\lambda = 0.94$.
+
+1. Estimated daily volatility is 1.26%, or $1.26\% \times \sqrt{252} \approx 20\%$ annualized.
+2. Exposure is $10\% / 20\% = 0.50$: \$500,000 in the risky asset, the rest in cash.
+3. The asset falls 4% the next day, leaving the position at \$480,000 and the account at \$980,000. Daily variance updates to $0.94 \times 1.26^{2} + 0.06 \times 4^{2} \approx 2.45$ (in squared percent): about 1.57% a day, or 24.9% annualized.
+4. Exposure falls to $10 / 24.9 \approx 0.40$, about \$394,000, so the rule sells roughly \$86,000, after the loss rather than before it.
+
+That is the method in miniature: risk returns toward the target, but only once the market has shown that it rose.
+
+<Chart
+  title="Illustrative: exposure for a 10% volatility target, capped at 1.5×"
+  caption="Illustrative calculation, not data or a forecast: the 10% target divided by each row's annualized volatility estimate, as a multiple of capital. Uncapped, the 5% row would be 2.0."
+  decimals={2}
+  data={[
+    { label: "5% (capped)", value: 1.5 },
+    { label: "8%", value: 1.25 },
+    { label: "10%", value: 1.0 },
+    { label: "15%", value: 0.6667 },
+    { label: "20%", value: 0.5, highlight: true },
+    { label: "30%", value: 0.3333 },
+    { label: "40%", value: 0.25 },
+  ]}
+/>
+
+## Why does volatility targeting work?
+
+**Volatility clusters.** Turbulent days tend to follow turbulent days, the pattern Engle (1982) modeled with ARCH. Recent volatility therefore forecasts near-term volatility reasonably well, and scaling by it keeps risk nearer the target than a fixed holding would.
+
+**Returns do not keep pace.** Sorting months by the previous month's volatility, Moreira and Muir (2017) and Harvey and coauthors (2018) both find that US equity volatility persists while average returns show no clear pattern. The reward per unit of risk is worse after turbulent months, so a mean-variance investor should hold less. The growth-optimal fraction discussed in [Position Sizing: Treat Kelly as a Ceiling](/insights/kelly-is-a-ceiling), $\mu/\sigma^{2}$, makes the same point: with $\mu$ roughly constant, optimal exposure scales with inverse variance, the rule Moreira and Muir test.
+
+**Momentum by another name.** In equities and credit, volatility tends to rise as prices fall, the so-called leverage effect, so the rule cuts exposure after declines. Harvey and coauthors show that this adds a dose of time-series momentum, which has historically helped, and that it explains much of why the benefits concentrate in these risk assets.
+
+## Does volatility targeting improve returns?
+
+It depends on what "improve" means.
+
+**The case for.** Fleming, Kirby and Ostdiek (2001) found that volatility timing across stocks, bonds and gold beat static portfolios with the same target return and volatility, a result robust to estimation risk and transaction costs. Barroso and Santa-Clara (2015) found that scaling equity momentum by its recent volatility nearly doubled its Sharpe ratio in their sample and largely eliminated its crashes. Moreira and Muir (2017) reported large alphas for volatility-managed versions of the market, several other equity factors and the currency carry trade.
+
+**The asset-class split.** Harvey and coauthors (2018) studied more than 60 assets with daily data from as early as 1926. In US equities from 1927 to 2017, scaling to a 10% target lifted the Sharpe ratio from 0.40 to between 0.48 and 0.51, depending on the estimator. Credit also benefited, but for bonds, currencies and commodities the effect on Sharpe ratios was negligible; US bond returns were in fact higher after volatile months. Across all assets, though, volatility targeting reduced the likelihood of extreme returns, in both tails, and it lowered maximum drawdowns for balanced 60/40 and risk-parity portfolios.
+
+**The case against.** Cederburg, O'Doherty, Wang and Yan (2020) tested 103 equity strategies as a real-time investor would. Volatility-managed versions did not systematically beat the originals. The earlier alphas rely on combinations that cannot be formed in real time, and realistic out-of-sample versions generally earned lower Sharpe ratios than the unmanaged portfolios. Bongaerts, Kang and van Dijk (2020) also found conventional targeting inconsistent in global equity markets, and report better results from acting only in extreme volatility states.
+
+The robust findings are steadier risk and fewer extreme outcomes. Higher Sharpe ratios are asset-specific, sensitive to sample and design, and should not be assumed.
+
+## How do you implement volatility targeting?
+
+The formula is one line; the choices around it decide how it behaves.
+
+1. **Scope.** Apply the target to each asset, the whole portfolio or both. Portfolio-level targets depend on correlation estimates, which can shift abruptly.
+2. **Lookback and weighting.** Short half-lives react fast and, in Harvey and coauthors' tests, cut tails the most, but they trade more and chase noise. Equal-weighted windows jump when a large return drops out; exponential weights fade it gradually. Blending a fast and a slow estimate is a reasonable compromise.
+3. **Volatility or variance.** Inverse-variance scaling can call for very high leverage after calm spells. Inverse-volatility scaling trades less, and Moreira and Muir report that it performs about as well.
+4. **Caps and floors.** A leverage cap limits borrowing when volatility is unusually low, which is when a sudden shock would hurt most. A floor keeps some exposure for rebounds.
+5. **Rebalancing frequency.** Daily rebalancing tracks the target closely but turns noise into trades. Weekly or monthly schedules, or a band that acts only when target exposure drifts more than, say, 10% to 20% from current exposure (illustrative values), trade less at the price of a looser fit.
+6. **Costs.** In Harvey and coauthors' US equity tests, turnover ranged from about five round trips a year for the fastest estimators to under one for the slowest, and at the low post-2008 costs they assumed, gross and net Sharpe ratios matched to two decimals. Less liquid markets, spreads that widen in turbulence and taxes change that arithmetic.
+7. **Testing.** Every lookback, cap and band you try is another trial. Apply the discipline in [How to Read a Backtest Like a Skeptic](/insights/read-a-backtest-like-a-skeptic), and prefer settings that work across a broad range.
+
+<Callout type="method" title="Half-lives and decay factors">
+An EWMA with decay factor $\lambda$ halves an observation's weight every $\ln 0.5 / \ln \lambda$ days. RiskMetrics' daily $\lambda = 0.94$ implies a half-life of about 11 trading days; the 20-day half-life in Harvey and coauthors' main tests corresponds to $\lambda \approx 0.966$. Both use squared returns without subtracting a mean, which over a few weeks adds noise rather than information.
+</Callout>
+
+## When does volatility targeting fail?
+
+Its weaknesses follow from its strength: it responds to volatility that has already happened.
+
+**The spike arrives first.** A shock from a calm market hits at full size, and at full leverage if calm has pushed exposure to its cap. Before February 2018, realized and implied volatility in equities and currencies had touched record lows; on February 5 the VIX jumped 20 points, its largest one-day rise since 1987 (BIS, 2018). In the worked example, if true volatility had jumped to 40%, the portfolio would run at about 16% even after cutting to 0.40, until the estimate caught up.
+
+**Whipsaws.** When volatility spikes and fades quickly, the rule sells after the drop and buys back once calm returns, by which time prices may have recovered, paying costs both ways. Rebounds that begin while trailing volatility is high are met with reduced exposure: Moreira and Muir note that their strategy cashed out almost completely after the declines of late 2008 and returned only as volatility receded.
+
+**Crowding.** In risk assets the rule is procyclical, selling into declines and buying into calm, in the same direction as trend followers. When many portfolios follow similar rules, a spike can set off simultaneous selling that pushes volatility higher still. The BIS described forced sales by commodity trading advisers and other momentum traders as amplifying the February 2018 moves, and called the daily rebalancing of leveraged and inverse volatility products a key factor in the spike despite their relatively small positions.
+
+Finally, volatility summarizes the past. It says nothing about a default, policy shift or liquidity squeeze that has not yet reached prices.
+
+<PullQuote>Volatility targeting adjusts to the weather it has just seen. It keeps risk steadier, but it cannot see the next storm coming.</PullQuote>
+
+## Key takeaways
+
+- Exposure equals a risk target divided by a recent volatility estimate, usually capped: $w_t = \min(\sigma_{\text{target}}/\hat{\sigma}_t,\, L_{\max})$.
+- It works because volatility clusters and, in equities, average returns do not keep pace with it.
+- Across asset classes it has reduced extreme returns; Sharpe-ratio gains appear mainly in equities, credit and portfolios heavy in them, and are weaker in real-time tests.
+- Lookback, weighting, caps, rebalancing and costs decide how it behaves.
+- It struggles when shocks come from calm markets, when volatility whipsaws and when many investors follow the same rule.
+
+## Sources
+
+- Bank for International Settlements (2018). "Volatility is back." *BIS Quarterly Review*, March 2018. The February 2018 sell-off and what amplified it.
+- Barroso, P., and Santa-Clara, P. (2015). "Momentum Has Its Moments." *Journal of Financial Economics*, 116(1), 111–120. Risk-managed momentum: fewer crashes and a higher Sharpe ratio.
+- Bongaerts, D., Kang, X., and van Dijk, M. (2020). "Conditional Volatility Targeting." *Financial Analysts Journal*, 76(4), 54–71. Conventional targeting is inconsistent in global equities; a conditional alternative.
+- Cederburg, S., O'Doherty, M. S., Wang, F., and Yan, X. (2020). "On the Performance of Volatility-Managed Portfolios." *Journal of Financial Economics*, 138(1), 95–117. Real-time tests across 103 equity strategies.
+- Engle, R. F. (1982). "Autoregressive Conditional Heteroscedasticity with Estimates of the Variance of United Kingdom Inflation." *Econometrica*, 50(4), 987–1007. The ARCH model of clustering volatility.
+- Fleming, J., Kirby, C., and Ostdiek, B. (2001). "The Economic Value of Volatility Timing." *Journal of Finance*, 56(1), 329–352. Volatility timing across stocks, bonds and gold.
+- Harvey, C. R., Hoyle, E., Korgaonkar, R., Rattray, S., Sargaison, M., and Van Hemert, O. (2018). "The Impact of Volatility Targeting." *Journal of Portfolio Management*, 45(1), 14–33. Evidence across more than 60 assets since 1926.
+- J.P. Morgan and Reuters (1996). *RiskMetrics—Technical Document*, 4th edition. The EWMA estimator with a daily decay factor of 0.94.
+- Moreira, A., and Muir, T. (2017). "Volatility-Managed Portfolios." *Journal of Finance*, 72(4), 1611–1644. Alphas from volatility-managed equity factors and the currency carry trade.

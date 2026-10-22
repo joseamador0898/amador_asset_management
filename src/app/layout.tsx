@@ -1,10 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
 import { Inter, JetBrains_Mono, Newsreader } from "next/font/google";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Analytics } from "@/components/analytics/Analytics";
 import { site } from "@/lib/site";
+import { JsonLd, siteGraph } from "@/lib/structured-data";
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -49,7 +49,11 @@ export const metadata: Metadata = {
     locale: "en_US",
   },
   twitter: { card: "summary_large_image", title: site.name, description: site.description },
-  alternates: { canonical: "/" },
+  // Search Console and Bing Webmaster Tools ownership tags, when set.
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
+    other: process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION } : undefined,
+  },
 };
 
 export const viewport: Viewport = {
@@ -59,7 +63,14 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${newsreader.variable} ${inter.variable} ${jetbrains.variable} antialiased`}>
+      <head>
+        {adsenseClient && (
+          // AdSense's own snippet, in <head> as Google asks: its site check reads the server HTML.
+          <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`} crossOrigin="anonymous" />
+        )}
+      </head>
       <body className="flex min-h-screen flex-col">
+        <JsonLd data={siteGraph()} />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:bg-ink focus:px-4 focus:py-2 focus:text-paper"
@@ -72,14 +83,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </main>
         <Footer />
         <Analytics />
-        {adsenseClient && (
-          <Script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
-            crossOrigin="anonymous"
-            strategy="afterInteractive"
-          />
-        )}
       </body>
     </html>
   );

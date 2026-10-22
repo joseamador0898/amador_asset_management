@@ -6,7 +6,7 @@ function Item({ q }: { q: Quote }) {
   return (
     <li className="flex shrink-0 items-baseline gap-2.5 px-6">
       <span className="font-mono text-[0.7rem] font-semibold tracking-wide text-paper">{q.symbol.replace("/USD", "")}</span>
-      <span className="text-[0.7rem] text-paper/45">{q.label}</span>
+      <span className="text-[0.7rem] text-paper/65">{q.label}</span>
       <span className="font-mono text-[0.72rem] tabular text-paper/85">{fmt.price(q.price)}</span>
       <span className={cn("font-mono text-[0.72rem] tabular", up ? "text-up" : "text-down")}>
         {up ? "▲" : "▼"} {Math.abs(q.changePct).toFixed(2)}%

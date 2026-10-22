@@ -87,24 +87,31 @@ async function InsiderPanel() {
   );
 }
 
+// Partner panels render only with a live licensed feed: blurred illustrative layouts read as placeholder content.
 async function PartnerPanels() {
   const [congress, darkpool] = await Promise.all([getCongress(), getDarkPool()]);
+  if (!congress.source.live && !darkpool.source.live) return null;
   return (
     <div className="flex flex-col gap-5">
-      <Panel title="Congressional trades" subtitle="Periodic transaction reports" source={congress.source} locked>
-        <CongressTable trades={congress.data} />
-      </Panel>
-      <Panel title="Dark pool prints" subtitle="Largest off-exchange blocks" source={darkpool.source} locked>
-        <DarkPoolTable prints={darkpool.data} />
-      </Panel>
+      {congress.source.live && (
+        <Panel title="Congressional trades" subtitle="Periodic transaction reports" source={congress.source}>
+          <CongressTable trades={congress.data} />
+        </Panel>
+      )}
+      {darkpool.source.live && (
+        <Panel title="Dark pool prints" subtitle="Largest off-exchange blocks" source={darkpool.source}>
+          <DarkPoolTable prints={darkpool.data} />
+        </Panel>
+      )}
     </div>
   );
 }
 
 async function TidePanel() {
   const tide = await getMarketTide();
+  if (!tide.source.live) return null;
   return (
-    <Panel title="Market tide" subtitle="Net call vs net put premium across all listed options, intraday" source={tide.source} locked className="lg:col-span-2">
+    <Panel title="Market tide" subtitle="Net call vs net put premium across all listed options, intraday" source={tide.source} className="lg:col-span-2">
       <MarketTide points={tide.data} />
     </Panel>
   );

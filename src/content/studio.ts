@@ -45,6 +45,14 @@ export const clips: Clip[] = [
   { id: "ten-seeds", title: "One lucky backtest is not evidence", series: "Paper to Portfolio", platform: "YouTube Shorts", duration: "0:59", status: "coming-soon" },
 ];
 
+/**
+ * Studio is listed (navigation, home page, sitemap) and indexable only once something is published: a page of
+ * "Coming soon" cards is the kind of under-construction content AdSense and search reviewers reject.
+ */
+export const studioLive =
+  (featuredVideo.status === "published" && Boolean(featuredVideo.youtubeId || featuredVideo.url)) ||
+  clips.some((c) => c.status === "published" && Boolean(c.youtubeId || c.url));
+
 export const podcast = {
   name: "The Amador Memo",
   description: "Conversations with investors, researchers and builders on risk, markets and the craft of allocation.",

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { PageHero } from "@/components/ui/Section";
 import { ContactForm } from "@/components/forms/ContactForm";
 import { site } from "@/lib/site";
+import { JsonLd, pageGraph } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
+      <JsonLd data={pageGraph("ContactPage", "Contact", "/contact")} />
       <PageHero eyebrow="Contact" title="Start a conversation." intro="Tell us what you're working on. We read every message and reply to most within one business day." />
       <section>
         <div className="container-x grid gap-16 py-16 md:py-24 lg:grid-cols-12">

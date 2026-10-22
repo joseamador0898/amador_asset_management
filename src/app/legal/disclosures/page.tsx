@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { LegalPage } from "@/components/legal/LegalPage";
 import { fund, site } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Important Disclosures", alternates: { canonical: "/legal/disclosures" } };
+export const metadata: Metadata = {
+  title: "Important Disclosures",
+  description: "Important disclosures for Amador Asset Management: educational content only, no investment advice, third-party market data, research limitations and the pre-launch status of the Amador Nautilus Fund.",
+  alternates: { canonical: "/legal/disclosures" },
+};
 
 export default function DisclosuresPage() {
   return (
@@ -46,7 +50,7 @@ export default function DisclosuresPage() {
         Bank of St. Louis), Cboe delayed quotes, SEC EDGAR filings, Polymarket and, where licensed, Unusual Whales and Goldman
         Sachs Global Investment Research (via Marquee). Data may be
         delayed, incomplete or inaccurate and is provided &ldquo;as is&rdquo; without warranty. Options premium figures are
-        estimates. Panels marked &ldquo;Sample&rdquo; or &ldquo;Partner data&rdquo; show illustrative data, not live markets.
+        estimates. If a provider is unavailable, the affected panel shows sample data and is labeled &ldquo;Sample&rdquo;.
         Trademarks and data remain the property of their respective owners, and their appearance does not imply endorsement.
       </p>
       <p>

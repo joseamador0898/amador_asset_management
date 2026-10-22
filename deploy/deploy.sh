@@ -23,3 +23,6 @@ echo "built $sha"
 REMOTE
 
 ssh "$TARGET" 'sudo systemctl restart amador-web && sleep 3 && systemctl is-active amador-web && curl -fsS -o /dev/null -w "app: HTTP %{http_code}\n" http://127.0.0.1:8781/'
+
+# Ask the IndexNow engines (Bing and others) to recrawl the sitemap's pages; a failure here never fails the deploy.
+node "$(dirname "$0")/../scripts/indexnow.mjs" || echo "IndexNow submission failed (the site is deployed)"

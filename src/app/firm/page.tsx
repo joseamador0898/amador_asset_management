@@ -4,6 +4,7 @@ import { ButtonLink, CircleArrowLink } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { PageHero, SectionHeader } from "@/components/ui/Section";
 import { fund, site } from "@/lib/site";
+import { JsonLd, pageGraph } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "The firm",
@@ -30,6 +31,7 @@ const HOW = [
 export default function FirmPage() {
   return (
     <>
+      <JsonLd data={pageGraph("AboutPage", "The firm", "/firm")} />
       <PageHero
         eyebrow="The firm"
         title={

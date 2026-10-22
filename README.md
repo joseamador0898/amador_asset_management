@@ -157,6 +157,21 @@ Privacy by design: no cookies, Do Not Track and Global Privacy Control respected
 
 To keep your own visits out, open amadoram.com/?noanalytics=1 once in each browser you use (`?noanalytics=0` turns statistics back on). The browser connection string reaches the build through `NEXT_PUBLIC_APPINSIGHTS_CONNECTION_STRING`: `bash deploy/azure/analytics.sh vm-env` writes it to the VM, then redeploy.
 
+## SEO, AI assistants and AdSense
+
+| Piece | Where |
+|---|---|
+| Structured data | `src/lib/structured-data.tsx`: Organization, WebSite and founder (root layout), Article and breadcrumbs (articles), About/Contact/Collection pages |
+| Social cards | `src/app/opengraph-image.tsx` (site) and `src/app/insights/[slug]/opengraph-image.tsx` (one per article) |
+| Crawling | `/robots.txt` (`src/app/robots.txt/route.ts`): AI search bots allowed by name, training bots allowed under `*`; `/sitemap.xml` |
+| AI assistants | `/llms.txt`, `/llms-full.txt` and a markdown twin of every article at `/insights/<slug>.md` (`src/lib/markdown.ts`) |
+| IndexNow | Key file in `public/`, `scripts/indexnow.mjs`; `deploy/deploy.sh` notifies Bing and the other IndexNow engines after each deploy |
+| Ownership tags | `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` (Search Console) and `NEXT_PUBLIC_BING_SITE_VERIFICATION` (Bing Webmaster Tools), if you verify with a meta tag instead of DNS |
+
+Google says AI Overviews and AI Mode need nothing beyond normal SEO; `llms.txt` and the markdown twins are for other assistants and agents, not a ranking lever.
+
+**AdSense readiness.** Google reviews the whole site, and pages without real content are the usual reason for "low value content" rejections. So Studio stays hidden (a 404, out of the navigation and sitemap) until a video or clip is published in `src/content/studio.ts`, and Signals hides partner panels without a live licensed feed. When AdSense gives you a publisher ID, set `NEXT_PUBLIC_ADSENSE_CLIENT="ca-pub-…"` in `/etc/amador/amador.env` and redeploy: that adds the verification meta tag, the AdSense script and `/ads.txt`. In AdSense, turn on a Google-certified consent message (Privacy & messaging) for visitors in the EEA, UK and Switzerland. The privacy notice already discloses Google's advertising cookies and the opt-outs.
+
 ## Pre-launch checklist
 
 - [ ] **Securities counsel review** of `/fund`, `/legal/*` and all fund-related copy. Public promotion of a private fund depends on the offering exemption (e.g. Rule 506(b) prohibits general solicitation; 506(c) allows it with verified accredited investors).

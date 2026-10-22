@@ -20,7 +20,7 @@ export function Logo({ tone = "dark", className, compact = false }: { tone?: "da
   return (
     <Link
       href="/"
-      aria-label="Amador Asset Management, home"
+      aria-label={compact ? "Amador Asset Management, home" : undefined}
       className={cn("group inline-flex items-center gap-3", tone === "light" ? "text-paper" : "text-ink", className)}
     >
       <Monogram
@@ -29,10 +29,12 @@ export function Logo({ tone = "dark", className, compact = false }: { tone?: "da
       />
       {!compact && (
         <span className="flex flex-col whitespace-nowrap leading-none">
-          <span className="font-serif text-[1.35rem] font-medium tracking-[0.22em]">AMADOR</span>
+          {/* The visible words are the link's name (with a spoken "home"), so speech users can say what they see. */}
+          <span className="font-serif text-[1.35rem] font-medium tracking-[0.22em]">AMADOR</span>{" "}
           <span className={cn("mt-1 text-[0.56rem] font-semibold tracking-[0.3em]", tone === "light" ? "text-brass-light" : "text-muted")}>
             ASSET MANAGEMENT
           </span>
+          <span className="sr-only">, home</span>
         </span>
       )}
     </Link>
