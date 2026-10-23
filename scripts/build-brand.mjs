@@ -341,6 +341,8 @@ const report = [
   png("youtube-banner-2560x1440.png", banner(2560, 1440, { x: 507, y: 509, w: 1546, h: 423 }), 2560),
   // Email signature (shown at 300 x 75; white so it reads in light and dark mail clients).
   png("email-signature-logo-600x150.png", fit(H, 600, 150, 16, C.white), 600),
+  // Google consent message logo (AdSense Privacy & messaging): PNG or JPG, at most 150 KB, 5:1 recommended.
+  png("consent-message-logo-800x160.png", fit(H, 800, 160, 10), 800),
   // Business cards at 300 dpi with bleed, for print services.
   png("business-card-front-1125x675.png", cardFront(), 1125),
   png("business-card-back-1125x675.png", cardBack(), 1125),

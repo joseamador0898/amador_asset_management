@@ -117,6 +117,7 @@ The logo (designed on a Claude Design canvas) is an **A drawn as a sail on a bra
 | `png/stripe-logo-1200x300.png` | Stripe **Logo**. Brand color `#A8834A`, accent color `#0A0E16` |
 | `png/google-ads-logo-square-1200.png`, `png/google-ads-icon-square-1200*.png` | Google Ads square logo (1:1) |
 | `png/google-ads-logo-landscape-1200x300.png` | Google Ads landscape logo (4:1) |
+| `png/consent-message-logo-800x160.png` | AdSense → Privacy & messaging logo for the EEA/UK/CH consent message (PNG or JPG, ≤150 KB, 5:1) |
 | `png/social-avatar-1080.png` | YouTube, X, LinkedIn, Instagram avatar |
 | `png/linkedin-banner-1584x396.png`, `png/linkedin-company-cover-1128x191.png` | LinkedIn profile background and company page cover |
 | `png/x-header-1500x500.png`, `png/youtube-banner-2560x1440.png` | X header and YouTube channel art (logo inside each safe area) |
