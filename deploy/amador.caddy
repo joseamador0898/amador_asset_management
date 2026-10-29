@@ -20,6 +20,8 @@ http://amadoram.com, http://www.amadoram.com {
 
 www.amadoram.com {
 	import amador_adstxt
+	# HSTS on the redirect too, so www is covered as well as the apex (audits flag a host without it).
+	header Strict-Transport-Security "max-age=31536000"
 	handle {
 		redir https://amadoram.com{uri} permanent
 	}

@@ -56,7 +56,7 @@ export default function PrivacyPage() {
         your browser at any time by visiting{" "}
         {/* A full page load on purpose: the analytics script reads the opt-out from the address when a page loads. */}
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-        <a href="/?noanalytics=1">amadoram.com/?noanalytics=1</a>.
+        <a href="/?noanalytics=1" rel="nofollow">amadoram.com/?noanalytics=1</a>.
       </p>
 
       <h2>Advertising</h2>
