@@ -89,7 +89,7 @@ export function articleGraph(meta: ArticleMeta, wordCount: number, twinSlug?: st
         description: meta.dek,
         url,
         mainEntityOfPage: url,
-        image: [`${url}/opengraph-image`],
+        image: [`${site.url}/og/${lang}/${meta.slug}`],
         datePublished: meta.date,
         dateModified: meta.updated ?? meta.date,
         author:

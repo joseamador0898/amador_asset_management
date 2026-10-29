@@ -45,6 +45,7 @@ export async function generateMetadata({ params }: PageProps<"/insights/[slug]">
       url: `/insights/${meta.slug}`,
       siteName: site.name,
       locale: "en_US",
+      images: [{ url: `/og/en/${meta.slug}`, width: 1200, height: 630, alt: meta.title }],
       title: meta.title,
       description: meta.dek,
       publishedTime: meta.date,
@@ -53,7 +54,7 @@ export async function generateMetadata({ params }: PageProps<"/insights/[slug]">
       section: meta.category,
       tags: meta.tags,
     },
-    twitter: { card: "summary_large_image", title: meta.title, description: meta.dek },
+    twitter: { card: "summary_large_image", title: meta.title, description: meta.dek, images: [`/og/en/${meta.slug}`] },
   };
 }
 

@@ -43,6 +43,7 @@ export async function generateMetadata({ params }: PageProps<"/es/analisis/[slug
       url: path,
       siteName: site.name,
       locale: "es_MX",
+      images: [{ url: `/og/es/${meta.slug}`, width: 1200, height: 630, alt: meta.title }],
       title: meta.title,
       description: meta.dek,
       publishedTime: meta.date,
@@ -51,7 +52,7 @@ export async function generateMetadata({ params }: PageProps<"/es/analisis/[slug
       section: CATEGORY_LABELS.es[meta.category],
       tags: meta.tags,
     },
-    twitter: { card: "summary_large_image", title: meta.title, description: meta.dek },
+    twitter: { card: "summary_large_image", title: meta.title, description: meta.dek, images: [`/og/es/${meta.slug}`] },
   };
 }
 

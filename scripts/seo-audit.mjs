@@ -115,7 +115,8 @@ await probe("article .md twin", `${SITE}/insights/the-arithmetic-of-drawdowns.md
 await probe("es article .md twin", `${SITE}/es/analisis/la-aritmetica-de-los-drawdowns.md`);
 await probe("es 404 page", `${SITE}/es/no-existe`);
 await probe("es unknown article", `${SITE}/es/analisis/no-existe`);
-await probe("opengraph-image", `${SITE}/opengraph-image`);
+await probe("og image en", `${SITE}/og/en`);
+await probe("og image es", `${SITE}/og/es`);
 await probe("query string variant", `${SITE}/?utm_source=test`);
 
 // Flags
@@ -161,6 +162,16 @@ for (const r of results) {
     const other = byUrl.get(u);
     if (!other) issues.push(`${p}: hreflang ${code} points to ${u.replace(SITE, "") || "/"}, which is not in the sitemap`);
     else if (!alternatesOf(other).some(([, back]) => back === r.url)) issues.push(`${p}: hreflang ${code} ${u.replace(SITE, "") || "/"} does not link back`);
+  }
+}
+
+// Every distinct og:image must load (social cards, and the Article image in the structured data uses the same address).
+for (const img of [...new Set(results.map((r) => r.og?.image).filter(Boolean))]) {
+  try {
+    const res = await fetch(local(img), { headers: { "user-agent": UA } });
+    if (res.status !== 200 || !String(res.headers.get("content-type")).startsWith("image/")) issues.push(`og:image ${img.replace(/^https?:\/\/[^/]+/, "")}: HTTP ${res.status} ${res.headers.get("content-type")}`);
+  } catch (e) {
+    issues.push(`og:image ${img}: ${e.message}`);
   }
 }
 

@@ -10,7 +10,8 @@ Description=Amador: warm the cached market pages
 After=amador-web.service
 Requires=amador-web.service
 
+# Each URL has its own --output: curl pairs them in order, and a URL without one prints its page to the journal.
 [Service]
 Type=oneshot
 User=amador
-ExecStart=/usr/bin/curl --silent --show-error --output /dev/null --max-time 90 --header "Host: amadoram.com" --user-agent "amador-warm/1 (cache warmer)" http://127.0.0.1:8781/ http://127.0.0.1:8781/signals http://127.0.0.1:8781/briefings http://127.0.0.1:8781/es http://127.0.0.1:8781/es/senales http://127.0.0.1:8781/es/boletines
+ExecStart=/usr/bin/curl --silent --show-error --max-time 90 --header "Host: amadoram.com" --user-agent "amador-warm/1 (cache warmer)" --output /dev/null http://127.0.0.1:8781/ --output /dev/null http://127.0.0.1:8781/signals --output /dev/null http://127.0.0.1:8781/briefings --output /dev/null http://127.0.0.1:8781/es --output /dev/null http://127.0.0.1:8781/es/senales --output /dev/null http://127.0.0.1:8781/es/boletines
