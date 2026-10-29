@@ -1,0 +1,129 @@
+---
+title: "Volatility targeting: ajustar el tamaño al clima, no al pronóstico"
+dek: "Escalar la exposición en proporción inversa a la volatilidad reciente mantiene el riesgo más estable y recorta los rendimientos extremos, pero que mejore o no los rendimientos ajustados por riesgo depende de la clase de activo, de la implementación y de la honestidad con que se ponga a prueba."
+seoTitle: "Volatility targeting explicado: cuándo ayuda"
+description: "Volatility targeting: escalar la exposición según la volatilidad reciente estabiliza el riesgo y recorta los extremos. Cuándo mejora el Sharpe y cuándo no."
+date: "2026-10-22"
+category: "Frameworks"
+author: "Jose Luis Amador Jaime"
+tags: ["volatility targeting", "gestión de riesgo", "tamaño de posiciones", "construcción de portafolios", "riesgo de cola"]
+featured: false
+cover: "bars"
+translationOf: "volatility-targeting-explained"
+---
+
+El volatility targeting (objetivo de volatilidad) dimensiona una posición dividiendo un nivel de riesgo elegido entre una estimación reciente de la volatilidad, de modo que la exposición se reduce cuando los mercados se vuelven turbulentos y crece cuando se calman. Como la volatilidad se agrupa en rachas, la regla mantiene el riesgo más estable y, en estudios históricos de largo plazo, ha hecho menos frecuentes los rendimientos extremos en todas las clases de activos; su efecto sobre los rendimientos ajustados por riesgo es mixto, más claro en acciones y crédito y más débil en pruebas en tiempo real. Reacciona a la volatilidad en lugar de predecirla, así que conviene tratarlo como una regla de gestión de riesgo, no como una fuente de rendimiento.
+
+## ¿Qué es el volatility targeting?
+
+La mayoría de los portafolios mantienen pesos fijos y dejan que el riesgo flote. El volatility targeting fija el riesgo, digamos 10% de volatilidad anualizada, y deja que la posición flote: la exposición sube después de periodos de calma y baja después de periodos turbulentos.
+
+Es una regla de series de tiempo que redimensiona un mismo portafolio a lo largo del tiempo. La ponderación por volatilidad inversa, la forma más simple de paridad de riesgo, es una regla de corte transversal que fija los pesos relativos de varios activos. Las dos suelen combinarse: equilibrar el riesgo entre activos y luego escalar el portafolio completo a un objetivo. La misma lógica está presente en muchos portafolios de paridad de riesgo, índices con control de volatilidad y programas de seguimiento de tendencia.
+
+## La fórmula, con un ejemplo práctico
+
+La exposición, como múltiplo del capital, es el objetivo dividido entre la estimación actual de volatilidad, por lo general con un tope de apalancamiento:
+
+$$
+w_t = \min\left(\frac{\sigma_{\text{target}}}{\hat{\sigma}_t},\, L_{\max}\right)
+$$
+
+La estimación $\hat{\sigma}_t$ debe usar solo información disponible antes de la operación. Normalmente se construye a partir de rendimientos diarios, anualizados al multiplicar por $\sqrt{252}$, y con frecuencia se calcula como una media móvil ponderada exponencialmente (EWMA) de los rendimientos diarios al cuadrado $r_t$:
+
+$$
+\hat{\sigma}_t^{2} = \lambda\,\hat{\sigma}_{t-1}^{2} + (1 - \lambda)\,r_t^{2}
+$$
+
+**Ejemplo práctico (cifras ilustrativas, no datos).** Objetivo de 10%, tope de 1.5 veces el capital, una cuenta de \$1,000,000, $\lambda = 0.94$.
+
+1. La volatilidad diaria estimada es 1.26%, o $1.26\% \times \sqrt{252} \approx 20\%$ anualizada.
+2. La exposición es $10\% / 20\% = 0.50$: \$500,000 en el activo riesgoso y el resto en efectivo.
+3. El activo cae 4% al día siguiente, lo que deja la posición en \$480,000 y la cuenta en \$980,000. La varianza diaria se actualiza a $0.94 \times 1.26^{2} + 0.06 \times 4^{2} \approx 2.45$ (en porcentaje al cuadrado): cerca de 1.57% al día, o 24.9% anualizada.
+4. La exposición baja a $10 / 24.9 \approx 0.40$, unos \$394,000, así que la regla vende aproximadamente \$86,000, después de la pérdida y no antes.
+
+Ese es el método en miniatura: el riesgo vuelve hacia el objetivo, pero solo una vez que el mercado ha mostrado que subió.
+
+<Chart
+  title="Ilustrativo: exposición para un objetivo de volatilidad de 10%, con tope de 1.5×"
+  caption="Cálculo ilustrativo, no datos ni pronóstico: el objetivo de 10% dividido entre la estimación de volatilidad anualizada de cada fila, como múltiplo del capital. Sin tope, la fila de 5% sería 2.0."
+  decimals={2}
+  data={[
+    { label: "5% (con tope)", value: 1.5 },
+    { label: "8%", value: 1.25 },
+    { label: "10%", value: 1.0 },
+    { label: "15%", value: 0.6667 },
+    { label: "20%", value: 0.5, highlight: true },
+    { label: "30%", value: 0.3333 },
+    { label: "40%", value: 0.25 },
+  ]}
+/>
+
+## ¿Por qué funciona el volatility targeting?
+
+**La volatilidad se agrupa.** Los días turbulentos tienden a seguir a días turbulentos, el patrón que Engle (1982) modeló con ARCH. La volatilidad reciente pronostica por tanto razonablemente bien la volatilidad de corto plazo, y escalar según ella mantiene el riesgo más cerca del objetivo de lo que lo haría una posición fija.
+
+**Los rendimientos no siguen el ritmo.** Al ordenar los meses según la volatilidad del mes anterior, Moreira y Muir (2017) y Harvey y coautores (2018) encuentran que la volatilidad de las acciones de EE. UU. persiste, mientras que los rendimientos promedio no muestran un patrón claro. La recompensa por unidad de riesgo es peor después de meses turbulentos, así que un inversionista de media-varianza debería tener menos exposición. La fracción óptima para el crecimiento que se discute en [Tamaño de posición: el criterio de Kelly es un techo](/es/analisis/el-criterio-de-kelly-es-un-techo), $\mu/\sigma^{2}$, apunta en la misma dirección: con $\mu$ aproximadamente constante, la exposición óptima escala con la varianza inversa, la regla que Moreira y Muir ponen a prueba.
+
+**Momentum con otro nombre.** En acciones y crédito, la volatilidad tiende a subir cuando los precios caen, el llamado efecto apalancamiento (leverage effect), así que la regla recorta la exposición después de las caídas. Harvey y coautores muestran que esto añade una dosis de momentum de series de tiempo, que históricamente ha ayudado, y que explica buena parte de por qué los beneficios se concentran en estos activos de riesgo.
+
+## ¿El volatility targeting mejora los rendimientos?
+
+Depende de qué signifique "mejorar".
+
+**Los argumentos a favor.** Fleming, Kirby y Ostdiek (2001) encontraron que el timing de volatilidad entre acciones, bonos y oro superó a los portafolios estáticos con el mismo rendimiento objetivo y la misma volatilidad, un resultado robusto al riesgo de estimación y a los costos de transacción. Barroso y Santa-Clara (2015) encontraron que escalar el momentum accionario según su volatilidad reciente casi duplicó su ratio de Sharpe en su muestra y eliminó en gran medida sus desplomes. Moreira y Muir (2017) reportaron alfas elevadas para versiones gestionadas por volatilidad del mercado, de varios otros factores accionarios y del carry trade de divisas.
+
+**La división por clase de activo.** Harvey y coautores (2018) estudiaron más de 60 activos con datos diarios desde fechas tan tempranas como 1926. En acciones de EE. UU. de 1927 a 2017, escalar a un objetivo de 10% elevó el ratio de Sharpe de 0.40 a entre 0.48 y 0.51, según el estimador. El crédito también se benefició, pero en bonos, divisas y materias primas el efecto sobre los ratios de Sharpe fue insignificante; los rendimientos de los bonos de EE. UU. fueron de hecho más altos después de meses volátiles. En todos los activos, sin embargo, el volatility targeting redujo la probabilidad de rendimientos extremos, en ambas colas, y disminuyó las caídas máximas (drawdowns) de los portafolios balanceados 60/40 y de paridad de riesgo.
+
+**Los argumentos en contra.** Cederburg, O'Doherty, Wang y Yan (2020) pusieron a prueba 103 estrategias accionarias como lo haría un inversionista en tiempo real. Las versiones gestionadas por volatilidad no superaron sistemáticamente a las originales. Las alfas anteriores dependen de combinaciones que no pueden formarse en tiempo real, y las versiones realistas fuera de muestra obtuvieron en general ratios de Sharpe más bajos que los portafolios sin gestionar. Bongaerts, Kang y van Dijk (2020) también encontraron que el targeting convencional es inconsistente en los mercados accionarios globales, y reportan mejores resultados al actuar solo en estados de volatilidad extrema.
+
+Los hallazgos robustos son un riesgo más estable y menos resultados extremos. Los ratios de Sharpe más altos son específicos de cada activo, sensibles a la muestra y al diseño, y no deben darse por sentados.
+
+## ¿Cómo se implementa el volatility targeting?
+
+La fórmula es una sola línea; las decisiones a su alrededor determinan cómo se comporta.
+
+1. **Alcance.** Aplique el objetivo a cada activo, al portafolio completo o a ambos. Los objetivos a nivel de portafolio dependen de estimaciones de correlación, que pueden cambiar de forma abrupta.
+2. **Ventana y ponderación.** Las vidas medias cortas reaccionan rápido y, en las pruebas de Harvey y coautores, son las que más recortan las colas, pero operan más y persiguen el ruido. Las ventanas de pesos iguales saltan cuando un rendimiento grande sale de la muestra; los pesos exponenciales lo desvanecen gradualmente. Combinar una estimación rápida y una lenta es un compromiso razonable.
+3. **Volatilidad o varianza.** El escalamiento por varianza inversa puede exigir un apalancamiento muy alto después de rachas de calma. El escalamiento por volatilidad inversa opera menos, y Moreira y Muir reportan que funciona casi igual de bien.
+4. **Topes y pisos.** Un tope de apalancamiento limita el endeudamiento cuando la volatilidad es inusualmente baja, que es cuando un choque repentino haría más daño. Un piso conserva algo de exposición para los rebotes.
+5. **Frecuencia de rebalanceo.** El rebalanceo diario sigue el objetivo de cerca, pero convierte el ruido en operaciones. Los calendarios semanales o mensuales, o una banda que actúa solo cuando la exposición objetivo se aleja más de, digamos, 10% a 20% de la exposición actual (valores ilustrativos), operan menos a cambio de un ajuste menos preciso.
+6. **Costos.** En las pruebas de Harvey y coautores con acciones de EE. UU., la rotación fue desde unas cinco vueltas completas (round trips) al año para los estimadores más rápidos hasta menos de una para los más lentos, y con los bajos costos posteriores a 2008 que supusieron, los ratios de Sharpe brutos y netos coincidieron hasta el segundo decimal. Los mercados menos líquidos, los diferenciales que se amplían en la turbulencia y los impuestos cambian esa aritmética.
+7. **Pruebas.** Cada ventana, tope y banda que pruebe es un ensayo más. Aplique la disciplina de [Cómo leer un *backtest* con escepticismo](/es/analisis/como-leer-un-backtest-con-escepticismo) y prefiera configuraciones que funcionen en un rango amplio.
+
+<Callout type="method" title="Vidas medias y factores de decaimiento">
+Una EWMA con factor de decaimiento $\lambda$ reduce a la mitad el peso de una observación cada $\ln 0.5 / \ln \lambda$ días. El $\lambda = 0.94$ diario de RiskMetrics implica una vida media de unos 11 días hábiles; la vida media de 20 días de las pruebas principales de Harvey y coautores corresponde a $\lambda \approx 0.966$. Ambos usan rendimientos al cuadrado sin restar una media, lo que en un horizonte de pocas semanas añade ruido en lugar de información.
+</Callout>
+
+## ¿Cuándo falla el volatility targeting?
+
+Sus debilidades se derivan de su fortaleza: responde a la volatilidad que ya ocurrió.
+
+**El pico llega primero.** Un choque que parte de un mercado en calma golpea a tamaño completo, y con apalancamiento completo si la calma ha llevado la exposición a su tope. Antes de febrero de 2018, la volatilidad realizada e implícita de acciones y divisas había tocado mínimos históricos; el 5 de febrero el VIX saltó 20 puntos, su mayor alza en un día desde 1987 (BIS, 2018). En el ejemplo práctico, si la volatilidad verdadera hubiera saltado a 40%, el portafolio habría operado a cerca de 16% incluso después de recortar a 0.40, hasta que la estimación la alcanzara.
+
+**Vaivenes (whipsaws).** Cuando la volatilidad se dispara y se desvanece rápido, la regla vende después de la caída y recompra una vez que vuelve la calma, momento en el que los precios pueden haberse recuperado, pagando costos en ambas direcciones. Los rebotes que comienzan mientras la volatilidad reciente es alta se reciben con una exposición reducida: Moreira y Muir señalan que su estrategia se fue casi por completo a efectivo después de las caídas de finales de 2008 y regresó solo a medida que la volatilidad cedía.
+
+**Aglomeración (crowding).** En activos de riesgo la regla es procíclica, vende en las caídas y compra en la calma, en la misma dirección que los seguidores de tendencia. Cuando muchos portafolios siguen reglas similares, un pico puede desatar ventas simultáneas que empujan la volatilidad aún más arriba. El BIS describió las ventas forzadas de los asesores de trading de materias primas (CTA) y otros operadores de momentum como un amplificador de los movimientos de febrero de 2018, y calificó el rebalanceo diario de los productos de volatilidad apalancados e inversos como un factor clave del pico a pesar de sus posiciones relativamente pequeñas.
+
+Por último, la volatilidad resume el pasado. No dice nada sobre un default, un giro de política o un apretón de liquidez que todavía no ha llegado a los precios.
+
+<PullQuote>El volatility targeting se ajusta al clima que acaba de ver. Mantiene el riesgo más estable, pero no puede ver venir la próxima tormenta.</PullQuote>
+
+## Puntos clave
+
+- La exposición es igual a un objetivo de riesgo dividido entre una estimación reciente de volatilidad, por lo general con tope: $w_t = \min(\sigma_{\text{target}}/\hat{\sigma}_t,\, L_{\max})$.
+- Funciona porque la volatilidad se agrupa y, en acciones, los rendimientos promedio no siguen su ritmo.
+- En todas las clases de activos ha reducido los rendimientos extremos; las ganancias en el ratio de Sharpe aparecen sobre todo en acciones, crédito y portafolios cargados de ellos, y son más débiles en pruebas en tiempo real.
+- La ventana, la ponderación, los topes, el rebalanceo y los costos determinan cómo se comporta.
+- Tiene dificultades cuando los choques llegan desde mercados en calma, cuando la volatilidad va y viene y cuando muchos inversionistas siguen la misma regla.
+
+## Fuentes
+
+- Bank for International Settlements (2018). "Volatility is back." *BIS Quarterly Review*, March 2018. The February 2018 sell-off and what amplified it.
+- Barroso, P., and Santa-Clara, P. (2015). "Momentum Has Its Moments." *Journal of Financial Economics*, 116(1), 111–120. Risk-managed momentum: fewer crashes and a higher Sharpe ratio.
+- Bongaerts, D., Kang, X., and van Dijk, M. (2020). "Conditional Volatility Targeting." *Financial Analysts Journal*, 76(4), 54–71. Conventional targeting is inconsistent in global equities; a conditional alternative.
+- Cederburg, S., O'Doherty, M. S., Wang, F., and Yan, X. (2020). "On the Performance of Volatility-Managed Portfolios." *Journal of Financial Economics*, 138(1), 95–117. Real-time tests across 103 equity strategies.
+- Engle, R. F. (1982). "Autoregressive Conditional Heteroscedasticity with Estimates of the Variance of United Kingdom Inflation." *Econometrica*, 50(4), 987–1007. The ARCH model of clustering volatility.
+- Fleming, J., Kirby, C., and Ostdiek, B. (2001). "The Economic Value of Volatility Timing." *Journal of Finance*, 56(1), 329–352. Volatility timing across stocks, bonds and gold.
+- Harvey, C. R., Hoyle, E., Korgaonkar, R., Rattray, S., Sargaison, M., and Van Hemert, O. (2018). "The Impact of Volatility Targeting." *Journal of Portfolio Management*, 45(1), 14–33. Evidence across more than 60 assets since 1926.
+- J.P. Morgan and Reuters (1996). *RiskMetrics—Technical Document*, 4th edition. The EWMA estimator with a daily decay factor of 0.94.
+- Moreira, A., and Muir, T. (2017). "Volatility-Managed Portfolios." *Journal of Finance*, 72(4), 1611–1644. Alphas from volatility-managed equity factors and the currency carry trade.

@@ -1,0 +1,136 @@
+---
+title: "Rebalanceo: el almuerzo gratis que hay que ganarse"
+seoTitle: "Rebalanceo de portafolio: qué es y cuándo hacerlo"
+dek: "El rebalanceo mantiene el riesgo de un portafolio donde usted decidió ponerlo; el bono de rendimiento que puede sumar es real pero pequeño y condicional, y una política sensata opera solo cuando la desviación es lo bastante grande para importar."
+description: "El rebalanceo mantiene el riesgo donde usted lo eligió. El bono de rendimiento es real pero pequeño; conviene operar solo cuando la desviación importa."
+date: "2026-10-22"
+category: "Frameworks"
+author: "Jose Luis Amador Jaime"
+tags: ["rebalanceo de portafolio", "asignación de activos", "rendimiento por diversificación", "bandas de tolerancia", "eficiencia fiscal", "gestión de riesgo"]
+featured: false
+cover: "rings"
+translationOf: "rebalancing-a-free-lunch-you-work-for"
+---
+
+El rebalanceo de portafolio consiste en operar para regresar un portafolio hacia sus pesos objetivo después de que los mercados lo han alejado de ellos, y su función principal es el control del riesgo, no el rendimiento adicional. Si se deja solo, un portafolio de acciones y bonos tiende a desviarse hacia las acciones y se vuelve más riesgoso que el que usted eligió. El llamado bono del rebalanceo es aritmética real, pero pequeño y condicional, y la evidencia sugiere que tener una política sensata, y seguirla, importa mucho más que si se rebalancea cada mes, cada trimestre o cada año.
+
+A la diversificación se le suele llamar el único almuerzo gratis de la inversión. El rebalanceo mantiene al portafolio comiéndoselo, pero el almuerzo tiene cuenta: costos de transacción, impuestos y la disciplina de comprar lo que acaba de caer.
+
+## ¿Qué es el rebalanceo de portafolio?
+
+Los activos obtienen rendimientos distintos, así que los pesos de un portafolio se desvían. Después de un año fuerte para las acciones, un portafolio 60/40 de acciones y bonos puede quedar en 65/35 aunque nada haya cambiado en el inversionista. El rebalanceo vende parte de lo que ha ganado en relación con el resto y compra lo que se ha rezagado: es contrario por construcción. Toda política toma tres decisiones: cuándo revisar, cuánta desviación tolerar y hasta dónde regresar al operar.
+
+## ¿Por qué rebalancear?
+
+Los activos con mayor rendimiento esperado suelen cargar más riesgo, así que un portafolio que nunca se rebalancea se desvía hacia ellos y se convierte en un portafolio distinto y más riesgoso. El estudio de Vanguard sobre un portafolio 60/40 de acciones y bonos de EE. UU. de 1926 a 2009 muestra la disyuntiva (Jaconetti, Kinniry y Zilbering, 2010):
+
+<KeyStats items={[
+  { value: "84%", label: "Peso promedio en acciones si nunca se rebalancea; terminó en 98%" },
+  { value: "14.4%", label: "Volatilidad si nunca se rebalancea, contra 12.1% con rebalanceo mensual" },
+  { value: "9.1%", label: "Rendimiento anualizado si nunca se rebalancea, contra 8.5% con rebalanceo mensual" },
+  { value: "1,008", label: "Eventos de rebalanceo si es mensual, contra 83 si es anual" }
+]} />
+
+El rendimiento adicional provino de desviarse hacia un portafolio de puras acciones, que el inversionista pudo haber elegido desde el primer día. Como concluyen los autores, el rebalanceo existe para controlar el riesgo respecto al objetivo, no para maximizar el rendimiento. Los calendarios mensual, trimestral y anual produjeron rendimientos (8.5% a 8.6%) y volatilidad (11.9% a 12.2%) casi idénticos con cantidades muy distintas de operaciones.
+
+## ¿El rebalanceo aumenta los rendimientos?
+
+La afirmación descansa en aritmética real. El crecimiento compuesto es aproximadamente el rendimiento promedio menos la mitad de la varianza, el lastre de la volatilidad que está detrás de [el criterio de Kelly](/es/analisis/el-criterio-de-kelly-es-un-techo). Un portafolio diversificado mantenido en pesos fijos tiene menos varianza que sus activos en promedio, así que se capitaliza más rápido que su promedio ponderado.
+
+<Callout type="method" title="La aritmética del bono">
+
+Para pesos constantes $w_i$, la tasa de crecimiento compuesto de largo plazo de un portafolio es aproximadamente
+
+$$
+g_p \approx \sum_i w_i \, g_i + \frac{1}{2}\left(\sum_i w_i \, \sigma_i^{2} - \sigma_p^{2}\right)
+$$
+
+donde $g_i$ y $\sigma_i^{2}$ son la tasa de crecimiento compuesto y la varianza de cada activo y $\sigma_p^{2}$ es la varianza del portafolio. Booth y Fama (1992) llamaron al segundo término el rendimiento por diversificación. Nunca es negativo para un portafolio solo largo y es mayor cuando los activos son más volátiles y están menos correlacionados: para dos activos mantenidos 50/50 con la misma volatilidad $\sigma$ y correlación $\rho$, es igual a $\sigma^{2}(1 - \rho)/4$.
+
+</Callout>
+
+En lo que Luenberger (1998) llama bombeo de volatilidad (volatility pumping), una acción se duplica o se reduce a la mitad en cada periodo con la misma probabilidad y el efectivo no gana nada, de modo que la trayectoria típica de la acción no va a ninguna parte. Con la mitad en la acción y la mitad en efectivo, rebalanceado cada periodo, el patrimonio se multiplica por 1.5 o por 0.75, una tasa de crecimiento típica de $\sqrt{1.5 \times 0.75} - 1 \approx 6.1\%$ por periodo. Erb y Harvey (2006) simularon cuarenta activos no correlacionados, cada uno con 30% de volatilidad y rendimiento compuesto en exceso de cero; un portafolio de pesos iguales rebalanceado anualmente creció a cerca de 4.3% al año, cerca del 4.4% de la fórmula.
+
+### Lo que omiten las afirmaciones sobre el bono
+
+**El punto de referencia no es comprar y mantener.** El bono se mide contra el promedio ponderado de las tasas de crecimiento de los activos, no contra comprar y mantener (buy-and-hold), que obtiene su propio rendimiento adicional conforme los ganadores crecen hasta ocupar una mayor proporción y cambian su riesgo (Willenbrock, 2011). Las estrategias de mezcla constante compran cuando los precios caen y venden cuando suben, lo que en efecto equivale a vender un seguro de portafolio: les va mejor en mercados volátiles y sin tendencia, y se rezagan frente a comprar y mantener cuando las tendencias persisten (Perold y Sharpe, 1988). Incluso en el ejemplo del bombeo, la acción por sí sola tiene el mayor rendimiento promedio, 25% por periodo contra 12.5%; el rebalanceo mejora la trayectoria típica, no el promedio.
+
+**El tamaño depende de condiciones que la mayoría de los portafolios no tienen.** Un bono grande requiere muchos activos volátiles y poco correlacionados; una mezcla de acciones y bonos tiene un activo volátil y uno tranquilo:
+
+<Chart
+  title="Rendimiento por diversificación aproximado, % al año (ilustrativo)"
+  caption="Supuestos, no pronósticos. 60/40: volatilidad de 16% y 5%, correlación 0.2. Dos activos: 20% de volatilidad cada uno, 50/50. Cuarenta activos: no correlacionados, 30% de volatilidad, pesos iguales."
+  decimals={2}
+  data={[
+    { label: "60/40 acciones/bonos", value: 0.30, highlight: true },
+    { label: "Dos activos, ρ = 0.5", value: 0.50 },
+    { label: "Dos activos, ρ = 0", value: 1.00 },
+    { label: "40 activos, 30% vol", value: 4.39 },
+  ]}
+/>
+
+## Rebalanceo por calendario o por umbral: ¿cuál es mejor?
+
+| Enfoque | Cómo funciona | Disyuntiva |
+| --- | --- | --- |
+| Calendario | Regresar al objetivo según un calendario, por ejemplo cada año | Simple; opera desviaciones triviales y pasa por alto las que ocurren entre fechas |
+| Umbral (banda de tolerancia) | Operar cuando un peso sale de una banda alrededor de su objetivo | Opera solo cuando hace falta; requiere monitoreo frecuente |
+| Híbrido | Revisar según un calendario; operar solo si se rompe una banda | La mayor parte del control de riesgo con pocas operaciones |
+
+La evidencia descarta los extremos más de lo que corona a un ganador. El estudio de Vanguard de 2010 no encontró una frecuencia ni un umbral óptimos y concluyó que, para la mayoría de los portafolios diversificados de acciones y bonos, revisar cada año o cada semestre y rebalancear cuando una asignación se desvía cinco puntos porcentuales equilibra el control del riesgo con el costo.
+
+Las bandas se ganan su lugar en mercados rápidos. Para sus fondos con fecha objetivo (target-date) monitoreados a diario, la investigación de Vanguard favorece una banda de dos puntos y, cuando se rompe, operar de regreso hasta 1.75 puntos del objetivo (Zhang y colegas, 2024). En su ejemplo hipotético 60/40 de marzo de 2020, el rebalanceo mensual pudo haber permitido una desviación de unos 7 puntos porcentuales y el trimestral de unos 10, contra unos 2 con la banda.
+
+- **Bandas absolutas o relativas.** Cinco puntos le quedan bien a una asignación de 60%, pero no a una de 5%, que podría desaparecer o duplicarse antes. Una regla práctica común usa cinco puntos porcentuales o un cuarto del peso objetivo, lo que sea menor: de 55% a 65% para una asignación de 60%, de 7.5% a 12.5% para una de 10%.
+- **Hasta el objetivo o a medio camino.** Con costos proporcionales al tamaño de la operación, la política óptima tiene una zona sin operaciones y solo opera de regreso hasta su borde (Davis y Norman, 1990). El documento de Vanguard de 2010 da la regla práctica: operar hasta el objetivo cuando los costos son en su mayoría fijos por operación, hasta el borde de la banda cuando escalan con la operación, como lo hacen los diferenciales y los impuestos, y a un punto intermedio cuando aplican ambos.
+
+## ¿Cuánto cuesta rebalancear?
+
+Incluso con comisiones de cero, las operaciones pagan el diferencial entre compra y venta (bid-ask spread), y las grandes mueven los precios; el modelo de Vanguard de 2024 hace que estos costos aumenten con la volatilidad y el tamaño de la operación. Para la mayoría de las personas, el costo mayor es el impuesto. En una cuenta gravable de EE. UU., vender un activo que se ha apreciado realiza una ganancia de capital, gravada a tasas ordinarias si se mantuvo un año o menos y a tasas de largo plazo más bajas si se mantuvo más tiempo (Publicación 550 del IRS). Las operaciones dentro de cuentas IRA y planes 401(k) no se gravan en el momento en que ocurren. Esta es información general, no asesoría fiscal.
+
+Use primero las herramientas más baratas:
+
+- **Flujos de efectivo.** Dirija las aportaciones, los dividendos y los intereses al activo subponderado, y tome los retiros del sobreponderado. En el estudio de Vanguard de 2010, un portafolio 60/40 rebalanceado solo redirigiendo dividendos e intereses promedió un peso en acciones de 61% sin operaciones de rebalanceo, aunque los autores advierten que rendimientos (yields) tan altos podrían no repetirse.
+- **Dónde y qué vender.** Venda en cuentas con ventajas fiscales cuando sea posible; en las gravables, venda primero los lotes con pérdidas o con el costo de adquisición más alto. Una pérdida no se reconoce fiscalmente si compra valores sustancialmente idénticos dentro de los 30 días anteriores o posteriores a la venta (la regla de wash sale).
+
+### Un ejemplo trabajado (ilustrativo)
+
+Un portafolio de \$100,000 tiene un objetivo de 60/40. En un año, las acciones rinden 30% y los bonos 5% (cifras ilustrativas), lo que deja \$78,000 en acciones y \$42,000 en bonos: 65/35. Con las volatilidades supuestas en la gráfica, la volatilidad del portafolio sube de alrededor de 10.2% a 10.9%; una caída de 30% en las acciones con los bonos sin cambio ahora costaría 19.5%, no 18%. Suponga un costo de adquisición de \$52,000 en las acciones, de modo que un tercio de cada dólar vendido es ganancia, gravada a un 15% ilustrativo:
+
+| Enfoque | Operación | Nueva mezcla | Impuesto a pagar ahora |
+| --- | --- | --- | ---: |
+| Rebalanceo completo, cuenta gravable | Vender \$6,000 de acciones, comprar bonos | 60/40 | \$300 |
+| A medio camino, cuenta gravable | Vender \$3,000 de acciones, comprar bonos | 62.5/37.5 | \$150 |
+| Dinero nuevo | Destinar una aportación de \$10,000 a bonos | 60/40 | \$0 |
+
+Los \$300 son 0.25% del portafolio, la mayor parte del bono teórico de un año bajo los supuestos de la gráfica (alrededor de 0.3%, o \$360). Pagarlos no es una pérdida pura, ya que la ganancia probablemente se gravaría tarde o temprano, pero renuncia al diferimiento. El impuesto es seguro; el bono no lo es.
+
+## ¿Cómo establecer una política de rebalanceo?
+
+Escriba esto mientras nada esté en juego:
+
+1. **El objetivo.** El rebalanceo hace cumplir una asignación; no puede elegirla.
+2. **Bandas a la medida de cada asignación.** Cinco puntos porcentuales para las asignaciones grandes, un cuarto del peso objetivo para las pequeñas; más anchas donde operar es costoso o gravable.
+3. **Un calendario de revisión.** Revise cada semestre o cada año y opere solo cuando se rompa una banda; las bandas más estrechas requieren monitoreo frecuente, de preferencia automatizado.
+4. **Hasta dónde operar.** Hasta el objetivo cuando los costos son en su mayoría fijos; hasta el borde de la banda o a medio camino cuando dominan los diferenciales y los impuestos. Use los flujos de efectivo antes que las ventas.
+5. **El caso difícil.** En la muestra de 84 años de Vanguard, un portafolio 60/40 revisado anualmente con una banda de cinco puntos exigió comprar acciones solo siete veces (1930, 1931, 1937, 1974, 2000, 2002 y 2008), cada una después de un año de rendimientos muy malos en acciones. La política existe para esos momentos.
+
+## Lo que la evidencia no muestra
+
+- **Un óptimo universal.** El argumento de Vanguard de 2024 a favor de bandas estrechas monitoreadas a diario descansa en rendimientos simulados y costos modelados para fondos grandes, y puede no trasladarse a la cuenta gravable de una persona.
+- **Una ventaja de rendimiento sobre comprar y mantener.** En la muestra larga de Vanguard, nunca rebalancear ganó más. Esperar que el rebalanceo le gane a comprar y mantener en rendimiento significa esperar que los precios relativos reviertan a la media: una opinión sobre el mercado, no una ley.
+- **Evidencia amplia.** Los estudios citados aquí se apoyan en una sola historia larga de EE. UU. o en simulaciones de modelos. Las comparaciones de rebalanceo son *backtests* y merecen el escrutinio descrito en [cómo leer un backtest con escepticismo](/es/analisis/como-leer-un-backtest-con-escepticismo).
+- **Insumos estables.** El bono depende de volatilidades y correlaciones que cambian; [la correlación entre acciones y bonos](/es/analisis/la-correlacion-no-es-constante) ha variado con el tiempo.
+- **Un argumento para valores individuales.** El bombeo de volatilidad supone que un activo puede recuperarse. Comprar más de una acción en su camino a cero no es cosechar volatilidad; es agrandar una pérdida.
+
+## Fuentes
+
+- Booth, D. G., and Fama, E. F. (1992). "Diversification Returns and Asset Contributions." *Financial Analysts Journal*, 48(3), 26–32.
+- Davis, M. H. A., and Norman, A. R. (1990). "Portfolio Selection with Transaction Costs." *Mathematics of Operations Research*, 15(4), 676–713.
+- Erb, C. B., and Harvey, C. R. (2006). "The Strategic and Tactical Value of Commodity Futures." *Financial Analysts Journal*, 62(2), 69–97.
+- Internal Revenue Service (2025). *Publication 550: Investment Income and Expenses*.
+- Jaconetti, C. M., Kinniry, F. M., Jr., and Zilbering, Y. (2010). *Best Practices for Portfolio Rebalancing*. Vanguard Research.
+- Luenberger, D. G. (1998). *Investment Science*. Oxford University Press.
+- Perold, A. F., and Sharpe, W. F. (1988). "Dynamic Strategies for Asset Allocation." *Financial Analysts Journal*, 44(1), 16–27.
+- Willenbrock, S. (2011). "Diversification Return, Portfolio Rebalancing, and the Commodity Return Puzzle." *Financial Analysts Journal*, 67(4), 42–49.
+- Zhang, Y., Ahluwalia, H., Daga, A., and Zi, Y. (2024). *The Rebalancing Edge: Optimizing Target-Date Fund Rebalancing through Threshold-Based Strategies*. Vanguard Research.

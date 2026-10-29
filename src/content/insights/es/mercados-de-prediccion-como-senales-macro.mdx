@@ -1,0 +1,114 @@
+---
+title: "Mercados de predicción como señales macro"
+seoTitle: "Mercados de predicción como señales macro"
+dek: "Los precios de los contratos de eventos pueden leerse como probabilidades, con cuidado. Mostramos cómo convertirlos, dónde engañan y cuándo dicen algo que los mercados de tasas no dicen."
+description: "Cómo leer los precios de Polymarket y Kalshi como probabilidades: convertir contratos de eventos, dónde engañan y cuándo dicen lo que las tasas no dicen."
+date: "2026-09-21"
+category: "Markets"
+author: "Jose Luis Amador Jaime"
+tags: ["mercados de predicción", "macro", "Reserva Federal", "probabilidades", "señales"]
+featured: false
+cover: "grid"
+translationOf: "prediction-markets-as-macro-signals"
+---
+
+Los inversionistas macro pasan buena parte del día preguntándose qué está descontando el mercado. Para la trayectoria de la tasa de política monetaria, la respuesta viene de los futuros de fondos federales y de los swaps de tasa a un día (OIS); para la inflación, de los *breakevens* de inflación. Pero muchas preguntas que mueven al mercado no tienen un instrumento tradicional que se ajuste limpiamente a ellas. ¿Cerrará el gobierno? ¿Entrará en vigor un arancel? ¿Superará un umbral el dato de inflación de este mes?
+
+Los mercados de predicción llenan parte de ese vacío, y sus precios, cotizados en centavos, se leen ampliamente como probabilidades. Leídos con cuidado, son un insumo útil; leídos con ingenuidad, son una fuente de falsa precisión. Esta nota cubre cómo convertir precios en probabilidades, cómo se comparan con los mercados de tasas, dónde engañan y cómo los mostramos en [Señales](/es/senales).
+
+## ¿Qué son los mercados de predicción?
+
+Los mercados de predicción son bolsas de contratos que pagan según el resultado de un evento: si la Reserva Federal recorta la tasa en una reunión determinada, si la inflación sale por encima de un umbral, quién gana una elección. El contrato más simple paga \$1 si el evento ocurre y nada en caso contrario, de modo que su precio, cotizado en centavos, se lee como la probabilidad que el mercado asigna al evento. Polymarket y Kalshi son hoy las plataformas más grandes; la mecánica es la misma que la de cualquier mercado dirigido por órdenes, con precios fijados por compradores y vendedores y no por un pronosticador.
+
+## De precios a probabilidades
+
+Un contrato binario de evento paga un dólar si el evento ocurre y nada en caso contrario. Si los operadores fueran neutrales al riesgo, no enfrentaran costos y compartieran una misma opinión, el precio sería igual a la probabilidad: 62 centavos implicarían una probabilidad de 62%. Justin Wolfers y Eric Zitzewitz expusieron esta correspondencia en "Prediction Markets" (*Journal of Economic Perspectives*, 2004), junto con diseños de contrato que en cambio revelan la media o la mediana que el mercado espera para una cantidad.
+
+Tres salvedades mantienen honesta la interpretación.
+
+**Es una probabilidad neutral al riesgo, no una física.** Un precio refleja tanto la probabilidad de un evento como el valor de un dólar si ocurre. Un contrato que paga en malos tiempos, como una recesión, puede operarse por encima de la probabilidad verdadera porque funciona como un seguro, y los seguros tienden a costar más que su pago esperado. Para la mayoría de las preguntas políticas la brecha probablemente es pequeña; para las preguntas sobre el ciclo económico puede no serlo.
+
+**¿Probabilidad de quién?** Charles Manski, en "Interpreting the Predictions of Prediction Markets" (*Economics Letters*, 2006), mostró que cuando operadores neutrales al riesgo tienen creencias distintas y enfrentan límites de presupuesto, el precio no tiene por qué ser igual a la creencia promedio. En su modelo estilizado el precio es un cuantil de la distribución de creencias, y la creencia promedio puede estar en cualquier punto de un rango amplio alrededor de él: a 50 centavos, en cualquier punto entre 25% y 75%. Es una advertencia contra la falsa precisión, no evidencia de que los precios estén equivocados.
+
+**Las fricciones difuminan la señal.** Los spreads, las comisiones y el costo de inmovilizar capital permiten que los precios difieran de las probabilidades por unos cuantos puntos sin que nadie pueda ganar corrigiéndolos. Lea un precio como un rango.
+
+### Un ejemplo resuelto
+
+Suponga que un contrato binario ofrece Sí a 62 centavos y No a 41 centavos. Comprar ambos costaría 1.03 dólares por un pago seguro de un dólar; el excedente de 3 centavos es el *overround*, el costo de operar ambos lados. La corrección más simple divide cada precio entre el total:
+
+$$
+\frac{0.62}{1.03} = 0.602 \qquad \frac{0.41}{1.03} = 0.398
+$$
+
+Las probabilidades implícitas son 60.2% y 39.8%, que suman 100%. Las mismas cotizaciones pueden leerse de otra manera: comprar No a 41 centavos equivale a vender Sí a 59, así que Sí está en efecto a 59 de compra y 62 de venta, con un punto medio de 60.5 centavos. La estimación puntual es cerca de 60%; la afirmación honesta es de 59% a 62%. El spread es la barra de error.
+
+La aritmética se extiende a varios resultados, como en estos precios hipotéticos para una decisión del FOMC:
+
+| Resultado | Precio | Probabilidad normalizada |
+| --- | ---: | ---: |
+| Sin cambio | 0.66 | 64.1% |
+| Recorte de 25 pb | 0.30 | 29.1% |
+| Recorte de 50 pb o más | 0.07 | 6.8% |
+| Total | 1.03 | 100.0% |
+
+## Cómo se compara con los futuros de fondos federales y los OIS
+
+Para la trayectoria de la tasa de política monetaria, los mercados de predicción tienen una competencia seria. Los futuros de fondos federales se liquidan sobre el promedio de la tasa efectiva de fondos federales durante el mes del contrato, de modo que su precio, 100 menos ese promedio, revela la tasa esperada; los swaps de tasa a un día hacen lo mismo durante la vida del swap. Comparar las tasas implícitas antes y después de una reunión del FOMC, ajustando por el punto del mes en que cae la reunión, da el cambio esperado en la tasa de política.
+
+Convertir ese cambio en una probabilidad normalmente supone solo dos resultados adyacentes, como sin cambio o un recorte de 25 puntos base (pb), de modo que la probabilidad del movimiento es el cambio esperado dividido entre 25 pb. Esta es la lógica detrás de las probabilidades por reunión que tanto cita la prensa, y funciona cuando el supuesto se cumple.
+
+La limitación es que los futuros y los swaps entregan un valor esperado, no una distribución. Un cambio esperado de −10 pb es compatible con una probabilidad de 40% de un recorte de 25 pb, una de 20% de un recorte de 50 pb, o muchas mezclas. Los precios hipotéticos del FOMC de arriba implican un cambio esperado de cerca de −10.7 pb, que una lectura de dos resultados reportaría como una probabilidad de 43% de un recorte de 25 pb. Los precios por resultado dicen algo distinto: una probabilidad de 36% de algún recorte, cerca de 7 puntos de ella en un movimiento mayor. Las opciones sobre futuros de tasas recuperan más de la distribución, con más esfuerzo.
+
+Los futuros y los swaps tienen su propio ruido: las primas por plazo, y la deriva de la tasa efectiva dentro del rango objetivo de la Fed, pueden mover las probabilidades implícitas sin ningún cambio en las expectativas. Aun así, para decisiones cercanas de la Fed son mercados mucho más profundos y merecen más peso, mientras que los mercados de predicción añaden detalle por resultado y una verificación cruzada independiente. Cuando los dos discrepan, la brecha es una invitación a investigar los términos del contrato, los costos y los participantes, no un almuerzo gratis.
+
+## Sesgos conocidos
+
+### El sesgo favorito–longshot
+
+En los mercados de apuestas, los *longshots* (los resultados poco probables) tienden a estar sobrevaluados y los favoritos subvaluados. Erik Snowberg y Justin Wolfers, en "Explaining the Favorite–Long Shot Bias: Is It Risk-Love or Misperceptions?" (*Journal of Political Economy*, 2010), estudiaron las apuestas en carreras de caballos y concluyeron que el patrón se explica mejor por una percepción errónea de las probabilidades pequeñas que por un gusto por el riesgo. Si la misma tendencia opera en los contratos de eventos, los precios de un solo dígito bajo exageran las probabilidades de los eventos improbables, y la mecánica hace costosa la corrección. Apostar contra un longshot de 3 centavos significa comprar No a 97 centavos; si la probabilidad verdadera es 1%, la operación gana cerca de 2% durante la vida del contrato antes de comisiones, menos de lo que podría ganar el efectivo si dura un año.
+
+### Liquidez escasa y manipulación
+
+Muchos contratos se operan en montos pequeños. La última operación puede estar desactualizada, la cotización puede no estar disponible en volumen, y un solo operador motivado o bien capitalizado puede mover el precio, al menos temporalmente. Un salto de 40 a 55 centavos con poco volumen habla de un participante, no de la multitud. La defensa habitual contra la manipulación, que un precio distorsionado invita a operadores mejor informados a regresarlo, es tan fuerte como profundo sea el mercado. Antes de tratar un movimiento brusco como información, revise el spread y el volumen, si se movieron los contratos relacionados y si los mercados tradicionales coincidieron.
+
+### Comisiones e inmovilización de capital
+
+Las comisiones, los spreads y el costo de mover dinero hacia y desde una plataforma crean una banda dentro de la cual una valuación incorrecta no puede corregirse con ganancia, y los esquemas de comisiones difieren entre plataformas y cambian con el tiempo. El capital también queda inmovilizado hasta la resolución: si el efectivo gana 4% al año, un contrato que con certeza pagará un dólar en doce meses vale hoy solo cerca de 96 centavos. Los movimientos menores que estas fricciones rara vez son noticia.
+
+### Riesgo de resolución
+
+Un contrato paga según sus reglas escritas, no según su titular. Un contrato de recesión podría resolverse con una determinación del Comité de Fechado de Ciclos Económicos del NBER, que suele llegar meses después del hecho, o con una regla basada en el PIB. Un contrato de inflación puede especificar la inflación general o la subyacente, una convención de redondeo, o una primera publicación que después se revisa. Lea las reglas: qué fuente, qué plazo, qué pasa si la fuente se retrasa o se revisa, y quién resuelve las disputas.
+
+<PullQuote>Un precio se convierte en probabilidad solo después de leer las reglas, revisar el spread y preguntarse quién está del otro lado.</PullQuote>
+
+## Cuándo añaden información
+
+Encontramos los mercados de predicción más útiles en cuatro situaciones:
+
+- **Eventos políticos y de política pública que se mueven rápido.** Los cierres de gobierno, los aranceles, la legislación y las nominaciones mueven los precios de los activos, pero también lo hace todo lo demás. Un contrato de evento aísla la pregunta y se revalúa conforme llegan las noticias.
+- **Datos macro discretos.** Los contratos sobre rangos para una publicación de inflación o de nómina no agrícola ofrecen una distribución donde el consenso de las encuestas ofrece un punto, lo que ayuda a calibrar qué tan probable es una sorpresa de cierto tamaño.
+- **Noticias fuera del horario de mercado.** Algunas plataformas operan las 24 horas, incluidos los fines de semana, cuando los mercados de futuros están cerrados. La liquidez de fin de semana puede ser escasa, así que trate esos movimientos como provisionales.
+- **Detalle por resultado.** Como en el ejemplo del FOMC, separan probabilidades que los futuros mezclan en un solo valor esperado.
+
+Añaden menos donde mercados tradicionales profundos ya descuentan el evento, como la próxima decisión de la Fed; ahí sobre todo hacen eco de los futuros y los swaps.
+
+## Cómo los presenta el tablero de Señales
+
+El panel de mercados de predicción en [Señales](/es/senales) muestra las probabilidades de Polymarket sobre eventos macro y de mercado, incluidas decisiones de la Fed, inflación, recesión, aranceles, rendimientos de los bonos del Tesoro e índices accionarios, ordenadas por volumen de operación reciente. Cada mercado lista sus resultados principales y su volumen de 24 horas, un indicador aproximado de liquidez. Las cifras son los precios cotizados tal como los publica la plataforma. No los normalizamos, y como solo se muestran los resultados principales, las cifras de un evento no tienen por qué sumar 100%. Aplique la conversión de arriba antes de tratarlas como una distribución.
+
+A su lado hay un panel macro construido con datos de FRED: los rendimientos de los bonos del Tesoro a 2 y 10 años y el diferencial entre ellos, la tasa efectiva de fondos federales, la inflación al consumidor (CPI), el desempleo, la inflación breakeven a 10 años y el Índice Nacional de Condiciones Financieras de la Fed de Chicago. El emparejamiento es deliberado. Las probabilidades de recorte de tasa van junto a la tasa efectiva de fondos federales y al rendimiento a 2 años; las de recesión, junto a la curva, el desempleo y las condiciones financieras; y los contratos de inflación, junto al CPI y los breakevens. Cuando las probabilidades de un evento se mueven y ni los datos ni los mercados de tasas las siguen, explique la brecha antes de sacar conclusiones.
+
+Las probabilidades de eventos son una de las formas en que hacemos explícitas las expectativas implícitas, la segunda de las cinco preguntas de [El marco Amador](/es/analisis/el-marco-amador), y las leemos contra el mapa de regímenes de [Las cuatro estaciones de la economía](/es/analisis/las-cuatro-estaciones-de-la-economia). Cada panel muestra su fuente y su retraso, y los [Boletines](/es/boletines) pueden entregar por correo electrónico las probabilidades de eventos macro.
+
+<Callout type="warning" title="Solo con fines informativos">
+El tablero de Señales muestra datos de mercado de terceros solo con fines informativos y no es una recomendación para operar ningún contrato o valor. El acceso a los mercados de predicción, y las reglas que los rigen, varían según la jurisdicción y han cambiado con el tiempo. No hacemos ninguna declaración de que alguna plataforma esté disponible o sea legal para algún lector; quien considere participar debe entender las reglas del lugar donde vive.
+</Callout>
+
+## Puntos clave
+
+- El precio de un contrato binario es una probabilidad aproximada y neutral al riesgo; léalo como un rango.
+- Cuando las cotizaciones suman más de uno, normalice: 62 y 41 centavos implican 60.2% y 39.8%. El spread es la barra de error.
+- Los futuros y los OIS dan tasas esperadas; los mercados de predicción dan probabilidades por resultado. Use ambos, dando más peso al mercado más profundo.
+- Descuente los longshots de precio bajo, los mercados poco líquidos y los contratos cuyas reglas de resolución no haya leído.
+- Los mercados de predicción aportan más en eventos políticos y de política pública que se mueven rápido, datos macro discretos y noticias fuera de horario.
+- En Señales, las probabilidades están junto a datos de FRED para que los movimientos puedan contrastarse con cifras duras; el tablero es solo informativo.

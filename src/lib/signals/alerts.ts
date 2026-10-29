@@ -1,19 +1,21 @@
+import type { Lang } from "@/lib/i18n";
+import { ALERT_COPY } from "./alerts-copy";
 import type { GsMacro, MacroSeries, SignalAlert } from "./types";
 
 /*
  * Rule-based alerts derived from the Goldman Sachs macro lens. Deterministic
  * thresholds on published GS series; no forecasts of our own and no advice.
+ * The wording in each language lives in alerts-copy.ts.
  */
 
 const LEVEL_RANK: Record<SignalAlert["level"], number> = { high: 0, medium: 1, info: 2 };
-const signed = (v: number, d = 2) => `${v > 0 ? "+" : ""}${v.toFixed(d)}`;
-const pct = (v: number) => `${v > 0 ? "+" : ""}${(v * 100).toFixed(0)}%`;
 
 function tile(macro: GsMacro, id: string): MacroSeries | undefined {
   return macro.tiles.find((t) => t.id === id);
 }
 
-export function buildGsAlerts(macro: GsMacro): SignalAlert[] {
+export function buildGsAlerts(macro: GsMacro, lang: Lang = "en"): SignalAlert[] {
+  const t = ALERT_COPY[lang];
   const out: SignalAlert[] = [];
 
   const fci = tile(macro, "GS_FCI");
@@ -24,8 +26,8 @@ export function buildGsAlerts(macro: GsMacro): SignalAlert[] {
       id: "fci",
       level: Math.abs(d) >= 0.5 ? "high" : big ? "medium" : "info",
       direction: d > 0 ? "up" : d < 0 ? "down" : "neutral",
-      title: big ? (d > 0 ? "US financial conditions tightened" : "US financial conditions eased") : "US financial conditions little changed",
-      detail: `GS Financial Conditions Index at ${fci.value.toFixed(2)}, ${signed(d)} over the past month (higher = tighter).`,
+      title: big ? (d > 0 ? t.fciTighter : t.fciEasier) : t.fciFlat,
+      detail: t.fciDetail(fci.value, d),
       source: "GS FCI",
       date: fci.date,
     });
@@ -39,8 +41,8 @@ export function buildGsAlerts(macro: GsMacro): SignalAlert[] {
       id: "cai",
       level: Math.abs(d) >= 1 ? "high" : big ? "medium" : "info",
       direction: d > 0 ? "up" : d < 0 ? "down" : "neutral",
-      title: big ? `US growth nowcast ${d > 0 ? "accelerated" : "slowed"} to ${cai.value.toFixed(1)}%` : `US growth nowcast steady at ${cai.value.toFixed(1)}%`,
-      detail: `GS Current Activity Indicator ${signed(d, 1)} pp versus the prior reading (annualized pace).`,
+      title: big ? t.caiMoved(d > 0, cai.value) : t.caiSteady(cai.value),
+      detail: t.caiDetail(d),
       source: "GS CAI",
       date: cai.date,
     });
@@ -50,17 +52,17 @@ export function buildGsAlerts(macro: GsMacro): SignalAlert[] {
   if (map) {
     const prev = map.value - map.change;
     const crossed = Math.sign(map.value) !== Math.sign(prev) && Math.abs(map.change) >= 0.3;
-    let title = "US data surprises near neutral";
+    let title = t.mapNeutral;
     let level: SignalAlert["level"] = "info";
-    if (map.value <= -0.5) [title, level] = ["US data surprising to the downside", map.value <= -1 ? "high" : "medium"];
-    else if (map.value >= 0.5) [title, level] = ["US data surprising to the upside", map.value >= 1 ? "high" : "medium"];
-    else if (crossed) [title, level] = [`US data surprises turned ${map.value < 0 ? "negative" : "positive"}`, "medium"];
+    if (map.value <= -0.5) [title, level] = [t.mapDown, map.value <= -1 ? "high" : "medium"];
+    else if (map.value >= 0.5) [title, level] = [t.mapUp, map.value >= 1 ? "high" : "medium"];
+    else if (crossed) [title, level] = [t.mapTurned(map.value < 0), "medium"];
     out.push({
       id: "map",
       level,
       direction: map.change > 0 ? "up" : map.change < 0 ? "down" : "neutral",
       title,
-      detail: `GS MAP surprise index (21-day average) at ${map.value.toFixed(2)}, ${signed(map.change)} over the month.`,
+      detail: t.mapDetail(map.value, map.change),
       source: "GS MAP",
       date: map.date,
     });
@@ -68,17 +70,17 @@ export function buildGsAlerts(macro: GsMacro): SignalAlert[] {
 
   const rai = tile(macro, "GS_RAI");
   if (rai) {
-    let title = "Global risk appetite neutral";
+    let title = t.raiNeutral;
     let level: SignalAlert["level"] = "info";
-    if (rai.value <= -0.5) [title, level] = ["Global risk appetite in risk-off territory", rai.value <= -1 ? "high" : "medium"];
-    else if (rai.value >= 0.5) [title, level] = ["Global risk appetite in risk-on territory", rai.value >= 1 ? "high" : "medium"];
-    else if (Math.abs(rai.change) >= 0.75) [title, level] = [`Global risk appetite ${rai.change < 0 ? "fell" : "rose"} sharply`, "medium"];
+    if (rai.value <= -0.5) [title, level] = [t.raiOff, rai.value <= -1 ? "high" : "medium"];
+    else if (rai.value >= 0.5) [title, level] = [t.raiOn, rai.value >= 1 ? "high" : "medium"];
+    else if (Math.abs(rai.change) >= 0.75) [title, level] = [t.raiSharp(rai.change < 0), "medium"];
     out.push({
       id: "rai",
       level,
       direction: rai.change > 0 ? "up" : rai.change < 0 ? "down" : "neutral",
       title,
-      detail: `GS Risk Appetite Indicator at ${rai.value.toFixed(2)}, ${signed(rai.change)} over the month.`,
+      detail: t.raiDetail(rai.value, rai.change),
       source: "GS RAI",
       date: rai.date,
     });
@@ -90,9 +92,9 @@ export function buildGsAlerts(macro: GsMacro): SignalAlert[] {
       id: "social",
       level: "medium",
       direction: social.change > 0 ? "up" : "down",
-      title: `Social-media economic sentiment ${social.change > 0 ? "improved" : "deteriorated"}`,
-      detail: `GS US social-media sentiment index at ${social.value.toFixed(2)}, ${signed(social.change)} over the month.`,
-      source: "GS Social Sentiment",
+      title: t.socialTitle(social.change > 0),
+      detail: t.socialDetail(social.value, social.change),
+      source: t.socialSource,
       date: social.date,
     });
   }
@@ -105,9 +107,9 @@ export function buildGsAlerts(macro: GsMacro): SignalAlert[] {
       id: `cmd-${c.label}`,
       level: Math.abs(move) >= 0.2 ? "medium" : "info",
       direction: move > 0 ? "up" : "down",
-      title: `GS sees ${c.label} ${move > 0 ? "higher" : "lower"} in 12 months`,
-      detail: `GIR forecast $${Math.round(c.twelveMonth).toLocaleString("en-US")} in 12 months vs $${Math.round(c.quarter).toLocaleString("en-US")} for ${c.quarterLabel} (${pct(move)}, ${c.unit}).`,
-      source: "GIR commodity forecasts",
+      title: t.commodityTitle(c.label, move > 0),
+      detail: t.commodityDetail(c.twelveMonth, c.quarter, c.quarterLabel, move, c.unit),
+      source: t.commoditySource,
       date: c.date,
     });
   }
@@ -118,9 +120,9 @@ export function buildGsAlerts(macro: GsMacro): SignalAlert[] {
       id: "fx-mxn",
       level: "info",
       direction: mxn.twelveMonth > mxn.threeMonth ? "up" : mxn.twelveMonth < mxn.threeMonth ? "down" : "neutral",
-      title: `GS forecasts USD/MXN at ${mxn.twelveMonth.toFixed(2)} in 12 months`,
-      detail: `GIR FX forecast: ${mxn.threeMonth.toFixed(2)} in 3 months, ${mxn.twelveMonth.toFixed(2)} in 12 months.`,
-      source: "GIR FX forecasts",
+      title: t.mxnTitle(mxn.twelveMonth),
+      detail: t.mxnDetail(mxn.threeMonth, mxn.twelveMonth),
+      source: t.mxnSource,
       date: mxn.date,
     });
   }

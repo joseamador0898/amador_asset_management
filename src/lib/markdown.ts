@@ -1,5 +1,6 @@
 import "server-only";
 import type { ArticleMeta } from "@/lib/insights";
+import { ARTICLES_PATH, type Lang } from "@/lib/i18n";
 import { site } from "@/lib/site";
 
 /*
@@ -17,12 +18,16 @@ const quote = (text: string) =>
     .split("\n")
     .map((line) => (line.trim() ? `> ${line}` : ">"))
     .join("\n");
-const CALLOUT_LABELS: Record<string, string> = { note: "Note", insight: "Insight", warning: "Warning", method: "Method" };
+const CALLOUT_LABELS: Record<Lang, Record<string, string>> = {
+  en: { note: "Note", insight: "Insight", warning: "Warning", method: "Method" },
+  es: { note: "Nota", insight: "Idea clave", warning: "Precaución", method: "Método" },
+};
+const TABLE_HEAD: Record<Lang, string> = { en: "| Item | Value |", es: "| Elemento | Valor |" };
 
-export function mdxToMarkdown(mdx: string): string {
+export function mdxToMarkdown(mdx: string, lang: Lang = "en"): string {
   return mdx
     .replace(/<Callout([^>]*)>([\s\S]*?)<\/Callout>/g, (_, attrs: string, body: string) => {
-      const label = attr(attrs, "title") ?? CALLOUT_LABELS[attr(attrs, "type") ?? "note"] ?? "Note";
+      const label = attr(attrs, "title") ?? CALLOUT_LABELS[lang][attr(attrs, "type") ?? "note"] ?? CALLOUT_LABELS[lang].note;
       return quote(`**${label}.** ${body.trim()}`);
     })
     .replace(/<PullQuote([^>]*)>([\s\S]*?)<\/PullQuote>/g, (_, attrs: string, body: string) => {
@@ -38,7 +43,7 @@ export function mdxToMarkdown(mdx: string): string {
       const title = attr(attrs, "title");
       const caption = attr(attrs, "caption");
       const rows = objects(attrs.match(/data=\{\[([\s\S]*?)\]\}/)?.[1] ?? "").map((o) => `| ${field(o, "label")} | ${field(o, "value")} |`);
-      return [title && `**${title}**`, rows.length && `| Item | Value |\n|---|---|\n${rows.join("\n")}`, caption && `*${caption}*`]
+      return [title && `**${title}**`, rows.length && `${TABLE_HEAD[lang]}\n|---|---|\n${rows.join("\n")}`, caption && `*${caption}*`]
         .filter(Boolean)
         .join("\n\n");
     })
@@ -54,6 +59,6 @@ export function mdxToMarkdown(mdx: string): string {
 }
 
 export function articleMarkdown(meta: ArticleMeta, content: string): string {
-  const url = `${site.url}/insights/${meta.slug}`;
-  return `# ${meta.title}\n\n> ${meta.dek}\n\n${meta.author} · ${meta.date} · ${meta.category} · ${url}\n\n${mdxToMarkdown(content)}\n`;
+  const url = `${site.url}${ARTICLES_PATH[meta.lang]}/${meta.slug}`;
+  return `# ${meta.title}\n\n> ${meta.dek}\n\n${meta.author} · ${meta.date} · ${meta.category} · ${url}\n\n${mdxToMarkdown(content, meta.lang)}\n`;
 }

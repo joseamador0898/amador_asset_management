@@ -1,14 +1,21 @@
+import type { Lang } from "@/lib/i18n";
 import type { TickerFlow } from "@/lib/signals/types";
 import { cn, fmt } from "@/lib/utils";
 
+const COPY = {
+  en: { put: "← Put premium", call: "Call premium →", note: "Net = estimated call premium minus put premium traded today (volume × last price × 100). Premium is not direction: many large trades are hedges or spreads." },
+  es: { put: "← Prima de puts", call: "Prima de calls →", note: "Neto = prima estimada de calls menos prima de puts operada hoy (volumen × último precio × 100). La prima no indica dirección: muchas operaciones grandes son coberturas o spreads." },
+};
+
 /** Diverging bars: estimated call premium (right) vs put premium (left) per ticker. */
-export function NetPremiumBars({ tickers }: { tickers: TickerFlow[] }) {
+export function NetPremiumBars({ tickers, lang = "en" }: { tickers: TickerFlow[]; lang?: Lang }) {
+  const t = COPY[lang];
   const max = Math.max(1, ...tickers.flatMap((t) => [t.callPremium, t.putPremium]));
   return (
     <div className="px-5 py-4">
       <div className="mb-3 flex justify-between font-mono text-[0.6rem] uppercase tracking-wider text-paper/60">
-        <span>← Put premium</span>
-        <span>Call premium →</span>
+        <span>{t.put}</span>
+        <span>{t.call}</span>
       </div>
       <ul className="space-y-2.5">
         {tickers.map((t) => (
@@ -26,10 +33,7 @@ export function NetPremiumBars({ tickers }: { tickers: TickerFlow[] }) {
           </li>
         ))}
       </ul>
-      <p className="mt-4 text-[0.68rem] leading-relaxed text-paper/60">
-        Net = estimated call premium minus put premium traded today (volume × last price × 100). Premium is not direction: many
-        large trades are hedges or spreads.
-      </p>
+      <p className="mt-4 text-[0.68rem] leading-relaxed text-paper/60">{t.note}</p>
     </div>
   );
 }

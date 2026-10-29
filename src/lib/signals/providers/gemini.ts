@@ -11,7 +11,7 @@ export function geminiConfigured() {
   return Boolean(process.env.GEMINI_API_KEY);
 }
 
-export async function generateBrief(facts: string): Promise<string | null> {
+export async function generateBrief(facts: string, lang: "en" | "es" = "en"): Promise<string | null> {
   const key = process.env.GEMINI_API_KEY;
   if (!key) return null;
   const model = process.env.GEMINI_MODEL || "gemini-2.5-flash";
@@ -23,6 +23,9 @@ export async function generateBrief(facts: string): Promise<string | null> {
     "The remaining bullets cover markets, rates and prediction markets.",
     "Rules: no investment advice, no recommendations, no predictions, no numbers or facts that are not in the data,",
     "neutral institutional tone, plain text bullets starting with '- '.",
+    ...(lang === "es"
+      ? ["Write the bullets in Mexican Spanish (español de México); keep tickers, index names and the numbers exactly as given."]
+      : []),
     "",
     "DATA:",
     facts,

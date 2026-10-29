@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
+  // Two root layouts (English, and Spanish under /es) leave no single layout to frame a 404 for an unmatched URL;
+  // app/global-not-found.tsx renders those.
+  experimental: { globalNotFound: true },
   cacheLife: {
     // Live market panels on /signals: served from cache, refreshed in the
     // background at most every 5 minutes so provider quotas stay small.
@@ -25,9 +28,12 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },
-  // Markdown twins of the articles for AI assistants: /insights/<slug>.md.
+  // Markdown twins of the articles for AI assistants: /insights/<slug>.md and /es/analisis/<slug>.md.
   async rewrites() {
-    return [{ source: "/insights/:slug.md", destination: "/insights-md/:slug" }];
+    return [
+      { source: "/insights/:slug.md", destination: "/insights-md/:slug" },
+      { source: "/es/analisis/:slug.md", destination: "/insights-md/es/:slug" },
+    ];
   },
   turbopack: {
     rules: {

@@ -112,6 +112,9 @@ await probe("404 page", `${SITE}/this-page-does-not-exist`);
 await probe("robots.txt", `${SITE}/robots.txt`);
 await probe("llms.txt", `${SITE}/llms.txt`);
 await probe("article .md twin", `${SITE}/insights/the-arithmetic-of-drawdowns.md`);
+await probe("es article .md twin", `${SITE}/es/analisis/la-aritmetica-de-los-drawdowns.md`);
+await probe("es 404 page", `${SITE}/es/no-existe`);
+await probe("es unknown article", `${SITE}/es/analisis/no-existe`);
 await probe("opengraph-image", `${SITE}/opengraph-image`);
 await probe("query string variant", `${SITE}/?utm_source=test`);
 
@@ -126,7 +129,11 @@ for (const r of results) {
   if (!r.description) flag("missing meta description");
   else { if (r.description.length > 160) flag(`description ${r.description.length} chars (>160)`); if (r.description.length < 70) flag(`description short (${r.description.length})`); }
   if (r.h1.length !== 1) flag(`${r.h1.length} <h1> in <main>${r.h1.length ? ": " + r.h1.map((h) => `"${h.slice(0, 60)}"`).join(" | ") : ""}`);
-  if (!r.canonical) flag("no canonical"); else if (r.canonical !== r.url && r.canonical !== r.url.replace(/\/$/, "")) flag(`canonical differs: ${r.canonical}`);
+  if (!r.canonical) flag("no canonical"); else if (local(r.canonical) !== r.url && r.canonical !== r.url.replace(/\/$/, "")) flag(`canonical differs: ${r.canonical}`);
+  // Language: Spanish pages live under /es and must say so in the server HTML; every page pairs with its translation.
+  const expectLang = /^\/es(\/|$)/.test(r.url.replace(SITE, "")) ? "es" : "en";
+  if (!String(r.lang || "").toLowerCase().startsWith(expectLang)) flag(`html lang "${r.lang}" (expected ${expectLang})`);
+  if (!r.hreflang?.length) flag("no hreflang alternates");
   if (r.robots && /noindex/i.test(r.robots)) flag(`noindex (${r.robots})`);
   if (!r.og.title || !r.og.description || !r.og.image) flag(`incomplete Open Graph (${Object.entries(r.og).filter(([, v]) => !v).map(([k]) => k).join(", ")})`);
   if (r.imagesNoAlt) flag(`${r.imagesNoAlt}/${r.images} images without alt`);
@@ -138,6 +145,23 @@ for (const r of results) {
   if (r.ms > 1500) flag(`slow TTFB+download ${r.ms} ms`);
   if (seenTitles.has(r.title)) flag(`duplicate title of ${seenTitles.get(r.title)}`); else seenTitles.set(r.title, r.url.replace(SITE, "") || "/");
   if (r.description && seenDesc.has(r.description)) flag(`duplicate description of ${seenDesc.get(r.description)}`); else if (r.description) seenDesc.set(r.description, r.url.replace(SITE, "") || "/");
+}
+
+// hreflang: each page lists itself and an x-default, and every alternate links back (Google ignores one-way pairs).
+const byUrl = new Map(results.map((r) => [r.url, r]));
+const alternatesOf = (r) => (r.hreflang || []).map((h) => [h.slice(0, h.indexOf("=")), local(h.slice(h.indexOf("=") + 1))]);
+for (const r of results) {
+  if (r.status !== 200 || !r.hreflang?.length) continue;
+  const p = r.url.replace(SITE, "") || "/";
+  const alts = alternatesOf(r);
+  if (!alts.some(([, u]) => u === r.url)) issues.push(`${p}: hreflang does not include the page itself`);
+  if (!alts.some(([code]) => code === "x-default")) issues.push(`${p}: hreflang without x-default`);
+  for (const [code, u] of alts) {
+    if (u === r.url || code === "x-default") continue;
+    const other = byUrl.get(u);
+    if (!other) issues.push(`${p}: hreflang ${code} points to ${u.replace(SITE, "") || "/"}, which is not in the sitemap`);
+    else if (!alternatesOf(other).some(([, back]) => back === r.url)) issues.push(`${p}: hreflang ${code} ${u.replace(SITE, "") || "/"} does not link back`);
+  }
 }
 
 // Orphans: sitemap pages that no crawled page links to from its main content.

@@ -1,0 +1,146 @@
+---
+title: "El marco Amador: cinco preguntas antes de cualquier posición"
+seoTitle: "Marco Amador: 5 preguntas antes de invertir"
+dek: "Antes de que cualquier posición reciba capital, preguntamos qué la refutaría, qué está ya descontado en el precio, qué forma tiene su pago, cómo encaja en el portafolio y cómo dimensionarla y salir de ella."
+description: "Las cinco preguntas que hacemos antes de cualquier posición: qué la refutaría, qué está descontado, la forma del pago, el encaje, el tamaño y la salida."
+date: "2026-10-12"
+category: "Frameworks"
+author: "Jose Luis Amador Jaime"
+tags: ["proceso de inversión", "valor esperado", "dimensionamiento de posiciones", "gestión de riesgo", "diversificación"]
+featured: false
+cover: "grid"
+translationOf: "the-amador-framework"
+---
+
+La mayoría de los errores de inversión son fallas de proceso, no de inteligencia: una buena historia comprada a un precio que ya la daba por hecha, una opinión correcta mantenida en un tamaño que no podía sostener, una posición conservada mucho después de que su razón de ser había expirado. Ningún proceso elimina el error, pero uno bueno hace que los errores sean más pequeños y más fáciles de corregir.
+
+Hacemos las cinco preguntas siguientes, en orden, antes de tomar cualquier posición. Cada una es un filtro: tiene poco sentido estimar el pago de una idea que no podemos refutar, y ninguno dimensionar una cuyo potencial de alza ya está en el precio.
+
+1. ¿Cuál es la tesis y qué la refutaría?
+2. ¿Qué está ya descontado en el precio?
+3. ¿Cuál es la asimetría del pago?
+4. ¿Cómo encaja en el portafolio?
+5. ¿Cuánto, y cuándo salimos?
+
+<PullQuote cite="Amador Asset Management">
+Una tesis que no puede refutarse no puede dimensionarse.
+</PullQuote>
+
+## Pregunta uno: la tesis y sus criterios de invalidación
+
+Una tesis es una afirmación causal con un mecanismo, un horizonte y consecuencias observables, no una historia. "La empresa está bien administrada" no es una tesis. "Los márgenes operativos se recuperarán hacia su rango previo al choque en cuatro trimestres conforme se normalicen los costos de los insumos, y el precio de la acción no refleja esa recuperación" sí lo es, porque cada cláusula puede verificarse.
+
+La segunda mitad importa más. Antes de entrar, escribimos criterios de invalidación (kill criteria): condiciones observables bajo las cuales concluiremos que estamos equivocados y saldremos. El estándar es la falsabilidad de Karl Popper: una tesis que sobrevive a todos los resultados posibles no puede gestionarse, porque nada nos dirá nunca que salgamos. Los buenos criterios de invalidación son:
+
+- **Observables:** un margen reportado, una decisión de política, un dato de inflación. "El sentimiento se deteriora" no califica.
+- **Comprometidos de antemano:** escritos antes de entrar, cuando no hay una posición que defender.
+- **Anclados en la tesis:** los precios se mueven por muchas razones sin relación, así que un movimiento grande detona una revisión, mientras que la decisión de salir descansa en las variables que la tesis nombra.
+
+Una ayuda útil es el pre-mortem de Klein (2007): suponga que la posición fracasó estrepitosamente dentro de un año y escriba el relato más plausible de por qué. Con frecuencia produce los mejores criterios de invalidación.
+
+## Pregunta dos: qué está ya descontado en el precio
+
+Tener razón sobre el mundo no basta. Un precio incorpora expectativas, y una posición paga solo si la realidad las supera: una empresa excelente valuada para la perfección puede ser una mala inversión, y una mediocre valuada para la ruina, una buena. Hacemos explícitas esas expectativas y luego explicamos por qué las nuestras difieren.
+
+**Tasas base.** Kahneman y Lovallo (1993) contrastaron la visión interna, construida a partir de los detalles de un caso, con la visión externa: ¿cómo han resultado los casos similares? Un pronóstico muy alejado en la cola de su clase de referencia no es necesariamente erróneo, pero carga con la obligación de probarlo. *The Base Rate Book* (2016) de Mauboussin, Callahan y Majd compila tales tasas base para el desempeño corporativo.
+
+**Flujo de efectivo descontado inverso.** Siguiendo *Expectations Investing* (2001) de Rappaport y Mauboussin, tomamos el precio como dado y despejamos el crecimiento que implica. En el caso de crecimiento constante:
+
+$$
+P = \frac{FCF_1}{r - g} \quad \Longrightarrow \quad g^{*} = r - \frac{FCF_1}{P}
+$$
+
+Con una tasa de descuento hipotética de 9% y un rendimiento de flujo de efectivo libre a futuro (forward) de 4%, la tasa de crecimiento perpetuo implícita es 5%. La pregunta es si las tasas base hacen plausible ese 5%.
+
+**Movimientos implícitos en las opciones.** Un straddle en el dinero (at-the-money) pone precio al movimiento absoluto esperado hasta el vencimiento, aproximadamente $0.8\,\sigma\sqrt{T}$ veces el precio del subyacente para una volatilidad implícita $\sigma$ y un tiempo al vencimiento $T$ en años. Una tesis que necesita un movimiento mucho mayor debe explicar por qué el mercado está equivocado.
+
+**Mercados de predicción.** Un contrato que paga un dólar si ocurre un evento y que se opera a 30 centavos implica aproximadamente una probabilidad de 30%, antes de comisiones, liquidez escasa y sesgos como la sobrevaluación de los resultados poco probables (long shots). Seguimos esas probabilidades en nuestro [panel de Señales](/es/senales); vea también [Mercados de predicción como señales macro](/es/analisis/mercados-de-prediccion-como-senales-macro).
+
+El resultado es una percepción variante: una diferencia específica y declarada entre nuestras expectativas y las del mercado, con una razón por la que podríamos tener razón. Sin ella, la idea se detiene aquí.
+
+## Pregunta tres: la forma del pago
+
+Una posición es una distribución de resultados, no un pronóstico. Reemplazamos la estimación puntual con unos cuantos escenarios explícitos, cada uno con una probabilidad y un rendimiento; el rendimiento esperado es su suma ponderada por probabilidad, $\mathbb{E}[R] = \sum_i p_i \, r_i$.
+
+La media es solo el comienzo. También preguntamos con qué frecuencia perdemos, cuánto, y si las ganancias descansan en un solo escenario heroico. En igualdad de condiciones, preferimos el sesgo positivo, pérdidas pequeñas frecuentes con ganancias grandes ocasionales, al sesgo negativo de vender seguros: sus errores son baratos y sus peores resultados, sobrevivibles.
+
+### Un ejemplo trabajado (hipotético)
+
+<Callout type="warning" title="Ilustración hipotética">
+
+Una posición accionaria a 12 meses sobre la tesis de recuperación de márgenes de la pregunta uno. Todos los escenarios, probabilidades y rendimientos son inventados para mostrar la aritmética; no describen ningún valor, pronóstico ni posición reales.
+
+</Callout>
+
+| Escenario | Probabilidad | Rendimiento | Contribución |
+| --- | --- | --- | --- |
+| Alcista: recuperación temprana, la acción se revalúa | 20% | +70% | +14.0% |
+| Base: recuperación según lo previsto, en gran parte descontada | 40% | +5% | +2.0% |
+| Bajista: la recuperación se estanca, un criterio de invalidación obliga a salir | 35% | −20% | −7.0% |
+| Severo: un choque repentino abre la acción a la baja con un hueco (gap) | 5% | −60% | −3.0% |
+| **Total** | **100%** | | **+6.0%** |
+
+Cada contribución es probabilidad por rendimiento (para el caso alcista, $0.20 \times 70\% = 14.0\%$), y las cuatro contribuciones suman un rendimiento esperado de 6.0%.
+
+Cuatro observaciones importan más que la cifra principal. Primera, la posición pierde dinero 40% de las veces y aun así luce atractiva en papel, porque las ganancias ponderadas de 16.0% son 1.6 veces las pérdidas ponderadas de 10.0%; una alta tasa de aciertos no es el objetivo. Segunda, el caso bajista es poco profundo porque supone que actuamos según los criterios de invalidación, así que la disciplina de salida es parte del pago. Tercera, ninguna salida puede gestionar el caso severo, ya que un gap mueve el precio antes de que alguien pueda actuar; ese escenario fija el tamaño máximo en la pregunta cinco. Cuarta, la respuesta es frágil. Si la probabilidad alcista cae a 15%, con la diferencia pasando al caso bajista, el rendimiento esperado baja a 1.5%:
+
+$$
+0.15 \times 70\% + 0.40 \times 5\% + 0.40 \times (-20\%) + 0.05 \times (-60\%) = 1.5\%
+$$
+
+Un rendimiento esperado que depende de cinco puntos porcentuales de probabilidad subjetiva no es uno que podamos afirmar que conocemos; es un argumento a favor de una posición más pequeña, un mejor precio o más trabajo. Incluso el 6.0% debe sopesarse contra lo que ofrecen el efectivo y el portafolio existente.
+
+## Pregunta cuatro: el encaje en el portafolio
+
+La pregunta no es si una posición es buena, sino si el portafolio es mejor con ella. Markowitz (1952) mostró que el riesgo de un portafolio depende de cómo se mueven juntas sus posiciones, no solo del riesgo de cada una. La diversificación tiene que ver con el riesgo, no con los tickers: treinta acciones que dependen todas de una baja en las tasas de interés son una sola apuesta tomada treinta veces.
+
+**Correlación.** Las correlaciones que parecen bajas en mercados tranquilos tienden a subir en las ventas masivas, cuando la diversificación más importa, así que también las medimos en periodos de estrés.
+
+**Contribución al riesgo.** La volatilidad del portafolio se descompone exactamente en las contribuciones de sus posiciones. Con pesos $w$ y matriz de covarianzas $\Sigma$:
+
+$$
+\sigma_p = \sqrt{w^{\top} \Sigma \, w}, \qquad RC_i = \frac{w_i \, (\Sigma w)_i}{\sigma_p}, \qquad \sum_i RC_i = \sigma_p
+$$
+
+Una posición pequeña en un activo volátil que se mueve con el resto del portafolio puede contribuir más riesgo que una posición mucho mayor en uno estable y diversificador. Presupuestamos riesgo, no capital; nuestro [mapa de regímenes](/es/analisis/las-cuatro-estaciones-de-la-economia) aplica la misma lógica a las clases de activos.
+
+**Agrupamiento jerárquico.** Para ver cuántas apuestas independientes tenemos en realidad, agrupamos las posiciones según una distancia de correlación,
+
+$$
+d_{ij} = \sqrt{\tfrac{1}{2}\left(1 - \rho_{ij}\right)}
+$$
+
+que es cero para activos perfectamente correlacionados y uno para activos perfectamente anticorrelacionados. El dendrograma resultante muestra qué posiciones se comportan como un grupo. López de Prado (2016) construyó la paridad de riesgo jerárquica sobre esta estructura y, en simulaciones, encontró menor varianza fuera de muestra que la optimización de varianza mínima, que debe invertir una matriz de covarianzas ruidosa. Un candidato que se une a un grupo que ya domina el riesgo del portafolio debe superar una vara más alta.
+
+## Pregunta cinco: tamaño y salida
+
+La convicción no es un tamaño de posición; las primeras cuatro preguntas aportan lo que el dimensionamiento necesita.
+
+Dimensionamos a partir del riesgo a la baja. Cada posición recibe un presupuesto de riesgo, fijado por su contribución a la volatilidad del portafolio y por su pérdida en el escenario severo, lo que restrinja primero. En el ejemplo hipotético, si ninguna posición puede costar más de 1.5% del capital en su escenario severo, un caso severo de −60% limita el peso a:
+
+$$
+w_{\max} = \frac{1.5\%}{60\%} = 2.5\%
+$$
+
+El criterio de Kelly (Kelly, 1956), que maximiza el crecimiento de largo plazo cuando las probabilidades se conocen, da una cota superior teórica. Nuestras probabilidades son estimaciones, y apostar de más a una ventaja exagerada hace mucho más daño que apostar de menos a una real, así que tratamos a Kelly como un techo; vea [El criterio de Kelly es un techo](/es/analisis/el-criterio-de-kelly-es-un-techo).
+
+Escribimos cuatro salidas antes de entrar:
+
+1. **Refutada:** se activa un criterio de invalidación y salimos sin renegociarlo.
+2. **Descontada:** el mercado ahora comparte nuestra opinión, así que la razón para tener la posición desapareció.
+3. **Fuera de presupuesto:** una posición ganadora ha crecido hasta dominar el riesgo del portafolio, así que la recortamos.
+4. **Fuera de tiempo:** el catalizador no ha llegado para la fecha de revisión, así que volvemos a evaluar la posición desde cero en lugar de extenderla por inercia.
+
+Los detonadores de revisión, como un movimiento de precio desmesurado o una sorpresa en una variable de la tesis, no obligan a vender. Obligan a responder de nuevo las cinco preguntas, terminando con una prueba: sabiendo lo que sabemos hoy, ¿compraríamos esta posición en este tamaño? Las salidas escritas son también nuestra principal defensa contra lo que Shefrin y Statman (1985) llamaron el efecto disposición, la tendencia a vender las posiciones ganadoras demasiado pronto y a cargar con las perdedoras demasiado tiempo.
+
+## Lo que el marco no hace
+
+No nos da la razón. Las probabilidades de los escenarios son juicios, y los juicios pueden ser malos. El marco los hace explícitos para que puedan verificarse y mejorarse, mantiene los errores lo bastante pequeños para sobrevivirlos y deja un registro de lo que creíamos y por qué. Es deliberadamente restrictivo: dejar pasar una buena idea suele costar menos que tener una mala en tamaño grande. Las mismas preguntas aplican a toda escala, hasta un portafolio multiactivo como el próximo [Amador Nautilus Fund](/es/fondo). Para conversar sobre el marco, [reserve una conversación](/es/reservar) con nosotros.
+
+## Puntos clave
+
+- Enuncie la tesis como una afirmación refutable, con criterios de invalidación escritos antes de entrar.
+- Haga explícitas las expectativas implícitas del mercado y sepa por qué las suyas difieren.
+- Juzgue toda la distribución, incluidas sus colas y su sensibilidad, no solo el valor esperado.
+- Mida la diversificación en riesgo, no en el número de posiciones.
+- Dimensione a partir del escenario severo, trate a Kelly como un techo y planee la salida antes de entrar.

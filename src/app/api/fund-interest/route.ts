@@ -17,8 +17,9 @@ export async function POST(req: Request) {
       indicativeSize: f.ticket,
       message: f.message,
       acknowledgedNotAnOffer: f.attestation,
+      language: f.lang === "es" ? "Spanish" : "English",
     },
-    { subject: `${fund.shortName} interest: ${f.name} (${f.status})`, replyTo: f.email },
+    { subject: `${fund.shortName} interest: ${f.name} (${f.status})${f.lang === "es" ? " [ES]" : ""}`, replyTo: f.email },
   );
   return Response.json({ ok: true });
 }

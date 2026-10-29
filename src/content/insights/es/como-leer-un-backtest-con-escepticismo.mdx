@@ -1,0 +1,110 @@
+---
+title: "Cómo leer un backtest con escepticismo"
+seoTitle: "Qué es el backtesting y cómo evaluarlo"
+dek: "Ratios de Sharpe probabilístico y deflactado, pruebas de sobreajuste de backtests, múltiples semillas y diez errores silenciosos que hacen que las estrategias parezcan mejores de lo que son."
+description: "Qué es el backtesting y cómo evaluarlo: ratios de Sharpe probabilístico y deflactado, pruebas de sobreajuste, varias semillas y diez errores silenciosos."
+date: "2026-10-10"
+category: "Risk"
+author: "Jose Luis Amador Jaime"
+tags: ["backtesting", "estadística", "ratio de Sharpe", "métodos de investigación"]
+series: "Deep HRP"
+featured: false
+cover: "bars"
+translationOf: "read-a-backtest-like-a-skeptic"
+---
+
+Un *backtest* es un argumento, no una medición. Se arma a partir de decisiones: el periodo, el universo, los parámetros, los costos, el código. Y quien toma esas decisiones normalmente quiere que la respuesta sea sí. Nuestra investigación sobre [Deep HRP](/es/analisis/deep-hrp-paridad-de-riesgo-jerarquica-aprendible) nos obligó a construir un protocolo de evaluación diseñado para decir no siempre que razonablemente pudiera. Este artículo comparte las herramientas que usamos y los errores que hemos aprendido a cazar, primero en nuestro propio trabajo.
+
+## ¿Qué es el backtesting?
+
+El *backtesting* consiste en aplicar una regla de inversión a datos históricos como si se hubiera seguido en su momento: las mismas señales y fechas de rebalanceo, con costos de operación y solo con la información disponible en cada fecha. El resultado es un historial simulado, que suele resumirse con el rendimiento, la volatilidad, el ratio de Sharpe y la caída máxima. Un *backtest* puede mostrar que una idea es plausible. No puede demostrar que funcionará, porque quien diseñó la regla ya conocía la historia. El resto de esta nota trata de la distancia entre esas dos afirmaciones.
+
+## Problema uno: un ratio de Sharpe es una estimación
+
+Un ratio de Sharpe reportado es un estadístico muestral. En muestras cortas, o con rendimientos asimétricos y de colas gruesas, un valor alto puede ser fácilmente suerte. Bailey y López de Prado (2012) propusieron el **ratio de Sharpe probabilístico (PSR, por sus siglas en inglés)**: la probabilidad de que el ratio de Sharpe verdadero supere un punto de referencia $SR^*$ (a menudo cero), dado el ratio de Sharpe observado $\widehat{SR}$ (medido por periodo), el número de observaciones $n$, la asimetría $\gamma_3$ y la curtosis $\gamma_4$ de los rendimientos:
+
+$$
+\mathrm{PSR}(SR^*) = \Phi\!\left( \frac{(\widehat{SR} - SR^*)\sqrt{n-1}}{\sqrt{1 - \gamma_3 \widehat{SR} + \frac{\gamma_4 - 1}{4}\widehat{SR}^2}} \right)
+$$
+
+Aquí $\Phi$ es la función de distribución normal estándar. Algo de intuición, para una estrategia con un ratio de Sharpe anualizado de 1.0 medido sobre rendimientos diarios con colas normales:
+
+| Historial | PSR (probabilidad de que el Sharpe verdadero supere 0) |
+|---|---|
+| 1 año | 84.1% |
+| 2 años | 92.1% |
+| 3 años | 95.8% |
+| 5 años | 98.7% |
+
+Un Sharpe de 1.0 a un año deja aproximadamente una probabilidad de uno en seis de que la estrategia no tenga ventaja alguna. Para datos diarios, la longitud del historial importa más que las colas gruesas: con tres años de datos, pasar de colas normales a una asimetría de −2 y una curtosis de 12 reduce el PSR solo de 95.8% a 94.8%.
+
+<Callout type="warning" title="El PSR no es una comparación">
+Un PSR alto dice que un ratio de Sharpe probablemente es positivo. No dice que una estrategia le gane a otra. Para eso se necesitan pruebas pareadas sobre las dos series de rendimientos en las mismas fechas, como una prueba de bootstrap por bloques de la diferencia de ratios de Sharpe (Ledoit y Wolf, 2008), corregida por comparaciones múltiples cuando se prueban muchos pares (Holm, 1979).
+</Callout>
+
+## Problema dos: se probó más de una cosa
+
+Cuantas más configuraciones se prueban, más alto será el ratio de Sharpe de la mejor, aunque ninguna tenga ventaja alguna. Bailey y López de Prado (2014) formalizaron esto en el **ratio de Sharpe deflactado (DSR)**: se calcula el PSR contra un punto de referencia igual al ratio de Sharpe que se *esperaría* del mejor de $N$ ensayos sin habilidad,
+
+$$
+SR_0 = \sqrt{V\!\left[\widehat{SR}_n\right]}\left( (1-\gamma)\,\Phi^{-1}\!\left(1 - \tfrac{1}{N}\right) + \gamma\,\Phi^{-1}\!\left(1 - \tfrac{1}{N e}\right) \right)
+$$
+
+donde $V[\widehat{SR}_n]$ es la varianza de los ratios de Sharpe entre los ensayos y $\gamma \approx 0.5772$ es la constante de Euler–Mascheroni.
+
+<Chart
+  title="Ratio de Sharpe deflactado de un backtest de tres años con Sharpe de 1.0"
+  caption="Ilustrativo: desviación estándar entre ensayos de los ratios de Sharpe anualizados de 0.5, rendimientos normales. Cuantas más variantes se probaron, menos significa el ratio de Sharpe del ganador."
+  decimals={2}
+  data={[
+    { label: "1 ensayo", value: 0.96 },
+    { label: "10 ensayos", value: 0.64 },
+    { label: "100 ensayos", value: 0.32, highlight: true },
+    { label: "1,000 ensayos", value: 0.14 }
+  ]}
+/>
+
+La parte difícil es la honestidad sobre $N$. Cada ventana de observación (*lookback*) que se probó, cada universo que se descartó, cada hiperparámetro que se ajustó después de echar un vistazo a los resultados es un ensayo. Afinar cualquier cosa sobre el periodo de prueba, incluso de manera informal, multiplica $N$ en silencio.
+
+## Problema tres: el ganador dentro de muestra no es el ganador fuera de muestra
+
+La **probabilidad de sobreajuste del backtest (PBO)**, de Bailey, Borwein, López de Prado y Zhu (2017), hace una pregunta directa: si se elige la mejor configuración en una mitad de los datos, ¿con qué frecuencia queda por debajo de la mediana en la otra mitad? Su validación cruzada combinatoriamente simétrica divide la muestra en $S$ bloques y prueba todas las formas de elegir la mitad de ellos para la selección, $\binom{S}{S/2}$ combinaciones (12,870 cuando $S = 16$). Un PBO cercano a cero significa que los ganadores dentro de muestra siguen ganando; un PBO cercano a un medio significa que la selección no es mejor que un volado.
+
+Nótese qué mide el PBO: la estabilidad de un *proceso de selección* sobre un *conjunto de candidatos*. Ejecutarlo sobre un puñado de estrategias fijas sin relación entre sí dice si su ordenamiento es estable, no si el proceso de desarrollo sobreajustó. Para responder eso, el conjunto de candidatos debe ser el de las configuraciones que realmente se exploraron.
+
+## Problema cuatro: una semilla es una anécdota
+
+Los asignadores basados en aprendizaje automático añaden otra fuente de suerte: la semilla aleatoria que inicializa la red y baraja los datos de entrenamiento. En nuestra experiencia, la dispersión entre semillas puede ser tan grande como la brecha entre métodos. Reportamos cada resultado neuronal como media y desviación estándar sobre diez semillas, y tratamos un resultado que depende de la semilla como si no fuera un resultado.
+
+## Diez errores silenciosos que cazamos
+
+Estos son los errores que no hacen fallar nada. Simplemente hacen que los resultados sean mejores de lo que deberían, o solo distintos de lo que dice el artículo. Cada punto de esta lista es algo que ahora probamos de forma explícita.
+
+1. **Rendimientos de precio en lugar de rendimientos totales.** Los precios de cierre sin ajustar dejan fuera dividendos y cupones. Para fondos de bonos y de alto dividendo, eso puede subestimar los rendimientos en varios puntos porcentuales al año y distorsionar toda comparación.
+2. **Ventanas de entrenamiento que se extienden en silencio.** Cuando un activo empieza a cotizar tarde, el código de datos que conserva solo las fechas en que todos los activos tienen precio puede empujar la muestra de "entrenamiento" hacia el periodo de prueba sin lanzar ningún error.
+3. **Comparar métodos en fechas distintas.** Si el backtest de un método empieza más tarde porque necesitaba más historia, su ratio de Sharpe se mide sobre un mercado distinto.
+4. **Costos cobrados incorrectamente.** Repartir el costo de un rebalanceo a lo largo del periodo de tenencia y luego cobrar solo la parte de un día elimina en silencio la mayor parte del costo.
+5. **Rendimientos brutos en regresiones de factores.** Los alfas deben estimarse sobre rendimientos en exceso de la tasa libre de riesgo; de lo contrario, el rendimiento del efectivo aparece como habilidad.
+6. **Estadísticos t mal escalados.** Anualizar de forma inconsistente el numerador y el denominador de un estadístico t puede inflarlo por un factor de casi 16 para datos diarios, la raíz cuadrada de 252.
+7. **Modelos que se dejan en modo de entrenamiento.** Las redes neuronales con dropout dan respuestas distintas en cada llamada a menos que se cambien a modo de evaluación antes de la inferencia.
+8. **Marcas de tiempo que filtran información.** Un titular fechado el mismo día que el rendimiento que se supone que predice puede haberse publicado después del cierre.
+9. **Afinar sobre el conjunto de prueba.** Comentarios como "esta configuración funcionó mejor en el backtest" en una base de código son ensayos que pertenecen a $N$.
+10. **Números de corridas distintas.** Las tablas armadas a partir de varias corridas, versiones de código o fechas de corte de datos no pueden reproducirse. Cada número debería generarse por script a partir de una sola corrida etiquetada, y cotejarse con el texto antes de publicar.
+
+<PullQuote cite="Cómo trabajamos">
+La meta de un proceso de investigación no es encontrar una estrategia con un buen backtest. Es dejar de creer en las que no lo merecen tan pronto y tan barato como sea posible.
+</PullQuote>
+
+## Cómo lo aplicamos
+
+Toda investigación de Amador se somete a esta lista de verificación antes de publicarse, y reportamos lo que falla junto con lo que pasa. Es el mismo estándar que aplicaremos al [Fondo Nautilus](/es/fondo) y el mismo que aplicaríamos a una estrategia que alguien le presente. Si quiere una segunda opinión sobre un backtest que le han mostrado, [reserve una consulta](/es/reservar).
+
+## Puntos clave
+
+- Lea un ratio de Sharpe junto con la longitud de su historial; el PSR convierte ambos en una probabilidad.
+- Deflacte por cada ensayo que se corrió, incluidos los informales.
+- Use el PBO para probar el proceso de selección, y pruebas pareadas para comparar estrategias.
+- Reporte los resultados neuronales a través de semillas, no a partir de la mejor.
+- Suponga que hay un error silencioso hasta que una lista de verificación diga lo contrario.
+
+*Referencias: Bailey and López de Prado (2012), "The Sharpe Ratio Efficient Frontier," Journal of Risk; Bailey and López de Prado (2014), "The Deflated Sharpe Ratio," Journal of Portfolio Management; Bailey, Borwein, López de Prado and Zhu (2017), "The Probability of Backtest Overfitting," Journal of Computational Finance; Ledoit and Wolf (2008), "Robust Performance Hypothesis Testing with the Sharpe Ratio," Journal of Empirical Finance; Holm (1979), Scandinavian Journal of Statistics.*

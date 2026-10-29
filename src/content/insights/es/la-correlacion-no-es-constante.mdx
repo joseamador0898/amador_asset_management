@@ -1,0 +1,122 @@
+---
+title: "La correlación no es constante: diversificación cuando más se necesita"
+dek: "Las correlaciones tienden a subir en las ventas masivas, y la correlación entre acciones y bonos cambia de signo con el régimen macro, por lo que los portafolios duraderos se construyen para un rango de correlaciones y no para una sola estimación."
+seoTitle: "Correlaciones en crisis: por qué suben y qué hacer"
+description: "Las correlaciones suben en las caídas y la de acciones y bonos cambia con el régimen macro. Cómo construir un portafolio que diversifique cuando importa."
+date: "2026-10-22"
+category: "Research"
+author: "Jose Luis Amador Jaime"
+tags: ["correlación", "correlación acciones-bonos", "diversificación", "paridad de riesgo", "construcción de portafolios", "regímenes macro"]
+featured: false
+cover: "grid"
+translationOf: "correlation-is-not-constant"
+---
+
+La correlación no es una propiedad fija de dos activos. Las correlaciones entre activos de riesgo tienden a subir en las ventas masivas, y la correlación entre las acciones y los bonos gubernamentales de alta calidad ha cambiado de signo con el régimen macroeconómico: negativa durante la mayor parte de las décadas de baja inflación anteriores a 2022, positiva cuando dominó el riesgo de inflación, como en 2022. La respuesta práctica es construir portafolios cuyo riesgo se mantenga aceptable en un rango de correlaciones, no solo en una estimación.
+
+## ¿Por qué importa tanto la correlación para el riesgo del portafolio?
+
+Para dos activos con pesos $w_1, w_2$, volatilidades $\sigma_1, \sigma_2$ y correlación $\rho$, la varianza del portafolio es
+
+$$
+\sigma_p^2 = w_1^2\sigma_1^2 + w_2^2\sigma_2^2 + 2\,w_1 w_2\,\rho\,\sigma_1\sigma_2
+$$
+
+Con una correlación de 1, la volatilidad del portafolio es simplemente el promedio ponderado de las dos volatilidades. Toda la reducción de riesgo por debajo de ese promedio proviene de una correlación menor que 1, de modo que la diversificación es tan confiable como las correlaciones que la sustentan.
+
+La correlación también fija un piso. Con $n$ activos de igual peso, igual volatilidad $\sigma$ y correlación promedio por pares $\bar{\rho}$, la volatilidad del portafolio es $\sigma\sqrt{1/n + (1 - 1/n)\,\bar{\rho}}$, que se aproxima a $\sigma\sqrt{\bar{\rho}}$ conforme $n$ crece. Agregar posiciones no puede llevar el riesgo por debajo de ese piso; solo una correlación más baja puede hacerlo. Para activos con 20% de volatilidad, una correlación promedio de 0.3 sitúa el piso cerca de 11% y una de 0.7 lo sitúa cerca de 17% (ilustrativo). Cuando las correlaciones suben en una venta masiva, el piso sube con ellas.
+
+## ¿Por qué suben las correlaciones en las ventas masivas?
+
+Tres fuerzas tienden a empujar las correlaciones al alza cuando los precios caen. Un solo choque, como un temor de recesión o un salto en la aversión al riesgo, eclipsa las noticias específicas de cada activo. Las ventas forzadas vinculan activos que de otro modo no tendrían relación, pues los inversionistas que enfrentan llamadas de margen o reembolsos venden lo que pueden; Brunnermeier y Pedersen (2009) muestran cómo la liquidez de mercado y la liquidez de financiamiento pueden reforzarse mutuamente en espirales que drenan la liquidez de muchos valores a la vez. En marzo de 2020, incluso los bonos del Tesoro de EE. UU. cayeron brevemente en la carrera por obtener efectivo. Y los objetivos de volatilidad y los límites de riesgo pueden ordenar a muchos portafolios recortar su exposición en el mismo momento.
+
+La asimetría está bien documentada. Longin y Solnik (2001), al estudiar los cinco mercados accionarios más grandes entre 1959 y 1996, encontraron que las correlaciones entre los rendimientos mensuales muy negativos eran mucho más altas de lo que implica una distribución normal, mientras que las correlaciones entre los rendimientos muy positivos no lo eran. Ang y Chen (2002) encontraron que las correlaciones entre las acciones de EE. UU. y el mercado agregado eran mucho mayores en los movimientos a la baja, sobre todo en los extremos, que en los movimientos al alza. Chua, Kritzman y Page (2009) encontraron correlaciones significativamente asimétricas en una amplia gama de activos, por lo general más altas a la baja: lo contrario de lo que los inversionistas desean.
+
+<Callout type="note" title="¿Contagio o interdependencia?">
+
+Parte del aumento medido es estadístico. Forbes y Rigobon (2002) mostraron que la correlación medida depende de la volatilidad. Si un mercado impulsa a otro y la varianza del primero aumenta en un factor de $1 + \delta$, sin que nada más cambie, la correlación medida sube de $\rho$ a $\rho\sqrt{(1 + \delta)/(1 + \delta\rho^2)}$: 0.50 se convierte en cerca de 0.76 cuando esa varianza se cuadruplica. Al ajustar por este sesgo, no encontraron prácticamente ningún aumento de las correlaciones durante el crac de EE. UU. de 1987, la devaluación mexicana de 1994 y la crisis asiática de 1997, aunque trabajos posteriores cuestionan los supuestos del ajuste (Corsetti, Pericoli y Sbracia, 2005).
+
+Para un portafolio, la etiqueta importa menos que la lección: cuando los activos comparten una fuente de riesgo, las correlaciones medidas en mercados tranquilos subestiman las que prevalecen una vez que esa fuente se vuelve volátil.
+
+</Callout>
+
+## ¿Qué determina la correlación entre acciones y bonos?
+
+Principalmente el equilibrio entre las noticias de crecimiento y las noticias de inflación. Las acciones y los bonos nominales comparten una tasa de descuento, pero no una exposición a los flujos de efectivo. Una economía más débil reduce las utilidades esperadas, lo que perjudica a las acciones, y reduce la inflación esperada y las tasas de política monetaria, lo que beneficia a los bonos: las noticias de crecimiento los separan. Una inflación más alta eleva los rendimientos, lo que perjudica a los bonos, y eleva la tasa a la que se descuentan los flujos de efectivo de las acciones, lo que perjudica a las acciones: las noticias de inflación los juntan.
+
+Brixton, Brooks, Hecht, Ilmanen, Maloney y McQuinn (2023) encuentran este patrón en los datos y sostienen que el signo de la correlación depende menos del nivel de la inflación que de su volatilidad en relación con el crecimiento. Campbell, Pflueger y Viceira (2020) estiman que el comovimiento entre la inflación de EE. UU. y la brecha del producto pasó de negativo a positivo alrededor de 2001. Cuando la inflación sube mientras la economía se debilita, los bonos pierden valor en los mismos malos momentos que las acciones; cuando baja, los bonos ganan. En su modelo, ese cambio, operando a través de primas de riesgo variables en el tiempo, explica que la correlación entre bonos y acciones pasara de positiva a negativa.
+
+Los rendimientos de las acciones y de los bonos del Tesoro de EE. UU. tendieron a moverse juntos durante buena parte de las décadas de 1970, 1980 y 1990, y después mayormente en direcciones opuestas durante las dos décadas posteriores a 2000, aproximadamente. Campbell, Sunderam y Viceira (2017) encuentran que su covarianza fue inusualmente alta a principios de la década de 1980 y negativa en la de 2000, sobre todo en las recesiones de 2000–02 y 2007–09. Como dice su título, los bonos nominales pueden ser apuestas a la inflación o coberturas contra la deflación.
+
+En 2022 la correlación volvió a cambiar. La inflación al consumidor en EE. UU. alcanzó su nivel más alto en cuatro décadas, la Reserva Federal elevó su tasa de política monetaria en más de cuatro puntos porcentuales en el año, y tanto las acciones como los bonos con grado de inversión de EE. UU. registraron pérdidas de dos dígitos. Para los portafolios que contaban con los bonos para compensar las pérdidas accionarias, la cobertura se convirtió en una segunda fuente del mismo riesgo.
+
+## ¿Cuánto cambia el riesgo del portafolio con un cambio en la correlación?
+
+Más de lo que sugiere la intuición, y sobre todo donde los bonos cargan con una gran parte del riesgo. Tome volatilidades anualizadas ilustrativas de 16% para las acciones y 6% para los bonos, y compare un portafolio 60/40 con uno equilibrado por riesgo que pondera cada activo en proporción inversa a su volatilidad (alrededor de 27% acciones y 73% bonos), de modo que cada uno aporte el mismo riesgo individual.
+
+| Correlación acciones-bonos | Volatilidad 60/40 | Volatilidad equilibrada por riesgo |
+| --- | ---: | ---: |
+| −0.4 | 8.9% | 4.8% |
+| 0.0 | 9.9% | 6.2% |
+| +0.4 | 10.8% | 7.3% |
+
+Un movimiento de −0.4 a +0.4 eleva la volatilidad del portafolio 60/40 en alrededor de una quinta parte y la del portafolio equilibrado por riesgo en alrededor de la mitad. En la mezcla 60/40, las acciones dominan el riesgo; en la mezcla equilibrada por riesgo, los bonos cargan con la mitad, de modo que la relación entre las dos mitades determina en gran medida el total.
+
+## ¿Qué significa esto para la paridad de riesgo?
+
+La paridad de riesgo está más expuesta a la correlación entre acciones y bonos que una mezcla tradicional, porque los bonos cargan con una gran parte de su riesgo y porque suele usar apalancamiento, como explica [Las cuatro estaciones de la economía](/es/analisis/las-cuatro-estaciones-de-la-economia). Con dos activos, las contribuciones iguales al riesgo implican pesos inversos a la volatilidad cualquiera que sea la correlación (con más activos, las correlaciones también entran en los pesos). La correlación no cambia la mezcla de dos activos; cambia cuánto riesgo carga la mezcla y, por tanto, el apalancamiento que requiere un objetivo de volatilidad.
+
+<Chart
+  title="Solo ilustrativo: volatilidad de un portafolio apalancado para 10% con una correlación de −0.4 (%)"
+  caption="Ilustrativo, no son datos ni un pronóstico. Portafolio de dos activos equilibrado por riesgo, volatilidades de los activos sin cambio: 10% × √((1 + ρ) ÷ 0.6)."
+  decimals={1}
+  data={[
+    { label: "Correlación −0.4", value: 10.0 },
+    { label: "Correlación −0.2", value: 11.5 },
+    { label: "Correlación 0.0", value: 12.9 },
+    { label: "Correlación +0.2", value: 14.1 },
+    { label: "Correlación +0.4", value: 15.3, highlight: true },
+  ]}
+/>
+
+Como los dos activos cargan con el mismo riesgo, la volatilidad escala por $\sqrt{(1 + \rho_{\text{new}})/(1 + \rho_{\text{old}})}$ cualesquiera que sean sus volatilidades individuales. Apalancado alrededor de 2.1 veces para alcanzar 10% con una correlación de −0.4, el portafolio opera cerca de 15% con +0.4. Un proceso de [volatility targeting](/es/analisis/volatility-targeting-explicado) acabará por recortar el apalancamiento, pero sus estimaciones van con retraso, así que el recorte tiende a llegar después de las pérdidas.
+
+## ¿Cómo construir un portafolio que no dependa de una sola estimación de correlación?
+
+Ningún estimador anticipa con fiabilidad los cambios de régimen, así que el objetivo es un portafolio cuyo riesgo se mantenga aceptable en todo el rango plausible. Las prácticas que nos resultan más útiles:
+
+1. **Dimensione para correlaciones estresadas, no promedio.** Recalcule el riesgo con la correlación entre acciones y bonos claramente positiva y las correlaciones entre activos de riesgo cerca de 1, y fije el apalancamiento de modo que el portafolio se mantenga dentro de sus límites en ambos casos. Esto tiene un costo: en el ejemplo anterior, un portafolio dimensionado para 10% con +0.4 opera cerca de 6.5% con −0.4, renunciando a riesgo, y con él a rendimiento esperado, en los regímenes benignos.
+2. **Estime la correlación de más de una manera.** Compare una estimación de ventana larga, una de movimiento rápido como un promedio ponderado exponencialmente, y una obtenida solo de periodos turbulentos, que la medida de turbulencia de Kritzman y Li (2010) puede identificar. La contracción (shrinkage) hacia un objetivo estructurado (Ledoit y Wolf, 2004) doma el ruido en matrices grandes. Un portafolio que parece aceptable bajo una sola estimación depende de esa estimación.
+3. **Diversifique los diversificadores.** Los bonos gubernamentales nominales cubren choques de crecimiento, no choques de inflación. Combínelos con exposiciones que han tendido a responder a las sorpresas de inflación, como los bonos indexados a la inflación y las materias primas, cada una con sus propios riesgos, y con fuentes de rendimiento que no dependan de la relación entre acciones y bonos.
+4. **Prefiera reglas de asignación que se degraden con suavidad.** Los optimizadores que invierten una matriz de covarianzas amplifican los errores en las estimaciones de correlación. La [paridad de riesgo jerárquica](/es/analisis/paridad-de-riesgo-jerarquica-explicada) evita la inversión, aunque su árbol sigue construyéndose a partir de correlaciones medidas en un solo régimen.
+5. **Vigile el cambio de régimen sin pretender pronosticarlo.** Siga las correlaciones móviles en varios horizontes y trate un cambio de signo como una razón para volver a correr las pruebas de estrés, no como una señal de trading.
+
+## Limitaciones
+
+- **La correlación es lineal y promedio.** Un solo coeficiente dice poco sobre el comportamiento conjunto en las colas, donde la evidencia anterior encuentra las mayores desviaciones respecto a la normalidad.
+- **Las estimaciones dependen de la ventana y la frecuencia.** Las ventanas cortas son ruidosas y las largas mezclan regímenes. Las correlaciones diarias entre zonas horarias distintas están sesgadas a la baja por horarios de operación que no se traslapan.
+- **Las explicaciones macro son parciales.** Baele, Bekaert e Inghelbrecht (2010) encontraron que los fundamentos macroeconómicos explican poco de las correlaciones entre acciones y bonos, y que las variables aproximadas (proxies) de liquidez desempeñan un papel mayor; el marco de Brixton y coautores ajusta mejor la variación de largo plazo que las oscilaciones de corto plazo.
+- **La historia es una muestra pequeña.** El registro moderno contiene solo unos cuantos regímenes largos de acciones y bonos, así que cualquier estimación de la frecuencia con que el signo cambia descansa en muy pocos episodios.
+- **La volatilidad no es pérdida.** Los resultados también dependen de la trayectoria de los rendimientos, las colas pesadas, la liquidez y los costos de financiamiento.
+
+## Puntos clave
+
+- Las correlaciones tienden a subir en las ventas masivas, así que las estimaciones de mercados tranquilos sobreestiman la diversificación.
+- La correlación entre acciones y bonos es negativa cuando dominan las noticias de crecimiento y positiva cuando dominan las de inflación, como en 2022.
+- Una correlación positiva entre acciones y bonos eleva el riesgo sobre todo en los portafolios equilibrados por riesgo y apalancados.
+- Dimensione para correlaciones estresadas, diversifique las coberturas y prefiera estimaciones y reglas de asignación que se degraden con suavidad.
+
+## Fuentes
+
+- Ang, A., and Chen, J. (2002). "Asymmetric Correlations of Equity Portfolios." *Journal of Financial Economics*, 63(3).
+- Baele, L., Bekaert, G., and Inghelbrecht, K. (2010). "The Determinants of Stock and Bond Return Comovements." *Review of Financial Studies*, 23(6).
+- Brixton, A., Brooks, J., Hecht, P., Ilmanen, A., Maloney, T., and McQuinn, N. (2023). "A Changing Stock-Bond Correlation: Drivers and Implications." *Journal of Portfolio Management*, 49(4).
+- Brunnermeier, M. K., and Pedersen, L. H. (2009). "Market Liquidity and Funding Liquidity." *Review of Financial Studies*, 22(6).
+- Campbell, J. Y., Pflueger, C., and Viceira, L. M. (2020). "Macroeconomic Drivers of Bond and Equity Risks." *Journal of Political Economy*, 128(8).
+- Campbell, J. Y., Sunderam, A., and Viceira, L. M. (2017). "Inflation Bets or Deflation Hedges? The Changing Risks of Nominal Bonds." *Critical Finance Review*, 6(2).
+- Chua, D. B., Kritzman, M., and Page, S. (2009). "The Myth of Diversification." *Journal of Portfolio Management*, 36(1).
+- Corsetti, G., Pericoli, M., and Sbracia, M. (2005). "'Some Contagion, Some Interdependence': More Pitfalls in Tests of Financial Contagion." *Journal of International Money and Finance*, 24(8).
+- Forbes, K. J., and Rigobon, R. (2002). "No Contagion, Only Interdependence: Measuring Stock Market Comovements." *Journal of Finance*, 57(5).
+- Kritzman, M., and Li, Y. (2010). "Skulls, Financial Turbulence, and Risk Management." *Financial Analysts Journal*, 66(5).
+- Ledoit, O., and Wolf, M. (2004). "Honey, I Shrunk the Sample Covariance Matrix." *Journal of Portfolio Management*, 30(4).
+- Longin, F., and Solnik, B. (2001). "Extreme Correlation of International Equity Markets." *Journal of Finance*, 56(2).

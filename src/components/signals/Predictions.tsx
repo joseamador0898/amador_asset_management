@@ -1,14 +1,17 @@
+import type { Lang } from "@/lib/i18n";
+import { outcomeLabel } from "@/lib/signals/labels";
 import type { PredictionMarket } from "@/lib/signals/types";
 import { cn, fmt } from "@/lib/utils";
 
-export function Predictions({ markets, tone = "dark", limit }: { markets: PredictionMarket[]; tone?: "dark" | "light"; limit?: number }) {
+/** Market titles and outcomes show as Polymarket publishes them (in English); Yes and No are translated. */
+export function Predictions({ markets, tone = "dark", limit, lang = "en" }: { markets: PredictionMarket[]; tone?: "dark" | "light"; limit?: number; lang?: Lang }) {
   const dark = tone === "dark";
   const items = limit ? markets.slice(0, limit) : markets;
   return (
     <ul className={cn("divide-y", dark ? "divide-term-line" : "divide-line")}>
       {items.map((m) => (
         <li key={m.id} className="px-5 py-4">
-          <a href={m.url} target="_blank" rel="noopener noreferrer" className={cn("text-sm leading-snug hover:underline", dark ? "text-paper" : "text-ink")}>
+          <a href={m.url} target="_blank" rel="noopener noreferrer" lang={lang === "es" ? "en" : undefined} className={cn("text-sm leading-snug hover:underline", dark ? "text-paper" : "text-ink")}>
             {m.title}
           </a>
           <ul className="mt-3 space-y-1.5">
@@ -19,14 +22,14 @@ export function Predictions({ markets, tone = "dark", limit }: { markets: Predic
                     className={cn("absolute inset-y-0 left-0", dark ? "bg-cyan/20" : "bg-sea/15")}
                     style={{ width: `${Math.max(2, o.probability * 100)}%` }}
                   />
-                  <span className={cn("relative block truncate px-2 text-[0.7rem] leading-6", dark ? "text-paper/80" : "text-ink/80")}>{o.label}</span>
+                  <span className={cn("relative block truncate px-2 text-[0.7rem] leading-6", dark ? "text-paper/80" : "text-ink/80")}>{outcomeLabel(o.label, lang)}</span>
                 </div>
                 <span className={cn("w-11 text-right font-mono text-xs tabular", dark ? "text-cyan" : "text-sea")}>{(o.probability * 100).toFixed(0)}%</span>
               </li>
             ))}
           </ul>
           <p className={cn("mt-2 font-mono text-[0.6rem] uppercase tracking-wider", dark ? "text-paper/60" : "text-muted")}>
-            24h volume {fmt.usdCompact(m.volume24h)}
+            {lang === "es" ? "Volumen 24 h" : "24h volume"} {fmt.usdCompact(m.volume24h)}
           </p>
         </li>
       ))}

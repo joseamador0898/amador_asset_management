@@ -9,6 +9,7 @@ import { fund, site } from "@/lib/site";
 export function GET() {
   const url = (path: string) => `${site.url}${path}`;
   const articles = getAllArticles();
+  const spanish = getAllArticles("es");
   const lines = [
     `# ${site.name}`,
     `> ${site.description} Everything on the site is educational and not investment advice. The ${fund.name} is pre-launch: nothing on the site is an offer to sell or a solicitation of an offer to buy any security.`,
@@ -27,6 +28,14 @@ export function GET() {
       `- [${fund.name}](${url("/fund")}): our forthcoming flagship, a risk-balanced multi-asset strategy (${fund.status.toLowerCase()}).`,
       `- [Book a consultation](${url("/book")}): portfolio reviews and research consultations.`,
       `- [Contact](${url("/contact")}): ${site.email}.`,
+    ].join("\n"),
+    "## En español",
+    [
+      `Every page and article also exists in Spanish (Mexican Spanish) under ${url("/es")}; Spanish articles have markdown twins too.`,
+      `- [Inicio](${url("/es")}): la versión en español del sitio.`,
+      `- [Amador Señales](${url("/es/senales")}): el panel de mercados en vivo, en español.`,
+      `- [Análisis](${url("/es/analisis")}): todos los artículos traducidos.`,
+      ...spanish.map((a) => `- [${a.title}](${url(`/es/analisis/${a.slug}`)}): ${a.dek}`),
     ].join("\n"),
     "## Optional",
     [

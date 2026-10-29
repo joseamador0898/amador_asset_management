@@ -13,7 +13,11 @@ const COVERS = ["dendrogram", "nautilus", "waves", "bars", "rings", "grid"];
 const COMPONENTS = ["Callout", "KeyStats", "Chart", "PullQuote", "Figure"];
 
 let failures = 0;
-const files = fs.readdirSync(dir).filter((f) => f.endsWith(".mdx"));
+// English articles live in the folder itself; Spanish translations in es/ (same rules, plus translationOf).
+const files = [
+  ...fs.readdirSync(dir).filter((f) => f.endsWith(".mdx")),
+  ...(fs.existsSync(path.join(dir, "es")) ? fs.readdirSync(path.join(dir, "es")).filter((f) => f.endsWith(".mdx")).map((f) => `es/${f}`) : []),
+];
 for (const file of files) {
   const raw = fs.readFileSync(path.join(dir, file), "utf8");
   const { data, content } = matter(raw);
@@ -23,6 +27,13 @@ for (const file of files) {
   if (data.cover && !COVERS.includes(data.cover)) problems.push(`unknown cover "${data.cover}"`);
   if (data.date && !/^\d{4}-\d{2}-\d{2}$/.test(String(data.date instanceof Date ? data.date.toISOString().slice(0, 10) : data.date)))
     problems.push(`date must be YYYY-MM-DD`);
+  if (file.startsWith("es/")) {
+    const twin = data.translationOf ? path.join(dir, `${data.translationOf}.mdx`) : null;
+    if (!twin) problems.push('a translation needs frontmatter "translationOf" (the English slug)');
+    else if (!fs.existsSync(twin)) problems.push(`translationOf "${data.translationOf}" does not match an English article`);
+    if (data.seoTitle && `${data.seoTitle} | Amador`.length > 60) problems.push(`seoTitle too long (${data.seoTitle.length} + suffix > 60)`);
+    if (data.description && data.description.length > 155) problems.push(`description too long (${data.description.length} > 155)`);
+  }
   if (/^#\s/m.test(content)) problems.push("do not use a level-1 heading; the title comes from frontmatter");
   if (/<!--/.test(content)) problems.push("HTML comments are not allowed in MDX");
   for (const m of content.matchAll(/<([A-Z][A-Za-z]+)/g)) if (!COMPONENTS.includes(m[1])) problems.push(`unknown component <${m[1]}>`);

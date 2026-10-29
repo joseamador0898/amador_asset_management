@@ -1,0 +1,135 @@
+---
+title: "Tamaño de posición: el criterio de Kelly es un techo, no una meta"
+seoTitle: "Criterio de Kelly: un techo, no una meta"
+dek: "El criterio de Kelly marca el punto a partir del cual más riesgo solo destruye crecimiento. El error de estimación, la correlación y las caídas máximas (drawdowns) explican por qué un tamaño sensato queda muy por debajo."
+description: "Criterio de Kelly: el punto donde más riesgo destruye crecimiento. Error de estimación, correlación y drawdowns explican por qué apostar muy por debajo."
+date: "2026-09-28"
+category: "Risk"
+author: "Jose Luis Amador Jaime"
+tags: ["tamaño de posición", "criterio de Kelly", "gestión de riesgo", "construcción de portafolios", "drawdowns"]
+featured: false
+cover: "bars"
+translationOf: "kelly-is-a-ceiling"
+---
+
+Toda decisión de inversión tiene dos mitades: qué tener y cuánto. La primera acapara casi toda la atención; la segunda suele decidir si un inversionista permanece en el juego el tiempo suficiente para que la primera importe.
+
+De las respuestas formales al "cuánto", el criterio de Kelly es la más conocida y, en nuestra opinión, la que más a menudo se usa mal. Tratado como meta, invita a apuestas agresivas sobre insumos que nadie conoce con precisión. Tratado como techo, es una de las ideas más útiles de la gestión de riesgo, porque marca el punto a partir del cual más riesgo reduce el crecimiento de largo plazo.
+
+## ¿Qué es el criterio de Kelly? La fórmula y de dónde viene
+
+En 1956, John L. Kelly Jr., investigador de Bell Labs, publicó "A New Interpretation of Information Rate" en el *Bell System Technical Journal*. Su apostador recibía pistas por un canal ruidoso, y Kelly demostró que la tasa máxima a la que el capital del apostador podía capitalizarse era igual a la tasa de información del canal. La enseñanza duradera para los inversionistas tiene que ver con los objetivos: cuando se apuesta repetidamente y se reinvierte, la riqueza de largo plazo no la gobierna el rendimiento promedio de cada apuesta, sino el logaritmo esperado de la riqueza, que fija la tasa de crecimiento compuesto.
+
+Edward O. Thorp llevó la idea de la mesa de blackjack al mercado accionario. Su panorama "The Kelly Criterion in Blackjack, Sports Betting, and the Stock Market" (2006) desarrolla la aproximación continua que usamos más abajo y defiende apostar una fracción de Kelly. *The Kelly Capital Growth Investment Criterion: Theory and Practice*, editado por Leonard MacLean, Thorp y William Ziemba (2011), reúne buena parte de la teoría y el debate que siguieron.
+
+### La apuesta binaria
+
+Tomemos una apuesta que gana con probabilidad $p$, paga $b$ por unidad apostada y, en caso contrario, pierde lo apostado, con $q = 1 - p$. Apostar una fracción $f$ del capital da un crecimiento logarítmico esperado de $G(f) = p\ln(1 + bf) + q\ln(1 - f)$ por apuesta, que se maximiza en la fracción de Kelly:
+
+$$
+f^{*} = p - \frac{q}{b}
+$$
+
+Una apuesta a la par ($b = 1$) que gana 55% de las veces tiene $f^{*} = 0.55 - 0.45 = 0.10$: se apuesta 10% del capital. Sin ventaja, $f^{*}$ es cero o negativa, y la apuesta correcta es no apostar.
+
+### La versión continua
+
+Para portafolios, la forma útil describe un activo riesgoso con rendimiento excedente esperado $\mu$ sobre el efectivo y volatilidad $\sigma$. Manteniendo una fracción $f$ del capital en el activo y el resto en efectivo que gana $r$, la tasa de crecimiento compuesto de largo plazo es aproximadamente
+
+$$
+g(f) = r + f\mu - \frac{f^{2}\sigma^{2}}{2}
+$$
+
+La recompensa crece en proporción al tamaño de la posición; el lastre de la volatilidad crece con su cuadrado. El crecimiento alcanza su máximo en $f^{*} = \mu/\sigma^{2}$, donde el crecimiento excedente es $\mu^{2}/(2\sigma^{2})$. Como $\mu/\sigma$ es el ratio de Sharpe $S$, la volatilidad del portafolio de Kelly es igual a $S$ y su tasa de crecimiento excedente es $S^{2}/2$.
+
+Es un dato que invita a la cautela. Para un activo con un rendimiento excedente esperado de 6% y una volatilidad de 15% (insumos ilustrativos, no pronósticos), $S = 0.4$, y Kelly completo pide cerca de 2.67 veces el capital: un portafolio apalancado con 40% de volatilidad anual, a cambio de 8% anual de crecimiento excedente.
+
+## La aritmética del Kelly fraccionario
+
+Ahora apostemos una fracción $k$ del monto de Kelly, de modo que $f = kf^{*}$. Sustituyendo en la tasa de crecimiento:
+
+$$
+g(kf^{*}) - r = \frac{\mu^{2}}{2\sigma^{2}}\left(2k - k^{2}\right)
+$$
+
+Respecto al máximo, el crecimiento excedente es $2k - k^{2}$, o de forma equivalente $1 - (1 - k)^{2}$, mientras que la volatilidad del portafolio es proporcional a $k$.
+
+<Chart
+  title="Tasa de crecimiento excedente respecto a Kelly completo"
+  caption="Fracción de la tasa máxima de crecimiento excedente al apostar k veces la fracción de Kelly (aproximación continua): 2k − k². La volatilidad sube en proporción a k."
+  decimals={4}
+  data={[
+    { label: "0.25× Kelly", value: 0.4375 },
+    { label: "0.5× Kelly", value: 0.75, highlight: true },
+    { label: "0.75× Kelly", value: 0.9375 },
+    { label: "1× Kelly (completo)", value: 1.0 },
+    { label: "1.5× Kelly", value: 0.75 },
+    { label: "2× Kelly", value: 0.0 },
+  ]}
+/>
+
+Destacan tres rasgos.
+
+**La cima es plana.** Medio Kelly conserva 75% de la tasa máxima de crecimiento con la mitad de la volatilidad; tres cuartos de Kelly conservan cerca de 94%.
+
+**Apostar de más es peor que apostar de menos.** Apostar $k$ y $2 - k$ veces Kelly produce el mismo crecimiento, así que 1.5 veces Kelly gana lo mismo que medio Kelly con el triple de volatilidad. Como los errores de estimación son proporcionales, la comparación que importa es en múltiplos, y ahí la penalización es asimétrica: reducir a la mitad la apuesta de Kelly cuesta una cuarta parte del crecimiento, mientras que duplicarla lo cuesta todo.
+
+**El doble de Kelly no gana nada.** En $k = 2$, el inversionista soporta el doble de la volatilidad de Kelly para capitalizar a la tasa del efectivo. Más allá, el crecimiento cae por debajo del efectivo aunque el rendimiento esperado de cada periodo sea positivo. La riqueza esperada sigue subiendo con el apalancamiento, pero solo porque una minoría cada vez más pequeña de trayectorias afortunadas eleva el promedio; el resultado típico se deteriora.
+
+La apuesta discreta se comporta casi igual: en el ejemplo a la par con 55%, apostar 5% gana cerca de 75% de la tasa máxima de crecimiento, y apostar 20% gana un poco menos que nada.
+
+Por eso llamamos a Kelly un techo. Para un inversionista que juzga los resultados por el crecimiento compuesto de largo plazo y al que no le gusta la volatilidad, cualquier posición por encima de Kelly está dominada: una más pequeña entrega el mismo crecimiento con menos riesgo. Por debajo de Kelly hay una disyuntiva genuina entre crecimiento y estabilidad. Cuánto bajar depende de la tolerancia al riesgo y de cuánta confianza merecen los insumos.
+
+## Por qué Kelly completo sobre insumos estimados apuesta de más
+
+Todo lo anterior supone que conocemos $\mu$ y $\sigma$. No es así, y $\mu$ es el mayor problema. La fracción de Kelly es proporcional a ella: si se sobreestima el rendimiento esperado en la mitad, se está en 1.5 veces Kelly; si se sobreestima al doble, se ha apostado toda la tasa de crecimiento excedente. Y los rendimientos esperados son difíciles de estimar. Con $T$ años de datos, el error estándar de un rendimiento anual promedio es aproximadamente $\sigma/\sqrt{T}$, de modo que para una estrategia con un ratio de Sharpe verdadero de 0.3, diez años de historia dan un error estándar un poco mayor que la propia media.
+
+<Callout type="method" title="Cuánto encoger">
+Suponga que su estimación de $\mu$ es insesgada, con un error estándar igual a una fracción $s$ del valor verdadero, y que apuesta $c$ veces la fracción de Kelly que implica su estimación. Promediado sobre el error de estimación, el crecimiento excedente esperado como fracción del máximo verdadero es $2c - c^{2}(1 + s^{2})$, que alcanza su máximo en $c = 1/(1 + s^{2})$.
+
+Cuando el error estándar es igual al rendimiento esperado verdadero ($s = 1$), la mejor respuesta es la mitad de la apuesta de Kelly ingenua, y la apuesta ingenua completa espera un crecimiento excedente de cero. En el ejemplo de diez años y Sharpe de 0.3, la escala óptima está un poco por debajo de la mitad.
+</Callout>
+
+Las estimaciones reales son peores que insesgadas. Las ideas que elegimos para darles tamaño son, casi por definición, aquellas cuyas estimaciones lucen mejor, y seleccionar con base en una estimación ruidosa inclina sus errores hacia el optimismo.
+
+La volatilidad se mide con más precisión, pero se mueve, y la fracción de Kelly depende de su cuadrado. Si se subestima la volatilidad en 20%, algo fácil tras un periodo de calma, la posición pasa a ser cerca de 1.56 veces Kelly, con aproximadamente 68% del crecimiento máximo y más riesgo. El modelo continuo también supone que los precios nunca dan saltos (gaps). Con un apalancamiento de 2.67 veces, una sola caída de 37.5% borra el capital, un desenlace que la fórmula trata como imposible.
+
+## Los drawdowns son el costo que se vive
+
+Las tasas de crecimiento describen el largo plazo; los inversionistas viven la trayectoria. En el modelo idealizado (insumos conocidos, negociación continua, riqueza medida respecto al efectivo), un resultado estándar del movimiento browniano da la probabilidad de que la riqueza caiga alguna vez a una fracción $x$ de su nivel actual al apostar $k$ veces Kelly: $x^{2/k - 1}$. En Kelly completo, es simplemente $x$.
+
+| Probabilidad de caer alguna vez | Kelly completo | Medio Kelly | Un cuarto de Kelly |
+| --- | ---: | ---: | ---: |
+| 10% | 90.0% | 72.9% | 47.8% |
+| 30% | 70.0% | 34.3% | 8.2% |
+| 50% | 50.0% | 12.5% | 0.8% |
+
+Incluso con un modelo perfecto, el crecimiento máximo viene con una probabilidad de 50%, un volado, de perder la mitad del capital en algún momento. Los insumos reales son inciertos y los rendimientos reales tienen colas gruesas, así que estas cifras son optimistas. Y una estrategia abandonada en el fondo de un drawdown nunca gana su tasa de crecimiento de largo plazo.
+
+## La correlación es el multiplicador oculto
+
+Kelly se aplica al portafolio, no a cada renglón. Con muchos activos, los pesos que optimizan el crecimiento son $\Sigma^{-1}\mu$, donde $\Sigma$ es la matriz de covarianzas, así que dar a cada posición su fracción de Kelly individual apuesta de más sin que se note. Tomemos $n$ posiciones parecidas con correlación $\rho$ entre pares: el tamaño individual equivale a $1 + (n - 1)\rho$ veces Kelly para el portafolio. Cinco posiciones con una correlación de apenas 0.25 ponen al portafolio en el doble de Kelly, donde el crecimiento excedente desaparece. Correlaciones que parecen modestas en promedio pueden ser sustancialmente mayores en una venta masiva, que es justo cuando el tamaño se pone a prueba.
+
+## Reglas prácticas
+
+Nada de esto va en contra de la convicción, solo a favor de expresarla dentro de límites. Las reglas que nos resultan más útiles:
+
+1. **Calcule Kelly con insumos conservadores y trátelo como la cota superior.** Encoja los rendimientos esperados hacia cero o hacia un prior escéptico, y use estimaciones de volatilidad que incluyan periodos de estrés.
+2. **Opere a una fracción.** Medio Kelly conserva 75% del crecimiento con la mitad de la volatilidad; un cuarto de Kelly conserva cerca de 44% con una cuarta parte.
+3. **Dimensione el portafolio antes que la posición.** Agrupe las posiciones por factores comunes (tasas, el dólar, beta accionaria, un mismo tema) y ponga un tope a cada grupo además de a cada renglón.
+4. **Fije primero el presupuesto de riesgo.** Decida el riesgo total, en volatilidad o en drawdown tolerable, y haga que las ideas compitan por él. Kelly ordena y acota; el presupuesto es el que manda.
+5. **Ponga un tope a la pérdida por idea.** Decida cuánto puede costar cualquier idea individual en un escenario severo pero plausible. Si ese límite es 1.5% del capital y el caso severo es una pérdida de 60%, el peso no puede exceder 2.5%, diga lo que diga Kelly (cifras hipotéticas).
+6. **Pruebe el gap.** Con apalancamiento $L$, una caída de $1/L$ en el subyacente borra el capital. Pregúntese qué tan cerca queda un movimiento plausible de un solo día.
+
+Estas reglas viven dentro del proceso más amplio descrito en [El marco Amador](/es/analisis/el-marco-amador). La volatilidad y la correlación también cambian con el régimen económico, tema de [Las cuatro estaciones de la economía](/es/analisis/las-cuatro-estaciones-de-la-economia).
+
+<PullQuote>Por encima de Kelly, cada unidad adicional de riesgo compra menos crecimiento. Por debajo, cada unidad de riesgo a la que se renuncia cuesta sorprendentemente poco.</PullQuote>
+
+## Puntos clave
+
+- Con insumos conocidos, Kelly maximiza el crecimiento compuesto de largo plazo: $f^{*} = p - q/b$ para una apuesta binaria, $f^{*} = \mu/\sigma^{2}$ para un activo riesgoso continuo.
+- Apostar $k$ veces Kelly gana $2k - k^{2}$ de la tasa máxima de crecimiento excedente. Medio Kelly conserva 75% con la mitad de la volatilidad; el doble de Kelly no gana nada sobre el efectivo.
+- Las posiciones por encima de Kelly están dominadas por otras más pequeñas con igual crecimiento y menos riesgo, lo que hace de Kelly un techo.
+- El error de estimación empuja la apuesta correcta hacia abajo. Cuando el error estándar es igual al rendimiento esperado, la mejor escala es la mitad de la fracción de Kelly ingenua.
+- La correlación multiplica la exposición: cinco posiciones con Kelly individual y correlación de 0.25 equivalen al doble de Kelly.
+- En la práctica, use Kelly fraccionario sobre insumos conservadores, dentro de un presupuesto de riesgo, con una pérdida máxima por idea y una prueba de gap para el apalancamiento.

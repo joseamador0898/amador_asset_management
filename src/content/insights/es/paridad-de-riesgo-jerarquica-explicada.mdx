@@ -1,0 +1,122 @@
+---
+title: "Paridad de riesgo jerárquica, explicada"
+seoTitle: "Paridad de riesgo jerárquica (HRP), explicada"
+dek: "Cómo una idea de 2016 tomada del aprendizaje automático evita el paso más frágil de la optimización de portafolios, y qué supone en silencio por el camino."
+description: "Paridad de riesgo jerárquica (HRP): cómo el método de 2016 agrupa activos y reparte el riesgo sin invertir la matriz de covarianzas, y qué supone."
+date: "2026-10-14"
+category: "Education"
+author: "Jose Luis Amador Jaime"
+tags: ["HRP", "construcción de portafolios", "paridad de riesgo", "clustering"]
+series: "Deep HRP"
+featured: false
+cover: "dendrogram"
+translationOf: "hierarchical-risk-parity-explained"
+---
+
+Todo método de construcción de portafolios responde a la misma pregunta: dado lo que sabemos sobre un conjunto de activos, ¿cuánto deberíamos tener de cada uno? La respuesta de libro de texto, la optimización de media-varianza de Markowitz (1952), es elegante y, en la práctica, frágil. La paridad de riesgo jerárquica (Hierarchical Risk Parity, HRP), presentada por Marcos López de Prado en el *Journal of Portfolio Management* en 2016, es uno de los intentos más influyentes por conservar la parte buena de esa respuesta y descartar la parte frágil.
+
+Este artículo explica paso a paso cómo funciona HRP, recorre un ejemplo de cuatro activos con cada número calculado y es franco sobre lo que el método supone. Es la primera entrega de nuestra serie sobre [Deep HRP](/es/analisis/deep-hrp-paridad-de-riesgo-jerarquica-aprendible), nuestra investigación para hacer que la jerarquía sea aprendible.
+
+## El problema que resuelve HRP
+
+La optimización de media-varianza necesita dos insumos: rendimientos esperados y una matriz de covarianzas. Ambos se estiman con error, y el optimizador es exquisitamente sensible a ese error. Richard Michaud llamó a los optimizadores "maximizadores del error de estimación" (1989): se vuelcan sobre los activos que casualmente lucen mejor en la muestra. DeMiguel, Garlappi y Uppal (2009) encontraron que, en muchos conjuntos de datos, a los portafolios optimizados les costaba superar fuera de muestra a un portafolio ingenuo de pesos iguales.
+
+Parte de la fragilidad proviene de un solo paso algebraico: **invertir la matriz de covarianzas**. Cuando los activos están muy correlacionados, esa matriz está cerca de ser singular, y pequeños cambios en las correlaciones estimadas producen grandes oscilaciones en la inversa y, por tanto, en los pesos. Cuanto más parecidos son los activos, peor se pone, que es justamente cuando más se necesita que la diversificación se calcule con cuidado.
+
+Los métodos de paridad de riesgo prescinden por completo de los rendimientos esperados y asignan por riesgo. HRP va un paso más allá: nunca invierte la matriz de covarianzas completa.
+
+## Los tres pasos
+
+HRP toma prestada una herramienta del aprendizaje automático, el agrupamiento jerárquico (*hierarchical clustering*), y la usa para imponer estructura al problema de asignación.
+
+### Paso 1: construir un árbol de activos
+
+Primero, se convierte la correlación $\rho_{ij}$ de cada par de activos en una distancia:
+
+$$
+d_{ij} = \sqrt{\tfrac{1}{2}\left(1 - \rho_{ij}\right)}
+$$
+
+Los activos perfectamente correlacionados están a distancia 0; los no correlacionados, a cerca de 0.71; los perfectamente anticorrelacionados, a 1. Un algoritmo de agrupamiento fusiona entonces los activos más cercanos, luego los grupos más cercanos, hasta que todo queda en un solo árbol (un dendrograma). El artículo original usa enlace simple (*single linkage*), donde la distancia entre dos grupos es la distancia entre sus miembros más cercanos, y calcula además una "distancia de distancias" entre perfiles de correlación. Las implementaciones difieren en ambas decisiones, y la elección importa.
+
+### Paso 2: reordenar la matriz de covarianzas
+
+Leer las hojas del árbol de izquierda a derecha da un orden en el que los activos parecidos quedan uno junto a otro. López de Prado llama *cuasi-diagonalización* a reordenar así la matriz de covarianzas: las covarianzas grandes se agrupan a lo largo de la diagonal y revelan la estructura de bloques que estaba oculta en el orden original.
+
+### Paso 3: repartir el riesgo de forma recursiva
+
+Partiendo de todos los activos, se divide la lista ordenada en dos mitades. A cada mitad se le da un peso inversamente proporcional a su varianza, donde la varianza de un grupo se calcula usando pesos de varianza inversa dentro de él:
+
+$$
+\alpha = 1 - \frac{V_{\text{left}}}{V_{\text{left}} + V_{\text{right}}}
+$$
+
+La mitad izquierda recibe una fracción $\alpha$ del presupuesto actual y la derecha recibe $1 - \alpha$. Luego se repite dentro de cada mitad hasta que cada activo tiene su peso. Nunca se invierte matriz alguna; las únicas operaciones son varianzas de subportafolios pequeños y cocientes simples.
+
+## Un ejemplo de cuatro activos
+
+Tomemos cuatro activos con las siguientes volatilidades anualizadas y correlaciones. Son supuestos ilustrativos, no pronósticos.
+
+| | Volatilidad | Acciones EE. UU. | Acciones intl. | Bonos del Tesoro | Oro |
+|---|---|---|---|---|---|
+| Acciones EE. UU. | 16% | 1.00 | 0.85 | −0.20 | 0.05 |
+| Acciones intl. | 18% | 0.85 | 1.00 | −0.15 | 0.15 |
+| Bonos del Tesoro | 6% | −0.20 | −0.15 | 1.00 | 0.30 |
+| Oro | 15% | 0.05 | 0.15 | 0.30 | 1.00 |
+
+Las distancias de correlación hacen que el árbol sea casi obvio. Las acciones de EE. UU. y las internacionales son, por mucho, el par más cercano (distancia 0.274). Siguen los bonos del Tesoro y el oro (0.592). Los dos pares se unen después en la cima. La lista ordenada es: acciones de EE. UU., acciones internacionales, bonos del Tesoro, oro.
+
+**Primera división: acciones contra el par defensivo.** Usando pesos de varianza inversa dentro de cada grupo, la varianza del grupo de acciones es 0.0264 y la del grupo de bonos del Tesoro más oro es 0.0037. Así, el grupo de acciones recibe $\alpha = 1 - 0.0264/(0.0264 + 0.0037) = 12.4\%$ del portafolio y el grupo defensivo, 87.6%.
+
+**Segundas divisiones.** Dentro del grupo de acciones, las de EE. UU. reciben 55.9% y las internacionales 44.1% de su 12.4%. Dentro del grupo defensivo, los bonos del Tesoro reciben 86.2% y el oro 13.8% de su 87.6%.
+
+Este es el resultado junto a dos alternativas más simples, con la participación de cada activo en el riesgo total del portafolio (su contribución al riesgo):
+
+| | Pesos: iguales | Pesos: vol. inversa | Pesos: HRP | Parte del riesgo: iguales | Parte del riesgo: vol. inversa | Parte del riesgo: HRP |
+|---|---|---|---|---|---|---|
+| Acciones EE. UU. | 25.0% | 17.8% | 6.9% | 34.8% | 28.3% | 4.2% |
+| Acciones intl. | 25.0% | 15.8% | 5.5% | 41.8% | 30.8% | 5.0% |
+| Bonos del Tesoro | 25.0% | 47.4% | 75.5% | 1.9% | 15.8% | 70.6% |
+| Oro | 25.0% | 19.0% | 12.1% | 21.5% | 25.0% | 20.3% |
+| Volatilidad del portafolio | 9.4% | 7.0% | 5.5% | | | |
+
+<Chart
+  title="Parte del riesgo del portafolio que proviene de las acciones (EE. UU. + internacionales)"
+  caption="Ejemplo ilustrativo de cuatro activos de la tabla anterior. Parte del riesgo = peso × contribución marginal ÷ varianza del portafolio."
+  decimals={1}
+  data={[
+    { label: "Pesos iguales", value: 76.6 },
+    { label: "Vol. inversa", value: 59.1 },
+    { label: "HRP", value: 9.2, highlight: true }
+  ]}
+/>
+
+Destacan dos lecciones. Primera, **pesos iguales no significa riesgo igual**: el portafolio "balanceado" obtiene más de tres cuartas partes de su riesgo de las acciones. Segunda, **HRP tampoco es contribución igual al riesgo**. Como reparte los presupuestos por varianza inversa en cada nivel, entrega la mayor parte del capital al activo de baja volatilidad, y aquí los bonos del Tesoro terminan cargando con 70% del riesgo. HRP equilibra el riesgo *entre grupos en cada división* en un sentido de varianza inversa; no promete que cada activo, o cada exposición económica, contribuya por igual.
+
+<Callout type="insight" title="Por qué importa el árbol">
+Si las acciones internacionales se hubieran agrupado con el oro en lugar de con las acciones de EE. UU., la primera división habría sido por completo distinta. Los pesos de HRP dependen mucho de la forma del árbol, que a su vez depende de estimaciones de correlación ruidosas y de la regla de enlace. Eso es a la vez su fortaleza (estructura) y una fuente de sensibilidad.
+</Callout>
+
+## Lo que HRP hace bien
+
+- **Sin inversión de matrices.** HRP funciona incluso cuando la matriz de covarianzas es singular, por ejemplo con más activos que observaciones.
+- **La estructura como prior.** Agrupar activos parecidos antes de asignar refleja cómo piensa un asignador humano reflexivo: primero decide entre clases de activos y luego dentro de ellas.
+- **Estabilidad.** Como evita la sensibilidad del optimizador a pequeños cambios en los insumos, los pesos de HRP tienden a moverse menos de un rebalanceo al siguiente que los de media-varianza. En los experimentos de Monte Carlo del artículo original, HRP obtuvo menor varianza fuera de muestra que el portafolio de varianza mínima.
+
+## Qué supone, y dónde se rompe
+
+- **El árbol se trata como verdad.** El agrupamiento se ejecuta una vez por rebalanceo y su resultado se toma al pie de la letra, incluso cuando dos árboles candidatos son casi igual de plausibles.
+- **La bisección sigue la posición en la lista, no el árbol.** El algoritmo original parte la lista ordenada por la mitad, lo que puede cortar un grupo natural. Trabajos posteriores de Raffinot (2017) y otros exploraron otros enlaces y la división a lo largo de las propias ramas del árbol.
+- **Ignora los rendimientos esperados** por diseño. Eso es una virtud cuando los pronósticos de rendimiento son ruido; es una limitación cuando se tiene una opinión fundamentada.
+- **Está congelado.** Cada paso es una regla fija. HRP no puede aprender de los resultados, adaptar sus divisiones a los regímenes de mercado ni entrenarse junto con otros modelos, porque el agrupamiento y la bisección son operaciones discretas sin gradientes.
+
+Ese último punto es lo que motivó nuestra investigación. Si la jerarquía es un buen sesgo inductivo, ¿podemos conservarla y a la vez dejar que un modelo aprenda con cuánta decisión repartir el riesgo, qué activos van juntos y cuándo alejarse de la respuesta clásica? Ese es el tema de [Deep HRP: enseñar a la paridad de riesgo jerárquica a aprender](/es/analisis/deep-hrp-paridad-de-riesgo-jerarquica-aprendible).
+
+## Puntos clave
+
+- HRP sustituye la inversión de la covarianza por tres pasos robustos: agrupar los activos por correlación, reordenarlos y repartir el riesgo de forma recursiva por varianza inversa.
+- Los pesos iguales concentran el riesgo; HRP desplaza el capital hacia los grupos de baja volatilidad y no iguala las contribuciones al riesgo.
+- Los resultados del método dependen del árbol, de la regla de enlace y de la convención de división, así que los detalles de implementación importan.
+- Las reglas de HRP son fijas, lo que lo hace estable pero incapaz de aprender. En esa disyuntiva comienza nuestra investigación sobre Deep HRP.
+
+*Referencias: Markowitz (1952), "Portfolio Selection," Journal of Finance; Michaud (1989), "The Markowitz Optimization Enigma: Is 'Optimized' Optimal?," Financial Analysts Journal; DeMiguel, Garlappi and Uppal (2009), Review of Financial Studies; López de Prado (2016), "Building Diversified Portfolios that Outperform Out of Sample," Journal of Portfolio Management; Raffinot (2017), "Hierarchical Clustering-Based Asset Allocation," Journal of Portfolio Management.*

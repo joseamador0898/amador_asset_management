@@ -1,10 +1,24 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import type { Lang } from "@/lib/i18n";
+import { insiderLabel } from "@/lib/signals/labels";
 import type { InsiderTrade } from "@/lib/signals/types";
 import { cn, fmt } from "@/lib/utils";
 
-export function InsiderTable({ trades }: { trades: InsiderTrade[] }) {
+const COPY = {
+  en: {
+    filter: "Filter insider transactions", all: "All", buys: "Buys", sales: "Sales", count: (n: number) => `${n} open-market buys in latest filings`,
+    type: "Type", shares: "Shares", price: "Price", value: "Value", date: "Trade date", none: "None in the latest batch of filings.",
+  },
+  es: {
+    filter: "Filtrar operaciones de insiders", all: "Todas", buys: "Compras", sales: "Ventas", count: (n: number) => `${n} compras en mercado abierto en los últimos reportes`,
+    type: "Tipo", shares: "Acciones", price: "Precio", value: "Valor", date: "Fecha de operación", none: "Ninguna en el último lote de reportes.",
+  },
+};
+
+export function InsiderTable({ trades, lang = "en" }: { trades: InsiderTrade[]; lang?: Lang }) {
+  const copy = COPY[lang];
   const [side, setSide] = useState<"all" | "buy" | "sell">("all");
   const rows = useMemo(() => trades.filter((t) => side === "all" || t.side === side), [trades, side]);
   const buys = trades.filter((t) => t.side === "buy").length;
@@ -18,14 +32,14 @@ export function InsiderTable({ trades }: { trades: InsiderTrade[] }) {
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 pt-4">
-        <div className="flex gap-2" role="group" aria-label="Filter insider transactions">
+        <div className="flex gap-2" role="group" aria-label={copy.filter}>
           {(["all", "buy", "sell"] as const).map((s) => (
             <button key={s} type="button" className={chip(side === s)} onClick={() => setSide(s)} aria-pressed={side === s}>
-              {s === "all" ? "All" : s === "buy" ? "Buys" : "Sales"}
+              {s === "all" ? copy.all : s === "buy" ? copy.buys : copy.sales}
             </button>
           ))}
         </div>
-        <p className="font-mono text-[0.62rem] uppercase tracking-wider text-paper/60">{buys} open-market buys in latest filings</p>
+        <p className="font-mono text-[0.62rem] uppercase tracking-wider text-paper/60">{copy.count(buys)}</p>
       </div>
       <div className="term-scroll mt-3 max-h-[420px] overflow-auto">
         <table className="w-full min-w-[700px] text-left font-mono text-[0.72rem] tabular">
@@ -33,18 +47,18 @@ export function InsiderTable({ trades }: { trades: InsiderTrade[] }) {
             <tr className="border-b border-term-line">
               <th className="px-5 py-2 font-normal">Ticker</th>
               <th className="px-2 py-2 font-normal">Insider</th>
-              <th className="px-2 py-2 font-normal">Type</th>
-              <th className="px-2 py-2 text-right font-normal">Shares</th>
-              <th className="px-2 py-2 text-right font-normal">Price</th>
-              <th className="px-2 py-2 text-right font-normal">Value</th>
-              <th className="px-5 py-2 text-right font-normal">Trade date</th>
+              <th className="px-2 py-2 font-normal">{copy.type}</th>
+              <th className="px-2 py-2 text-right font-normal">{copy.shares}</th>
+              <th className="px-2 py-2 text-right font-normal">{copy.price}</th>
+              <th className="px-2 py-2 text-right font-normal">{copy.value}</th>
+              <th className="px-5 py-2 text-right font-normal">{copy.date}</th>
             </tr>
           </thead>
           <tbody>
             {rows.length === 0 && (
               <tr>
                 <td colSpan={7} className="px-5 py-6 text-center text-paper/60">
-                  None in the latest batch of filings.
+                  {copy.none}
                 </td>
               </tr>
             )}
@@ -67,7 +81,7 @@ export function InsiderTable({ trades }: { trades: InsiderTrade[] }) {
                       t.side === "buy" ? "bg-up/15 text-up" : t.side === "sell" ? "bg-down/10 text-down" : "bg-paper/10 text-paper/60",
                     )}
                   >
-                    {t.label}
+                    {insiderLabel(t.label, lang)}
                   </span>
                 </td>
                 <td className="px-2 py-2.5 text-right text-paper/80">{fmt.int(t.shares)}</td>

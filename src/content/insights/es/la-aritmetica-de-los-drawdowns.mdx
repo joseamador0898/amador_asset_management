@@ -1,0 +1,147 @@
+---
+title: "La aritmética de los drawdowns: por qué las pérdidas duelen más de lo que ayudan las ganancias"
+seoTitle: "Qué es un drawdown: la aritmética de las pérdidas"
+dek: "La recuperación se gana sobre una base más pequeña, así que una pérdida de 50% necesita una ganancia de 100%; la misma aritmética explica el lastre de la volatilidad, el riesgo de secuencia y por qué el dimensionamiento parte del drawdown que usted puede sobrevivir."
+description: "Una pérdida de 50% necesita una ganancia de 100%: la aritmética de los drawdowns, el lastre de la volatilidad, el riesgo de secuencia y cómo dimensionar."
+date: "2026-10-22"
+category: "Risk"
+author: "Jose Luis Amador Jaime"
+tags: ["drawdowns", "drawdown máximo", "lastre de la volatilidad", "riesgo de secuencia de rendimientos", "dimensionamiento de posiciones", "gestión de riesgo"]
+featured: false
+cover: "waves"
+translationOf: "the-arithmetic-of-drawdowns"
+---
+
+Un portafolio que pierde 50% necesita una ganancia de 100% para volver a donde empezó, porque la recuperación se gana sobre la mitad que queda. En general, una pérdida de una fracción $d$ requiere una ganancia de $d/(1-d)$, así que la ganancia requerida crece más rápido que la pérdida: alrededor de 11% después de una caída de 10%, 25% después de 20% y 900% después de 90%. La misma asimetría explica por qué la volatilidad reduce los rendimientos compuestos, por qué el orden de los rendimientos importa una vez que se retira dinero y por qué la profundidad de las caídas máximas (drawdowns) merece tanta atención como el rendimiento promedio.
+
+Las cifras marcadas como ilustrativas más abajo son inventadas para mostrar la aritmética; no son pronósticos.
+
+## ¿Por qué una pérdida de 50% necesita una ganancia de 100% para recuperarse?
+
+Suponga que \$100 caen 50% a \$50. Una ganancia de 50% los regresa solo a \$75; volver a \$100 requiere otros \$50, o 100% de lo que queda. Formalmente, si el patrimonio cae en una fracción $d$, la ganancia $x$ que lo restaura satisface $(1 - d)(1 + x) = 1$, así que
+
+$$
+x = \frac{d}{1 - d}
+$$
+
+Para pérdidas pequeñas, $x$ y $d$ son casi iguales; conforme las pérdidas se profundizan, la ganancia requerida se acelera, y una pérdida total nunca puede recuperarse. La tabla agrega el tiempo, suponiendo a modo de ilustración que el portafolio crece a un 7% anual constante desde el mínimo, de modo que la recuperación toma $-\ln(1 - d)/\ln(1.07)$ años.
+
+| Pérdida desde el máximo | Ganancia necesaria para recuperarse | Años a 7% anual (ilustrativo) |
+| ---: | ---: | ---: |
+| 10% | 11.1% | 1.6 |
+| 20% | 25.0% | 3.3 |
+| 30% | 42.9% | 5.3 |
+| 40% | 66.7% | 7.6 |
+| 50% | 100.0% | 10.2 |
+| 75% | 300.0% | 20.5 |
+| 90% | 900.0% | 34.0 |
+
+A una tasa de rendimiento dada, duplicar un drawdown más que duplica el tiempo necesario para recuperarse de él: 3.3 años para 20%, 7.6 años para 40%.
+
+Con base en precios de cierre, el índice de precios S&P 500 cayó alrededor de 57% del 9 de octubre de 2007 al 9 de marzo de 2009, así que necesitó una ganancia de alrededor de 131% para recuperar su máximo, lo que logró por primera vez el 28 de marzo de 2013, más de cinco años después del pico.
+
+<PullQuote>Una pérdida se mide contra lo que se tenía. La recuperación se gana sobre lo que queda.</PullQuote>
+
+## ¿Qué es el lastre de la volatilidad?
+
+La misma asimetría opera en cada periodo, no solo en los desplomes. Una inversión que gana 25% un año y pierde 20% al siguiente promedia 2.5% al año, y sin embargo \$100 se convierten en \$125 y luego otra vez en \$100: su rendimiento compuesto es cero. Una ganancia de 50% seguida de una pérdida de 50% promedia 0% y deja \$75, un rendimiento compuesto de alrededor de −13.4% al año.
+
+A la brecha entre el promedio aritmético y el rendimiento geométrico, o compuesto, se le llama lastre de la volatilidad (volatility drag) o drenaje de la varianza (variance drain; Messmore, 1995). Con un rendimiento promedio $\mu$ y una volatilidad $\sigma$, la tasa de crecimiento compuesto $g$ es aproximadamente
+
+$$
+g \approx \mu - \frac{\sigma^{2}}{2}
+$$
+
+La relación es exacta en tiempo continuo con volatilidad constante, y una buena aproximación para rendimientos anuales cuando la volatilidad es moderada (Booth y Fama, 1992). Explica el primer ejemplo: rendimientos de +25% y −20% tienen una desviación estándar de 22.5%, así que el lastre es de alrededor de 2.5 puntos porcentuales, el promedio completo.
+
+<Chart
+  title="Crecimiento compuesto aproximado con un rendimiento promedio de 8% (% al año)"
+  caption="Ilustrativo, usando g ≈ μ − σ²/2. Con 20% de volatilidad el lastre se lleva un cuarto del rendimiento promedio; con 40%, todo."
+  decimals={1}
+  data={[
+    { label: "0% de volatilidad", value: 8.0 },
+    { label: "10% de volatilidad", value: 7.5 },
+    { label: "20% de volatilidad", value: 6.0, highlight: true },
+    { label: "30% de volatilidad", value: 3.5 },
+    { label: "40% de volatilidad", value: 0.0 },
+  ]}
+/>
+
+Como el lastre crece con el cuadrado de la volatilidad, duplicar la volatilidad lo cuadruplica.
+
+## ¿Qué es el riesgo de secuencia de rendimientos?
+
+Para un inversionista que ni aporta ni retira dinero, el orden de los rendimientos no importa: el patrimonio final es el producto $(1 + r_1)(1 + r_2)\cdots(1 + r_T)$, que es el mismo en cualquier orden.
+
+Los flujos de efectivo cambian eso. Un retiro fijo después de una caída vende una mayor parte del portafolio a precios bajos, y el dinero retirado no puede participar en la recuperación. La tabla sigue a dos inversionistas hipotéticos que empiezan cada uno con \$1,000,000 y retiran \$50,000 al final de cada año. Obtienen los mismos cinco rendimientos en orden opuesto, así que sus rendimientos promedio (3.0%) y compuesto (alrededor de 1.3% al año) son idénticos; los saldos son después de retiros (ilustrativo).
+
+| Año | Pérdidas primero | Saldo | Ganancias primero | Saldo |
+| --- | ---: | ---: | ---: | ---: |
+| 1 | −25% | \$700,000 | +25% | \$1,200,000 |
+| 2 | −10% | \$580,000 | +15% | \$1,330,000 |
+| 3 | +10% | \$588,000 | +10% | \$1,413,000 |
+| 4 | +15% | \$626,200 | −10% | \$1,221,700 |
+| 5 | +25% | \$732,750 | −25% | \$866,275 |
+
+Sin retiros, ambos terminarían con alrededor de \$1,067,000. Con ellos, el inversionista que enfrentó primero las pérdidas termina alrededor de \$134,000 más pobre, a pesar de retirar los mismos \$250,000. Dicho de otro modo, después de una caída de 50%, un retiro fijado en 4% del saldo original es 8% de lo que queda.
+
+El riesgo de secuencia es, por tanto, mayor alrededor de la jubilación, cuando el saldo es más grande: las pérdidas tardías de un ahorrador golpean la mayor cantidad de dinero, y las pérdidas tempranas de un jubilado quedan fijadas por los retiros. Bengen (1994), al probar tasas de retiro con rendimientos históricos de EE. UU. desde 1926, encontró que cuánto duraba una tasa dada dependía en gran medida del año de inicio. Cubrimos la evidencia, cómo medirlo y qué lo reduce en [riesgo de secuencia de rendimientos, explicado](/es/analisis/riesgo-de-secuencia-de-rendimientos).
+
+## ¿Qué es el drawdown máximo y cómo se calcula?
+
+La volatilidad trata igual a las ganancias y a las pérdidas e ignora su orden; las medidas de drawdown siguen la trayectoria. Las más comunes son:
+
+- **Drawdown máximo:** la mayor caída porcentual desde un máximo acumulado hasta un mínimo posterior.
+- **Tiempo de recuperación:** el tiempo desde el mínimo hasta que se recupera el máximo anterior; medido desde el máximo, es la duración completa del drawdown.
+- **Tiempo bajo el agua:** la proporción del tiempo que se pasa por debajo de un máximo anterior.
+
+El ratio de Calmar (Young, 1991) divide el rendimiento anualizado entre el drawdown máximo, por convención sobre los 36 meses previos. El drawdown condicional (Chekhlov, Uryasev y Zabarankin, 2005) promedia los drawdowns más profundos en lugar de depender del peor de todos, y puede servir como restricción en la optimización de portafolios.
+
+<Callout type="method" title="Cómo calcular los drawdowns">
+Parta de los valores del portafolio $V_t$, de preferencia de rendimiento total y netos de costos. Lleve el registro del máximo acumulado $M_t = \max_{s \le t} V_s$; el drawdown en cada fecha es $D_t = 1 - V_t / M_t$, y el drawdown máximo es el mayor $D_t$. La fecha de recuperación es la primera fecha después del mínimo en la que $V_t$ recupera el máximo precedente. Reporte los drawdowns no recuperados como abiertos, con su duración hasta la fecha, en lugar de omitirlos.
+</Callout>
+
+Los drawdowns, más que la volatilidad, obligan a tomar decisiones: uno profundo invita a abandonar una estrategia cerca del fondo, y el apalancamiento o los reembolsos pueden forzar ventas a los peores precios. Un rendimiento de largo plazo que exige aguantar un drawdown intolerable existe solo en papel.
+
+## Qué significa esto para la construcción de portafolios y el dimensionamiento
+
+Estos principios son educación general, no recomendaciones para ningún inversionista.
+
+**Parta del drawdown que puede sobrevivir.** Fije la mayor caída que el portafolio puede sufrir sin forzar una venta o un cambio de plan, y dimensione las exposiciones de modo que un escenario severo pero plausible se mantenga dentro de ella. Si un activo riesgoso podría caer plausiblemente 50% y la pérdida tolerable del portafolio es 20%, una posición superior a 40% rebasa el límite a menos que otras posiciones subieran en ese escenario (ilustrativo).
+
+**Diversifique para elevar el crecimiento compuesto.** Como el lastre depende de la varianza del portafolio, combinar activos que no se mueven al unísono eleva el rendimiento compuesto de un portafolio [rebalanceado](/es/analisis/rebalanceo-el-almuerzo-gratis-que-hay-que-ganarse) por encima del promedio ponderado de los rendimientos compuestos de sus partes; Booth y Fama (1992) llaman a la diferencia el rendimiento por diversificación. Dos activos con un rendimiento promedio de 8% y 30% de volatilidad cada uno crecen a alrededor de 3.5% por separado. Mantenidos 50/50, rebalanceados y sin correlación, crecen a alrededor de 5.75%, porque la volatilidad del portafolio baja a alrededor de 21% (ilustrativo).
+
+**Trate el apalancamiento como un multiplicador de drawdowns.** Con apalancamiento de dos veces, una caída de 25% en el activo subyacente se convierte en una pérdida de 50% que necesita una ganancia de 100%, antes de los costos de financiamiento. El apalancamiento escala el rendimiento promedio de forma lineal y el lastre de forma cuadrática, así que el crecimiento compuesto alcanza su máximo en una exposición finita, y por eso tratamos [el criterio de Kelly como un techo, no como un objetivo](/es/analisis/el-criterio-de-kelly-es-un-techo).
+
+**Decida de antemano cómo responde la exposición a las pérdidas.** Grossman y Zhou (1993) mostraron que, en su modelo de tiempo continuo, un inversionista cuyo patrimonio nunca debe caer por debajo de una fracción fija de su máximo acumulado debería mantener activos riesgosos en proporción al colchón por encima de ese piso, de modo que la exposición baja conforme se profundiza un drawdown. Tales reglas limitan los drawdowns por construcción, a un costo: venden después de las caídas, pueden rezagarse en rebotes bruscos, y un hueco (gap) en el precio puede romper el piso.
+
+**Separe el gasto de corto plazo del riesgo de largo plazo.** Financiar los retiros próximos con activos de baja volatilidad significa que un drawdown no tiene por qué forzar ventas de posiciones deprimidas.
+
+## Los límites de las medidas de drawdown
+
+**Una trayectoria, un número.** El drawdown máximo registra el peor episodio de una sola historia realizada. Estrategias con riesgo idéntico pueden mostrar drawdowns máximos muy distintos por suerte, y el peor drawdown de una muestra no es el peor posible.
+
+**Crece con la longitud del historial.** En el modelo de movimiento browniano que se usa comúnmente para los precios, el drawdown máximo esperado aumenta con la longitud de la muestra: aproximadamente con su logaritmo cuando la deriva es positiva, y con su raíz cuadrada cuando es cero (Magdon-Ismail et al., 2004). Un historial de tres años y uno de treinta no pueden compararse sin ajustes. Los *backtests* son peores, ya que la versión que sobrevive al desarrollo tiende a ser la que tiene drawdowns moderados; vea [cómo leer un backtest con escepticismo](/es/analisis/como-leer-un-backtest-con-escepticismo).
+
+**La serie importa.** Los datos mensuales ocultan los mínimos dentro del mes, los precios basados en avalúos o poco frecuentes suavizan los drawdowns hasta hacerlos desaparecer, los índices de precios omiten los dividendos, y las cifras nominales ignoran la inflación y la deflación. El Dow Jones Industrial Average cayó alrededor de 89% de septiembre de 1929 a julio de 1932, y su índice de precios no recuperó el máximo de cierre de 1929 sino hasta noviembre de 1954. Contando los dividendos y la deflación de principios de los años treinta, Hulbert (2009) estimó que un inversionista que compró acciones en el pico de 1929 había recuperado su inversión para finales de 1936.
+
+**El tiempo de recuperación depende del futuro.** Refleja los rendimientos que resultaron seguir al mínimo, no solo el riesgo asumido, y no está definido mientras un drawdown sigue abierto.
+
+## Puntos clave
+
+- Una pérdida de $d$ requiere una ganancia de $d/(1-d)$: 25% después de una pérdida de 20%, 100% después de 50%, 900% después de 90%.
+- El crecimiento compuesto es aproximadamente el rendimiento promedio menos la mitad de la varianza, así que la volatilidad reduce el patrimonio de largo plazo.
+- Sin flujos de efectivo, el orden de los rendimientos no importa; con retiros, las pérdidas tempranas causan un daño duradero.
+- Las medidas de drawdown describen la trayectoria que los inversionistas viven, pero provienen de una sola historia, crecen con su longitud y dependen de cómo se mide la serie.
+- Dimensione a partir de un drawdown tolerable, diversifique para reducir el lastre, trate el apalancamiento como un multiplicador de drawdowns y decida de antemano cómo responde la exposición a las pérdidas.
+
+## Fuentes
+
+- Bengen, W. P. (1994). "Determining Withdrawal Rates Using Historical Data." *Journal of Financial Planning*, October.
+- Booth, D. G., and Fama, E. F. (1992). "Diversification Returns and Asset Contributions." *Financial Analysts Journal*, 48(3).
+- Chekhlov, A., Uryasev, S., and Zabarankin, M. (2005). "Drawdown Measure in Portfolio Optimization." *International Journal of Theoretical and Applied Finance*, 8(1).
+- Grossman, S. J., and Zhou, Z. (1993). "Optimal Investment Strategies for Controlling Drawdowns." *Mathematical Finance*, 3(3).
+- Hulbert, M. (2009). "25 Years to Bounce Back? Try 4½." *The New York Times*, April 26.
+- Magdon-Ismail, M., Atiya, A. F., Pratap, A., and Abu-Mostafa, Y. S. (2004). "On the Maximum Drawdown of a Brownian Motion." *Journal of Applied Probability*, 41(1).
+- Messmore, T. (1995). "Variance Drain." *Journal of Portfolio Management*, 21(4).
+- Young, T. W. (1991). "Calmar Ratio: A Smoother Tool." *Futures*, October.

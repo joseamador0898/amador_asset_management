@@ -1,3 +1,4 @@
+import type { Lang } from "@/lib/i18n";
 import "server-only";
 import { cacheLife } from "next/cache";
 import type {
@@ -125,7 +126,7 @@ export async function getLiveBoard(): Promise<LiveBoard> {
  * and GIR forecasts (when enabled), then markets, macro and prediction markets.
  * Refreshed hourly.
  */
-export async function getBrief(): Promise<{ text: string; asOf: string; model: string; gs: boolean } | null> {
+export async function getBrief(lang: Lang = "en"): Promise<{ text: string; asOf: string; model: string; gs: boolean } | null> {
   "use cache";
   cacheLife("hours");
   const [gs, quotes, macro, predictions] = await Promise.all([fetchGsMacro(), fetchAlpacaQuotes(), fetchFredMacro(), fetchPolymarket(5)]);
@@ -157,6 +158,6 @@ export async function getBrief(): Promise<{ text: string; asOf: string; model: s
       "Prediction markets: " +
         predictions.map((p) => `${p.title}: ${p.outcomes.slice(0, 2).map((o) => `${o.label} ${(o.probability * 100).toFixed(0)}%`).join(", ")}`).join(" | "),
     );
-  const text = await generateBrief(lines.join("\n"));
+  const text = await generateBrief(lines.join("\n"), lang);
   return text ? { text, asOf: now(), model: process.env.GEMINI_MODEL || "gemini-2.5-flash", gs: Boolean(gs) } : null;
 }

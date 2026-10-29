@@ -1,0 +1,110 @@
+---
+title: "Deep HRP: enseñar a la paridad de riesgo jerárquica a aprender"
+dek: "Nuestra investigación sustituye el agrupamiento y la bisección fijos de HRP por un árbol diferenciable que puede entrenarse de extremo a extremo, y lo somete a un estándar de evidencia diseñado para resistir el ruido halagador."
+seoTitle: "Deep HRP: paridad de riesgo jerárquica aprendible"
+description: "Hacemos a HRP entrenable de extremo a extremo: un árbol diferenciable sustituye su agrupamiento y bisección fijos, con pruebas diseñadas contra el ruido."
+date: "2026-10-17"
+category: "Research"
+author: "Jose Luis Amador Jaime"
+tags: ["HRP", "DHRP", "aprendizaje automático", "construcción de portafolios", "investigación"]
+series: "Deep HRP"
+featured: true
+cover: "dendrogram"
+translationOf: "deep-hrp-learnable-risk-parity"
+---
+
+La paridad de riesgo jerárquica (HRP, por sus siglas en inglés) es una de las ideas más útiles de la construcción moderna de portafolios, y una de las más rígidas. Agrupa los activos por correlación y reparte el riesgo a lo largo del árbol resultante con reglas fijas. Esas reglas la hacen robusta. También la hacen imposible de entrenar: el agrupamiento y la bisección son pasos discretos, así que ningún gradiente puede fluir a través de ellos, y el método no puede aprender de los resultados ni combinarse de extremo a extremo con otros modelos. (Si HRP es nuevo para usted, empiece por [Paridad de riesgo jerárquica, explicada](/es/analisis/paridad-de-riesgo-jerarquica-explicada).)
+
+La paridad de riesgo jerárquica diferenciable, o **DHRP**, es nuestro intento de conservar la estructura de HRP y, al mismo tiempo, hacer que cada paso sea aprendible. Este artículo describe la idea, la arquitectura, cómo la evaluamos, y qué hemos establecido y qué no hasta ahora.
+
+## ¿Por qué hacer diferenciable una jerarquía?
+
+Durante la última década, el aprendizaje automático ha aprendido a poner la optimización *dentro* de los modelos. OptNet, de Amos y Kolter (2017), mostró cómo retropropagar a través de programas cuadráticos; Agrawal y colegas (2019) lo extendieron a programas convexos generales. En paralelo, el *aprendizaje enfocado en la decisión* (decision-focused learning), por ejemplo "Smart Predict, then Optimize" de Elmachtoub y Grigas (2022), sostuvo que los modelos deben entrenarse por la calidad de la decisión que impulsan, no solo por la precisión de su pronóstico.
+
+La construcción de portafolios es un hogar natural para ambas ideas. Sin embargo, los asignadores jerárquicos se habían quedado fuera de este conjunto de herramientas, precisamente porque sus operaciones centrales son discretas. Queríamos un asignador que:
+
+- conserve el sesgo inductivo de HRP: el riesgo se presupuesta a lo largo de un árbol y los activos similares comparten una rama;
+- pueda aprender de los datos con cuánta decisión repartir el riesgo en cada rama y qué activos van juntos;
+- pueda entrenarse directamente con un objetivo de portafolio en lugar de ajustarse a mano; y
+- se mantenga anclado a la solución clásica, para que no se desvíe hacia rincones frágiles.
+
+## La arquitectura
+
+DHRP transforma características recientes del mercado y una matriz de covarianzas estimada en pesos de portafolio en cuatro etapas.
+
+**1. Un estado del mercado.** Las características recientes de los rendimientos se combinan con una proyección aprendida de la matriz de covarianzas (normalizada). Condicionar sobre la covarianza completa, y no solo sobre las volatilidades, permite al modelo reaccionar a cambios en la estructura de correlación, que es exactamente aquello sobre lo que HRP agrupa.
+
+**2. Un árbol de compuertas suaves.** En lugar de un dendrograma rígido, DHRP usa un árbol binario perfecto cuyos nodos internos son pequeñas compuertas neuronales. Cada compuerta observa el estado del mercado y reparte el presupuesto de riesgo que recibe entre dos hijos con una softmax:
+
+$$
+\pi_k = \mathrm{softmax}\!\left(\frac{g_k(h_t)}{\tau}\right)
+$$
+
+La temperatura $\tau$ se aprende: las temperaturas bajas hacen que los repartos sean decisivos y las altas distribuyen el riesgo de manera uniforme. El presupuesto de una hoja es el producto de las probabilidades de las compuertas a lo largo de su trayectoria desde la raíz, ajustado por una distribución a priori aprendida sobre las hojas.
+
+**3. Una asignación aprendida.** Las hojas no están atadas a clústeres fijos. Una matriz aprendible asigna suavemente cada activo a las hojas, de modo que el modelo descubre su propio agrupamiento en lugar de heredarlo de una regla de enlace. La asignación bruta de cada activo es una combinación ponderada de los presupuestos de las hojas a las que pertenece, normalizada para sumar uno.
+
+**4. Un ancla a la paridad de riesgo.** La asignación aprendida $a$ se mezcla con pesos simples de volatilidad inversa $v$ mediante un coeficiente aprendido:
+
+$$
+w = \alpha\, a + (1 - \alpha)\, v
+$$
+
+La mezcla mantiene al asignador cerca de una base sensata de paridad de riesgo al inicio del entrenamiento, y a la vez permite que la vía aprendida tome el control donde ayuda.
+
+### Objetivo de entrenamiento
+
+DHRP se entrena de extremo a extremo con un objetivo de portafolio y no con una pérdida de pronóstico: una utilidad con aversión al riesgo (CRRA) de los rendimientos futuros y un término al estilo Sharpe, más penalizaciones por la varianza del portafolio, la concentración y los pesos erráticos. Un regularizador atrae los pesos hacia el HRP clásico, con una fuerza que decae durante el entrenamiento, de modo que el modelo arranca cerca de la respuesta clásica y se aleja de ella solo en la medida en que los datos lo justifican.
+
+<Callout type="method" title="Una relajación, no un clon">
+DHRP se inspira en HRP; no es una copia diferenciable exacta. A temperaturas muy bajas, sus compuertas colapsan el presupuesto sobre hojas individuales en lugar de reproducir los repartos equilibrados de varianza inversa de HRP. Lo que conserva es el sesgo inductivo: presupuestación jerárquica del riesgo sobre un árbol condicionado a la estructura de correlación, con un ancla explícita a la solución clásica.
+</Callout>
+
+## Cómo lo evaluamos: el benchmark DHRP-8
+
+Es fácil hacer que un asignador nuevo luzca bien. Corra una sola semilla aleatoria en un solo universo de activos durante un periodo conveniente, y alguna configuración brillará. Diseñamos la evaluación para que eso sea difícil.
+
+<KeyStats
+  items={[
+    { value: "8", label: "universos de activos, desde acciones de mercados desarrollados hasta materias primas y bonos" },
+    { value: "10", label: "semillas aleatorias para cada modelo neuronal" },
+    { value: "6", label: "líneas base clásicas, incluidas HRP y pesos iguales" },
+    { value: "1", label: "corrida etiquetada de la que debe provenir cada cifra reportada" }
+  ]}
+/>
+
+- **Ocho universos**: acciones de mercados desarrollados y emergentes, materias primas, sectores de EE. UU., una mezcla global multiactivos, factores accionarios, activos vinculados a criptomonedas y bonos.
+- **Líneas base sólidas**: pesos iguales, media-varianza, varianza mínima, paridad de riesgo, diversificación máxima y HRP clásico. En la práctica, los pesos iguales son la más difícil de superar.
+- **Las semillas como fuente de riesgo**: cada resultado neuronal se reporta como media y desviación estándar a lo largo de diez semillas. Un resultado que aparece con una semilla y desaparece con otra no es un resultado.
+- **Una batería estadística**: ratios de Sharpe probabilísticos, pruebas pareadas contra las líneas base con correcciones por comparaciones múltiples, el ratio de Sharpe deflactado (Deflated Sharpe Ratio) y la probabilidad de sobreajuste del *backtest* (Probability of Backtest Overfitting). Explicamos cada una de ellas en [Cómo leer un backtest con escepticismo](/es/analisis/como-leer-un-backtest-con-escepticismo).
+- **Costos**: los resultados se reportan con costos de transacción cobrados en cada rebalanceo, junto con una curva de sensibilidad a los costos.
+
+## Lo que hemos encontrado hasta ahora
+
+Nuestra primera ronda de experimentos fue alentadora en un lugar específico: la jerarquía aprendible lució más fuerte en **materias primas**, un universo donde las correlaciones cambian rápidamente entre regímenes y un árbol fijo se vuelve obsoleto. En los demás, las líneas base simples con frecuencia la igualaron o la superaron, lo que es consistente con décadas de evidencia sobre lo difícil que es superar la diversificación ingenua.
+
+Deliberadamente, todavía no citamos cifras principales. Antes de publicar las cifras finales, estamos volviendo a correr el benchmark completo bajo un protocolo más estricto:
+
+- **precios de rendimiento total**, para que los dividendos y cupones se acrediten a cada activo;
+- **ventanas de entrenamiento estrictamente separadas**, incluso para activos con historiales de operación cortos;
+- **todos los métodos comparados en fechas idénticas**;
+- **costos cobrados en cada rebalanceo**, con resultados mostrados tanto brutos como netos;
+- **una sola corrida etiquetada**, con cada cifra del artículo regenerada por script a partir de las salidas de esa corrida.
+
+<PullQuote cite="Nuestro estándar de investigación">
+Si un resultado no puede regenerarse a partir de una sola corrida etiquetada, todavía no es un resultado.
+</PullQuote>
+
+También probamos una extensión que alimenta al árbol con un resumen de embeddings de noticias financieras. Hasta ahora no ha producido una mejora confiable sobre el modelo que usa solo precios. Los datos de texto son especialmente fáciles de desalinear en el tiempo, así que estamos auditando la cobertura, las marcas de tiempo y la alineación antes de sacar conclusiones. En cualquier caso, publicaremos lo que encontremos, incluido un resultado negativo si eso es lo que muestra la evidencia.
+
+## Por qué esto importa para la forma en que invertimos
+
+Una investigación como esta no es una señal de trading. Informa nuestra manera de pensar la diversificación:
+
+- **La estructura ayuda.** Agrupar los activos según cómo se mueven realmente, y luego presupuestar el riesgo a lo largo de esa jerarquía, es una opción predeterminada sólida y el punto de partida de nuestro enfoque de construcción de portafolios.
+- **El aprendizaje debe estar anclado.** El papel más útil del aprendizaje automático en la asignación es ajustar en el margen un punto de partida robusto, no reemplazarlo.
+- **La evidencia tiene que sobrevivir al escrutinio.** El reporte con múltiples semillas, las pruebas pareadas y una sola corrida reproducible ya forman parte de cómo evaluamos cualquier idea, incluidas las nuestras.
+
+Actualizaremos este artículo cuando la nueva corrida esté completa. Para recibir los resultados cuando se publiquen, suscríbase a los artículos de investigación (Research Papers) en nuestra página de [Boletines](/es/boletines).
+
+*Referencias: López de Prado (2016), Journal of Portfolio Management; Amos and Kolter (2017), "OptNet," ICML; Agrawal, Amos, Barratt, Boyd, Diamond and Kolter (2019), "Differentiable Convex Optimization Layers," NeurIPS; Elmachtoub and Grigas (2022), "Smart 'Predict, then Optimize'," Management Science; DeMiguel, Garlappi and Uppal (2009), Review of Financial Studies.*

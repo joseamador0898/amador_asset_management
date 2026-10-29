@@ -1,0 +1,120 @@
+---
+title: "Las cuatro estaciones de la economía: un mapa de regímenes para portafolios que resisten"
+dek: "El crecimiento y la inflación, cada uno al alza o a la baja, definen cuatro estaciones económicas, y un portafolio construido para resistir equilibra su riesgo entre las cuatro en lugar de apostar a una sola."
+seoTitle: "Cuatro estaciones económicas: mapa de regímenes"
+description: "Crecimiento e inflación, al alza o a la baja, definen cuatro regímenes. Cómo un portafolio all weather equilibra el riesgo entre los cuatro, no solo uno."
+date: "2026-10-05"
+category: "Frameworks"
+author: "Jose Luis Amador Jaime"
+tags: ["asignación de activos", "paridad de riesgo", "regímenes macro", "inflación", "diversificación", "Nautilus Fund"]
+featured: false
+cover: "rings"
+translationOf: "four-seasons-of-the-economy"
+---
+
+Todo portafolio está construido para algún tipo de economía, haya elegido una su dueño o no. La mezcla tradicional de 60% acciones y 40% bonos es, en el fondo, una apuesta al crecimiento con inflación contenida, el entorno en el que sus dos activos principales han tendido a desempeñarse bien. Durante la mayor parte de las dos décadas anteriores a 2022, la inflación fue baja y estable, los bonos tendían a subir cuando las acciones caían, y la mezcla parecía diversificación. Entonces la inflación regresó, y ambas mitades cayeron juntas.
+
+Este ensayo expone el mapa de regímenes que usamos para pensar ese problema, cómo la paridad de riesgo lo pone en práctica y dónde se rompe. Los patrones son tendencias estilizadas de la historia, no reglas, y nada de lo aquí expuesto es un pronóstico.
+
+## Dos variables, cuatro estaciones
+
+Los precios de los activos son expectativas descontadas de flujos de efectivo futuros. El crecimiento impulsa los flujos de efectivo: utilidades, rentas y la capacidad de servir la deuda. La inflación impulsa las tasas de descuento que se les aplican, el valor real de los pagos nominales fijos y la reacción de los bancos centrales. Ilmanen (2011) trata a ambos como motores centrales de los rendimientos de los activos, y la estrategia All Weather de Bridgewater, lanzada en 1996 y la pionera más conocida de esta forma de pensar, organizó un portafolio entero alrededor de ellos.
+
+Lo que mueve los precios es la sorpresa: la brecha entre lo que ocurre y lo que se esperaba. Una economía fuerte que todos anticipaban ya está en el precio, así que definimos cada estación según si el crecimiento y la inflación suben o bajan respecto a las expectativas, no por sus niveles.
+
+| Estación | Crecimiento | Inflación | Tendieron a hacerlo mejor | Tendieron a hacerlo peor |
+| --- | --- | --- | --- | --- |
+| Primavera: expansión desinflacionaria | Al alza | A la baja | Acciones, crédito corporativo | Materias primas, oro, efectivo |
+| Verano: sobrecalentamiento | Al alza | Al alza | Materias primas, bonos indexados a la inflación, acciones cíclicas | Bonos gubernamentales nominales |
+| Otoño: estanflación | A la baja | Al alza | Materias primas, oro, bonos indexados a la inflación, efectivo | Acciones, bonos nominales, crédito corporativo |
+| Invierno: desaceleración deflacionaria | A la baja | A la baja | Bonos gubernamentales nominales, efectivo | Acciones, crédito corporativo, materias primas |
+
+El patrón se deriva de los dos canales. Un crecimiento al alza favorece los derechos sobre flujos de efectivo futuros, como las acciones y el crédito; un crecimiento a la baja favorece la seguridad y los pagos fijos de los bonos gubernamentales de alta calidad. Una inflación al alza favorece los activos reales y los instrumentos indexados a la inflación, y erosiona los pagos nominales fijos. Un estudio de largo horizonte sobre los repuntes de inflación en EE. UU. de Neville, Draaisma, Funnell, Harvey y Van Hemert (2021) encontró que las acciones y los bonos gubernamentales nominales tendieron a entregar rendimientos reales negativos en esos episodios, mientras que a las materias primas tendió a irles bien. Los episodios individuales difieren, a veces marcadamente.
+
+<Callout type="note" title="Estaciones sin calendario">
+
+A diferencia de las del calendario, las estaciones económicas no llegan en un orden fijo, no duran un tiempo fijo y por lo general se reconocen solo después de que empiezan. Los datos en tiempo real, como las series macro de nuestro [tablero de Señales](/es/senales), describen el presente; no predicen con fiabilidad la siguiente estación. Esa es la razón principal para construir un portafolio que no dependa de predecirla.
+
+</Callout>
+
+## Equilibrar el riesgo, no los dólares
+
+Tener algo de cada fila de la tabla no es lo mismo que estar expuesto de manera significativa a cada estación. Lo que importa es cuánto riesgo aporta cada posición, y los pesos de capital son una mala guía. Como las acciones son mucho más volátiles que los bonos de alta calidad, dominan el riesgo de un portafolio 60/40:
+
+<Chart
+  title="Solo ilustrativo: portafolio 60/40, participación en el capital vs. participación en el riesgo (%)"
+  caption="Cálculo ilustrativo, no son datos ni un pronóstico. Supone una volatilidad anualizada de 16% para las acciones, 5% para los bonos y una correlación de 0.2. La participación en el riesgo es la contribución de cada activo a la varianza del portafolio."
+  decimals={1}
+  data={[
+    { label: "Acciones: capital", value: 60 },
+    { label: "Acciones: riesgo", value: 92.4, highlight: true },
+    { label: "Bonos: capital", value: 40 },
+    { label: "Bonos: riesgo", value: 7.6, highlight: true },
+  ]}
+/>
+
+Otros supuestos cambian las cifras pero no la conclusión: en un amplio rango de volatilidades y correlaciones plausibles, las acciones representan aproximadamente 80% o más del riesgo. Un portafolio 60/40 se acerca a una apuesta concentrada en las estaciones que favorecen a las acciones, con una cobertura modesta adjunta.
+
+El equilibrio por riesgo invierte la lógica. En lugar de elegir pesos de capital y aceptar el riesgo resultante, decidimos cuánto riesgo debe cargar cada fuente de rendimiento, por lo general más o menos el mismo, y resolvemos los pesos. La versión más simple pondera los activos en proporción inversa a su volatilidad; una más completa, la contribución igual al riesgo, también toma en cuenta las correlaciones:
+
+$$
+w_i \propto \frac{1}{\sigma_i} \qquad \text{or} \qquad w_i \, (\Sigma w)_i = w_j \, (\Sigma w)_j \quad \text{for all } i, j
+$$
+
+Aplicado al mapa de regímenes, el objetivo es que los activos que tienden a desempeñarse bien en cada estación carguen con una participación comparable del riesgo total, de modo que ninguna sorpresa, sea de crecimiento o de inflación, domine el resultado. Bridgewater ha descrito públicamente All Weather en términos similares, como un riesgo aproximadamente igual en cada uno de cuatro entornos económicos.
+
+<PullQuote cite="Amador Asset Management">
+El objetivo no es pronosticar la siguiente estación. Es tener un portafolio que no necesite que el pronóstico sea correcto.
+</PullQuote>
+
+## El escalamiento por volatilidad y la cuestión del apalancamiento
+
+El equilibrio por riesgo crea un problema práctico. Los activos que protegen contra un crecimiento a la baja, principalmente los bonos gubernamentales de alta calidad, son mucho menos volátiles que las acciones, así que una participación igual en el riesgo exige tener una gran cantidad de ellos, lo que acerca el rendimiento esperado al de los bonos. La elección es aceptar un rendimiento menor con menor riesgo, o aplicar un apalancamiento moderado a todo el portafolio equilibrado, normalmente mediante futuros y otros derivados, hasta que su riesgo alcance el nivel deseado.
+
+Asness, Frazzini y Pedersen (2012) dieron a la segunda opción su fundamento teórico. Como muchos inversionistas no pueden o no quieren usar apalancamiento, sobreponderan los activos de riesgo para alcanzar rendimientos más altos, lo que deja a los activos más seguros ofreciendo rendimientos más altos por unidad de riesgo a los inversionistas que sí pueden. Sus pruebas históricas encontraron rendimientos ajustados por riesgo más altos para los portafolios de paridad de riesgo que para las referencias ponderadas por mercado y 60/40. Como todo *backtest*, esos resultados dependen del periodo estudiado y del costo supuesto del apalancamiento.
+
+Muchos portafolios equilibrados por riesgo también escalan la exposición a lo largo del tiempo para mantener la volatilidad cerca de un objetivo, usando un multiplicador de exposición
+
+$$
+L_t = \frac{\sigma_{\text{target}}}{\hat{\sigma}_t}
+$$
+
+donde $\hat{\sigma}_t$ es la estimación actual de la volatilidad. La exposición se reduce cuando los mercados se vuelven turbulentos y crece cuando se calman. Eso mantiene el riesgo aproximadamente estable, a un precio: las estimaciones van rezagadas respecto a la realidad, así que la exposición a menudo se recorta solo después de las pérdidas, y las ventas resultantes pueden sumarse a la presión sobre los precios a la baja.
+
+<Callout type="warning" title="El apalancamiento cambia los modos de falla">
+
+Un portafolio apalancado depende de que el financiamiento siga disponible y asequible, de que las llamadas de margen se cubran sin ventas forzadas, y de que las correlaciones que justificaron el apalancamiento se sostengan bajo estrés. Las tres cosas pueden fallar a la vez.
+
+</Callout>
+
+## Dónde se rompe el mapa: 2022 y otros modos de falla
+
+La limitación más importante del mapa es que depende de relaciones, sobre todo la correlación entre acciones y bonos, que no son constantes de la naturaleza, como mostró 2022.
+
+La inflación al consumidor en EE. UU. superó 9% a mediados de 2022, su tasa más alta en cuatro décadas, y la Reserva Federal elevó su tasa de política monetaria en más de cuatro puntos porcentuales en el año. El alza de la inflación y de los rendimientos reales golpeó a la vez a todos los activos valuados con tasas de descuento de largo plazo, y tanto las acciones de EE. UU. como el amplio mercado de bonos con grado de inversión de EE. UU. registraron pérdidas de dos dígitos. Los bonos, que los portafolios equilibrados por riesgo mantienen en gran tamaño y a menudo con apalancamiento, en parte porque han tendido a subir cuando las acciones caen, cayeron junto con ellas. Incluso los bonos indexados a la inflación perdieron valor al subir con fuerza los rendimientos reales. Las materias primas ayudaron, pero para la mayoría de los portafolios equilibrados por riesgo no pudieron compensar las pérdidas en duración.
+
+El episodio encaja en un patrón más amplio. Durante la mayor parte de las dos décadas anteriores a 2022, la correlación entre acciones y bonos de EE. UU. fue negativa, pues dominaban los temores de crecimiento y la inflación era estable; en décadas anteriores de inflación alta y volátil fue mayormente positiva. Brixton, Brooks, Hecht, Ilmanen, Maloney y McQuinn (2023) vinculan su signo a la importancia relativa de la incertidumbre sobre el crecimiento y sobre la inflación: cuando domina la inflación, las acciones y los bonos tienden a moverse juntos. Un mapa de regímenes que supone que los bonos siempre cubren a las acciones es en realidad un mapa de un solo régimen.
+
+Otros modos de falla que vigilamos:
+
+- **Cambios de régimen en la correlación.** Las relaciones de cobertura pueden cambiar de signo cuando cambia la fuente dominante de incertidumbre macro.
+- **Choques comunes de tasa de descuento.** Las acciones y los bonos largos son activos de larga duración, así que un alza abrupta de las tasas reales puede dañar casi todo a la vez.
+- **Error de estimación.** Las volatilidades y correlaciones se estiman a partir del pasado, así que un activo inusualmente tranquilo puede quedar sobreponderado justo antes de que su calma termine.
+- **Estrés de liquidez y financiamiento.** En los pánicos, los inversionistas venden lo que pueden. En marzo de 2020 incluso los bonos del Tesoro de EE. UU. cayeron brevemente en la carrera por obtener efectivo, y el apalancamiento convierte esos momentos de dolorosos en peligrosos.
+- **Valuaciones iniciales.** Equilibrar el riesgo no dice nada sobre el rendimiento esperado. Los bonos que parten de rendimientos muy bajos ofrecen poco colchón contra la inflación y poco margen para subir en una desaceleración.
+
+Ninguno de estos es una razón para abandonar el equilibrio, pero cada uno es una razón para la humildad: más de un tipo de protección por estación, correlaciones sometidas a pruebas de estrés en lugar de supuestas, apalancamiento moderado con financiamiento robusto, y pruebas contra choques que el portafolio todavía no ha vivido, desde repuntes de inflación como el de 2022 hasta colapsos deflacionarios como el de 2008.
+
+## Qué significa esto para el Amador Nautilus Fund
+
+El Amador Nautilus Fund, nuestro futuro fondo insignia, está en etapa de prelanzamiento. Se está diseñando alrededor de la filosofía aquí descrita: un enfoque multiactivos, equilibrado por riesgo y para todas las estaciones, que busca evitar la dependencia de cualquier estación económica en particular, incluido el supuesto de que los bonos siempre compensarán las pérdidas accionarias. Su lema, *firme en mar fuerte*, nombra aquello hacia lo que trabajamos, no un resultado que alguien pueda prometer.
+
+Las lecciones de 2022 moldean cómo pensamos ese diseño: diversificar las fuentes de protección dentro de cada estación, hacer pruebas de estrés contra una correlación positiva entre acciones y bonos y contra movimientos abruptos de las tasas reales, tratar el apalancamiento como algo que hay que justificar y no suponer, y medir la diversificación en términos de riesgo, como lo hace nuestro [marco de cinco preguntas](/es/analisis/el-marco-amador) para las posiciones individuales. La estrategia, los riesgos y los términos del fondo se describirán en sus documentos de oferta; nada de lo aquí expuesto es una oferta de venta ni una solicitud de oferta de compra de participación alguna en él. Hay más información en la [página del Nautilus Fund](/es/fondo).
+
+## Puntos clave
+
+- Las sorpresas de crecimiento e inflación definen cuatro estaciones económicas, cada una de las cuales ha tendido a favorecer activos distintos.
+- Las estaciones no llegan en un orden fijo, así que equilibrar el riesgo entre ellas es más robusto que apostar a la siguiente.
+- Los pesos de capital ocultan el riesgo: en un portafolio 60/40, las acciones suelen cargar con aproximadamente 80% o más del riesgo total.
+- La paridad de riesgo depende del escalamiento por volatilidad y a menudo del apalancamiento, que traen sus propios modos de falla.
+- En 2022 la correlación entre acciones y bonos se volvió positiva al dominar la inflación. Un equilibrio duradero necesita más de una cobertura por estación.

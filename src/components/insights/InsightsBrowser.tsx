@@ -4,17 +4,29 @@ import { useState } from "react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
+const DEFAULT_LABELS = { all: "All", filter: "Filter by category", empty: "No articles in this category yet.", names: {} as Record<string, string> };
+
 /**
  * Category filter for the Insights index. Cards are rendered on the server and
  * passed in already grouped by category, so filtering needs no data fetching.
+ * `categories` are the frontmatter codes; `labels.names` maps them to what is shown.
  */
-export function InsightsBrowser({ categories, cards }: { categories: string[]; cards: Array<{ category: string; node: ReactNode; key: string }> }) {
-  const [active, setActive] = useState("All");
-  const visible = cards.filter((c) => active === "All" || c.category === active);
+export function InsightsBrowser({
+  categories,
+  cards,
+  labels = DEFAULT_LABELS,
+}: {
+  categories: string[];
+  cards: Array<{ category: string; node: ReactNode; key: string }>;
+  labels?: typeof DEFAULT_LABELS;
+}) {
+  const ALL = "__all__";
+  const [active, setActive] = useState(ALL);
+  const visible = cards.filter((c) => active === ALL || c.category === active);
   return (
     <div>
-      <div className="flex flex-wrap gap-2" role="tablist" aria-label="Filter by category">
-        {["All", ...categories].map((c) => (
+      <div className="flex flex-wrap gap-2" role="tablist" aria-label={labels.filter}>
+        {[ALL, ...categories].map((c) => (
           <button
             key={c}
             type="button"
@@ -26,7 +38,7 @@ export function InsightsBrowser({ categories, cards }: { categories: string[]; c
               active === c ? "border-ink bg-ink text-paper" : "border-line text-ink/70 hover:border-ink hover:text-ink",
             )}
           >
-            {c}
+            {c === ALL ? labels.all : (labels.names[c] ?? c)}
           </button>
         ))}
       </div>
@@ -35,7 +47,7 @@ export function InsightsBrowser({ categories, cards }: { categories: string[]; c
           <div key={c.key}>{c.node}</div>
         ))}
       </div>
-      {visible.length === 0 && <p className="mt-10 text-muted">No articles in this category yet.</p>}
+      {visible.length === 0 && <p className="mt-10 text-muted">{labels.empty}</p>}
     </div>
   );
 }

@@ -1,7 +1,8 @@
 ---
 title: "How to Read a Backtest Like a Skeptic"
+seoTitle: "Backtesting: How to Read a Backtest Like a Skeptic"
 dek: "Probabilistic and Deflated Sharpe Ratios, backtest-overfitting tests, multiple seeds, and ten quiet bugs that make strategies look better than they are."
-description: "How to evaluate a backtest: Probabilistic and Deflated Sharpe ratios, overfitting tests, multiple seeds and ten quiet bugs that flatter strategies."
+description: "What backtesting is and how to evaluate a backtest: Probabilistic and Deflated Sharpe ratios, overfitting tests, multiple seeds and ten quiet bugs."
 date: "2026-10-10"
 category: "Risk"
 author: "Jose Luis Amador Jaime"
@@ -12,6 +13,10 @@ cover: "bars"
 ---
 
 A backtest is an argument, not a measurement. It is assembled from choices: the period, the universe, the parameters, the costs, the code. And the person making those choices usually wants the answer to be yes. Our research on [Deep HRP](/insights/deep-hrp-learnable-risk-parity) forced us to build an evaluation protocol designed to say no whenever it reasonably could. This article shares the tools we use and the bugs we have learned to hunt for, in our own work first.
+
+## What is backtesting?
+
+Backtesting is running an investment rule over historical data as if it had been followed at the time: the same signals and rebalancing dates, with trading costs, and with only the information that was available on each date. The output is a simulated track record, usually summarized by return, volatility, Sharpe ratio and maximum drawdown. A backtest can show that an idea is plausible. It cannot show that the idea will work, because the history was known to whoever designed the rule. The rest of this note is about the gap between those two statements.
 
 ## Problem one: a Sharpe ratio is an estimate
 

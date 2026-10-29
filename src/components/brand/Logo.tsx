@@ -16,11 +16,26 @@ export function Monogram({ className, title = "Amador", horizon = "var(--color-b
   );
 }
 
-export function Logo({ tone = "dark", className, compact = false }: { tone?: "dark" | "light"; className?: string; compact?: boolean }) {
+export function Logo({
+  tone = "dark",
+  className,
+  compact = false,
+  href = "/",
+  homeLabel = "Amador Asset Management, home",
+}: {
+  tone?: "dark" | "light";
+  className?: string;
+  compact?: boolean;
+  /** The language's home page. */
+  href?: string;
+  /** Accessible name when compact, and the spoken suffix otherwise (", home" / ", inicio"). */
+  homeLabel?: string;
+}) {
+  const spoken = homeLabel.includes(",") ? homeLabel.slice(homeLabel.lastIndexOf(",")) : `, ${homeLabel}`;
   return (
     <Link
-      href="/"
-      aria-label={compact ? "Amador Asset Management, home" : undefined}
+      href={href}
+      aria-label={compact ? homeLabel : undefined}
       className={cn("group inline-flex items-center gap-3", tone === "light" ? "text-paper" : "text-ink", className)}
     >
       <Monogram
@@ -34,7 +49,7 @@ export function Logo({ tone = "dark", className, compact = false }: { tone?: "da
           <span className={cn("mt-1 text-[0.56rem] font-semibold tracking-[0.3em]", tone === "light" ? "text-brass-light" : "text-muted")}>
             ASSET MANAGEMENT
           </span>
-          <span className="sr-only">, home</span>
+          <span className="sr-only">{spoken}</span>
         </span>
       )}
     </Link>

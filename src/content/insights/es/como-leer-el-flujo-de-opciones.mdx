@@ -1,0 +1,143 @@
+---
+title: "Cómo leer el flujo de opciones sin engañarse"
+seoTitle: "Flujo de opciones: qué es y cómo leerlo"
+dek: "La actividad inusual en opciones es fácil de encontrar y difícil de interpretar; así la leemos nosotros, qué respalda la investigación y dónde se queda corto nuestro propio filtro."
+description: "Qué es el flujo de opciones financieras, qué significa la actividad inusual y cómo leerla: sweeps, bloques, prima, gamma y lo que dice la investigación."
+date: "2026-10-08"
+category: "Signals"
+author: "Jose Luis Amador Jaime"
+tags: ["flujo de opciones", "actividad inusual en opciones", "microestructura de mercado", "cobertura de dealers", "señales"]
+featured: false
+cover: "waves"
+translationOf: "reading-options-flow"
+---
+
+Un bloque grande de calls de corto plazo se registra en una acción que no se ha movido en un mes y, en cuestión de minutos, circula como evidencia de dinero inteligente. A veces lo es. Con frecuencia se trata de una cobertura, un spread, un roll o una operación de ingreso que parece alcista solo porque nadie puede ver el otro lado.
+
+Nuestro [panel de Señales](/es/senales) corre un filtro de actividad inusual porque el volumen concentrado en opciones es contexto útil, no un pronóstico. Esto es lo que mide, lo que respalda la investigación y lo que nos preguntamos antes de leer algo en una operación.
+
+## ¿Qué es el flujo de opciones?
+
+El flujo de opciones es la corriente de operaciones con opciones conforme se registran: para cada operación, el subyacente, el precio de ejercicio (strike), el vencimiento, si fue un call o un put, el tamaño, el precio y si se ejecutó más cerca de la postura de compra (bid) o de la postura de venta (ask). Las herramientas de flujo agregan esa corriente y la ordenan por tamaño o por prima; la "actividad inusual en opciones" es el subconjunto en el que el volumen supera por mucho el interés abierto (open interest) del contrato o su nivel habitual. El flujo muestra que alguien operó; nunca muestra por qué, si la operación abrió o cerró una posición, ni qué más se operó en contra.
+
+## Qué significa realmente "inusual"
+
+El **volumen** es el número de contratos operados hoy; el **interés abierto** es el número de contratos vigentes. La Options Clearing Corporation actualiza el interés abierto una vez al día, después de procesar las operaciones de la sesión anterior, de modo que la cifra que se ve durante la sesión es la de ayer.
+
+Un volumen muy por encima del interés abierto significa que la operación de hoy es grande en relación con las posiciones existentes. Eso eleva la probabilidad de que se estén creando posiciones nuevas, pero no lo demuestra: los mismos contratos pueden cambiar de manos muchas veces en una sesión, y las posiciones pueden pasar de un tenedor a otro sin cambio neto. "Inusual" describe actividad, no intención, y es relativo. En las acciones más operadas, medio millón de dólares de prima en un solo contrato no es algo raro.
+
+## Sweeps, blocks y el lado de la operación
+
+### Sweeps y blocks
+
+Un **sweep** es una orden grande dividida entre varias bolsas al mismo tiempo para tomar todo lo que se ofrece a los mejores precios. Los servicios de flujo interpretan los sweeps como urgencia. Un **block** es una sola operación grande, por lo general negociada entre una institución y un formador de mercado (market maker), y con frecuencia una pieza de un paquete, como una opción ligada a una operación con acciones o una pata (leg) de un spread.
+
+La urgencia no es información. Un gestor que acaba de comprar acciones puede ejecutar un sweep de puts como protección; un formador de mercado puede ejecutar uno para reducir su riesgo.
+
+### Quién inició: ask contra bid
+
+El dato aislado más útil sobre una operación es qué lado tenía prisa. Una ejecución en la postura de venta o por encima de ella sugiere que un comprador cruzó el diferencial bid-ask; una en la postura de compra o por debajo sugiere un vendedor. Las ejecuciones cerca del punto medio son ambiguas. Los proveedores comerciales de datos clasifican las operaciones de esta manera, pero el resultado es una inferencia: las cotizaciones se mueven constantemente con la acción, las órdenes de varias patas se cotizan como paquetes y las operaciones negociadas suelen registrarse cerca del punto medio. Nada de esto sobrevive en una cadena de opciones con retraso, que reporta el volumen solo como un total diario acumulado.
+
+## Apertura o cierre
+
+Vender para cerrar calls comprados hace seis semanas es una toma de utilidades, no una nueva apuesta alcista, y sin embargo suma el mismo volumen que una compra nueva.
+
+Con datos públicos, la primera evidencia real llega a la mañana siguiente. Si el interés abierto subió más o menos en el tamaño de la operación, probablemente se abrieron posiciones; si apenas se movió o bajó, el volumen fue en su mayoría de cierre o rotación intradía. Aun así, la cifra es neta de todas las operaciones en el contrato. Las bolsas venden datos que etiquetan el volumen como de apertura o de cierre, pero eso no está en una cadena pública con retraso.
+
+## Operaciones que parecen direccionales pero no lo son
+
+Buena parte del mayor volumen en opciones tiene un propósito distinto a una opinión sobre la dirección:
+
+- **Coberturas.** Un inversionista que posee la acción compra puts para proteger una ganancia; un collar agrega un call vendido.
+- **Spreads.** Un call spread compra un strike y vende otro; un risk reversal vende un put para financiar un call. Cada pata se registra por separado, así que la prima bruta exagera el dinero en riesgo.
+- **Rolls.** Un tenedor cierra una posición por vencer y la reabre más lejos en el tiempo o en otro strike. El contrato nuevo puede operar muchas veces su interés abierto mientras la posición sigue siendo esencialmente la misma.
+- **Venta de calls cubiertos (overwriting).** Vender calls contra acciones que ya se poseen cambia potencial de alza por ingreso. Sin el lado de la operación, se lee como actividad intensa en calls.
+- **Operaciones de dividendo.** Alrededor de las fechas ex-dividendo, los profesionales a veces operan cantidades enormes de calls muy dentro del dinero (deep in-the-money) en estrategias ligadas al ejercicio anticipado.
+- **Operaciones de volatilidad.** Las opciones compradas y cubiertas en delta con acciones son una apuesta al tamaño de los movimientos, no a su dirección.
+
+<Callout type="warning" title="Por qué la mayor parte de la actividad inusual no es una señal para operar">
+
+Una gran parte del volumen en opciones involucra a formadores de mercado, coberturistas, operadores de spreads y estrategias de ingreso. Incluso cuando hay un operador informado en la cinta, un filtro público ve la operación tarde, sin signo, sin saber si abrió una posición y mezclada con la actividad de todos los demás. La investigación que encontró poder predictivo se basó en volumen con signo y, en su forma más sólida, en datos que el público no podía ver. Tratamos un contrato señalado como una razón para mirar más de cerca, nunca como una razón para operar.
+
+</Callout>
+
+## La prima no es dirección
+
+La prima es la cifra más citada en los comentarios sobre flujo y la menos informativa sobre la dirección. No tiene signo: dos millones de dólares de prima en calls son igual de consistentes con un comprador que con un vendedor. También es una mala medida de la exposición. Una mejor traducción es la posición equivalente en acciones, o ajustada por delta, para $N$ contratos:
+
+$$
+\text{share-equivalent exposure} \approx N \times 100 \times \Delta
+$$
+
+<Chart title="Exposición equivalente en acciones por cada $1 millón de prima en calls (miles de acciones)" caption="Acción hipotética de $100, opciones a 30 días, volatilidad implícita de 40%, tasas y dividendos de cero, valores Black-Scholes. No son datos de mercado." decimals={0} data={[{ label: "Call 80 (ITM)", value: 49 }, { label: "Call 100 (ATM)", value: 114 }, { label: "Call 115 (OTM)", value: 185, highlight: true }]} />
+
+La misma prima compra casi cuatro veces más exposición equivalente en acciones en calls fuera del dinero (out-of-the-money) que en calls muy dentro del dinero. Las opciones muy dentro del dinero tienen una prima grande porque la mayor parte de su precio es valor intrínseco, así que abarrotan las listas ordenadas por prima mientras se comportan casi como la acción.
+
+<PullQuote>La prima dice cuánto dinero cambió de manos. No dice hacia dónde apuntaba.</PullQuote>
+
+## Dealers, cobertura y gamma
+
+Los formadores de mercado, que con frecuencia están del otro lado de las operaciones de los clientes, suelen cubrirse con acciones: venden un call, compran acciones. La gamma mide qué tan rápido cambia la delta de una opción cuando se mueve la acción, de modo que un formador de mercado que está corto en opciones debe comprar más acciones conforme sube el precio y vender conforme baja. Para un formador de mercado corto $N$ contratos, un movimiento pequeño $dS$ en la acción requiere aproximadamente
+
+$$
+\text{shares to buy} \approx N \times 100 \times \Gamma \times dS
+$$
+
+donde un resultado negativo significa acciones por vender. Si los formadores de mercado en conjunto están cortos en gamma, su cobertura amplifica los movimientos; si están largos en gamma, los amortigua. Ni, Pearson y Poteshman (2005) encontraron que las acciones con opciones listadas tienden a cerrar cerca de los precios de ejercicio en las fechas de vencimiento, lo que es consistente con este canal.
+
+Dos advertencias. La cobertura le da al volumen en opciones una vía mecánica para mover la acción sin información alguna, así que un movimiento después de una operación grande no demuestra nada sobre el operador. Y las estimaciones publicadas de "exposición gamma" deben suponer quién está largo y quién corto en cada contrato, algo que los datos públicos no revelan. Si el supuesto está equivocado, el signo también puede estarlo.
+
+## Qué respalda la investigación
+
+El argumento académico de que el volumen en opciones puede contener información es real, y más estrecho de lo que sugiere la mercadotecnia del flujo.
+
+**Easley, O'Hara y Srinivas (1998)** modelaron a operadores informados que eligen entre acciones y opciones según el apalancamiento que ofrecen las opciones y la liquidez de cada mercado. En sus pruebas, el volumen en opciones contenía información sobre cambios futuros en el precio de la acción, pero las medidas informativas tenían signo: volumen que refleja noticias positivas (comprar calls, vender puts) o noticias negativas (comprar puts, vender calls).
+
+**Pan y Poteshman (2006)** usaron una base de datos del Chicago Board Options Exchange que clasificaba el volumen en opciones según si las operaciones fueron iniciadas por compradores o por vendedores y si abrieron o cerraron posiciones. A partir del volumen iniciado por compradores para abrir posiciones nuevas, construyeron ratios put-call. Las acciones con ratios bajos superaron a las acciones con ratios altos durante los días y la semana siguientes, y los autores atribuyeron la predictibilidad a información no pública en manos de los operadores de opciones.
+
+La señal descansaba exactamente en los dos datos que una cadena pública no revela en tiempo real: quién inició cada operación y si abrió una posición. La evidencia muestra que los compradores que abrían posiciones nuevas iban, en promedio, adelantados a la acción; no que el volumen total o la prima estimada a partir de una cadena con retraso contengan la misma información.
+
+## Cómo funciona nuestro filtro
+
+<KeyStats items={[{ value: "≥1,000", label: "Contratos operados" }, { value: "≥2×", label: "Volumen vs. interés abierto del día previo" }, { value: "≥$500K", label: "Prima estimada" }, { value: "~15 min", label: "Retraso de los datos de Cboe" }]} />
+
+<Callout type="method" title="Cómo se define el filtro de actividad inusual">
+
+- **Universo.** Una lista fija de doce acciones grandes y muy operadas de EE. UU.
+- **Datos.** Las cadenas públicas con retraso de Cboe, unos 15 minutos atrás; nuestra caché puede agregar unos minutos más.
+- **Prima estimada.** El volumen del día × el precio de la última operación × 100, con el punto medio bid-ask como sustituto cuando no hay última operación.
+- **Filtro.** Volumen de al menos 1,000, al menos el doble del interés abierto del día previo y prima estimada de al menos \$500,000. Un contrato con interés abierto de cero pasa la prueba del cociente automáticamente.
+- **Presentación.** Los 30 contratos que califican con la mayor prima estimada.
+- **Pulso de opciones.** Por ticker, la prima estimada de calls y de puts en todos los contratos que operaron, y la diferencia.
+
+</Callout>
+
+Las limitaciones se derivan de los datos:
+
+- **Retraso.** El mercado ha tenido al menos 15 minutos para reaccionar antes de que aparezca una fila.
+- **Prima estimada.** Aplicar el último precio a todo el volumen del día puede fallar por mucho si el precio de la opción se movió durante la sesión.
+- **Sin lado de la operación.** No podemos distinguir lo comprado de lo vendido, así que la prima de calls del panel de pulso cuenta ambos.
+- **Sin información de apertura o cierre.** El interés abierto de la cadena es el de ayer.
+- **Sin vinculación ni línea base.** Los spreads, los rolls y las operaciones ligadas a acciones aparecen como contratos sin relación, y el volumen nunca se compara con la actividad normal, de modo que los contratos activos de vencimiento cercano se señalan con frecuencia.
+
+Si una fuente de datos no está disponible, el panel se marca como datos de muestra.
+
+## Una lista de verificación práctica
+
+Antes de leer algo en un contrato señalado, nos preguntamos:
+
+1. **¿Conocemos el lado?** Si no, no conocemos la dirección.
+2. **¿Fue de apertura?** Revisar el cambio en el interés abierto del día siguiente.
+3. **¿Es una pata de algo más grande?** Buscar un tamaño equivalente en otros strikes, vencimientos o en la acción.
+4. **¿Hay una razón de calendario?** Los reportes de resultados, las fechas ex-dividendo, los vencimientos y los eventos de índices generan volumen intenso con poco contenido direccional.
+5. **¿Qué tan grande es, en realidad?** Compararlo con el volumen normal de opciones y de acciones, en equivalentes de acciones.
+6. **¿Se repite?** La acumulación durante varias sesiones con interés abierto creciente dice más que una sola operación.
+7. **¿Se sostendría la idea sin esa operación?** El flujo puede motivar investigación; no puede reemplazarla.
+
+Los reportes de insiders plantean un problema similar de separar la actividad rutinaria de la informativa; vea [Qué dicen (y qué no) las compras de insiders](/es/analisis/que-dicen-las-compras-de-insiders). Para un resumen de los contratos señalados, vea nuestras [alertas](/es/boletines#alerts).
+
+## Referencias
+
+- Easley, D., O'Hara, M., and Srinivas, P. S. (1998). "Option Volume and Stock Prices: Evidence on Where Informed Traders Trade." *Journal of Finance*, 53(2).
+- Ni, S. X., Pearson, N. D., and Poteshman, A. M. (2005). "Stock Price Clustering on Option Expiration Dates." *Journal of Financial Economics*, 78(1).
+- Pan, J., and Poteshman, A. M. (2006). "The Information in Option Volume for Future Stock Prices." *Review of Financial Studies*, 19(3).

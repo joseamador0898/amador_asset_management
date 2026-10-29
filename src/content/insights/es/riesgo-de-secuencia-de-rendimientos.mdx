@@ -1,0 +1,120 @@
+---
+title: "Riesgo de secuencia de rendimientos: por qué importa el orden de los rendimientos"
+seoTitle: "Riesgo de secuencia de rendimientos explicado"
+dek: "Dos inversionistas pueden obtener exactamente los mismos rendimientos en distinto orden y terminar muy lejos uno del otro en cuanto hay dinero entrando o saliendo. Qué es el riesgo de secuencia de rendimientos, a quién perjudica más, cómo medirlo y qué lo reduce de verdad."
+description: "Riesgo de secuencia de rendimientos: por qué el orden importa cuando hay retiros o aportaciones, un ejemplo práctico, a quién afecta más y qué lo reduce."
+date: "2026-10-29"
+category: "Risk"
+author: "Jose Luis Amador Jaime"
+tags: ["riesgo de secuencia de rendimientos", "retiros en la jubilación", "tasa de retiro segura", "drawdowns", "gestión de riesgo", "asignación de activos"]
+featured: false
+cover: "rings"
+translationOf: "sequence-of-returns-risk"
+---
+
+El riesgo de secuencia de rendimientos (también llamado riesgo de secuencia de retornos, riesgo de secuencia o SORR, por sus siglas en inglés) es el riesgo de que el *orden* en que llegan los rendimientos, y no solo su promedio, decida el resultado para cualquiera que esté aportando dinero a un portafolio o retirándolo. Para un inversionista que compra y mantiene sin hacer ninguna de las dos cosas, el orden es irrelevante. Para un jubilado que vive de un ingreso del portafolio, o para un ahorrador en los últimos años antes de jubilarse, puede ser el riesgo más grande de todo el plan, y es invisible en las cifras que la mayoría de la gente mira: rendimiento promedio, volatilidad e incluso caída máxima (drawdown).
+
+Esta nota define el riesgo, desarrolla un ejemplo con aritmética real, muestra de dónde proviene la evidencia histórica y separa las medidas que lo reducen de las que solo dan la sensación de hacerlo. Las cifras etiquetadas como ilustrativas son inventadas para mostrar la mecánica; no son pronósticos.
+
+## ¿Qué es el riesgo de secuencia de rendimientos?
+
+Sin flujos de efectivo, la riqueza final es el producto de los factores de crecimiento, $W_T = W_0 (1 + r_1)(1 + r_2)\cdots(1 + r_T)$, y a un producto no le importa el orden de sus términos. Baraje los rendimientos y el valor final no cambia. Por eso el rendimiento promedio y el compuesto de una estrategia lo dicen todo sobre una suma global que se deja intacta.
+
+Los flujos de efectivo rompen la simetría. Un retiro realizado después de una caída vende más unidades a precios bajos, y el dinero que sale del portafolio no puede participar en la recuperación que sigue. Dos inversionistas con rendimientos idénticos, promedios idénticos y retiros idénticos pueden, por tanto, terminar con saldos muy distintos, dependiendo únicamente de cuándo llegaron los años malos. El mismo mecanismo funciona a la inversa para un ahorrador: las aportaciones hechas después de una caída compran más unidades a bajo precio, así que para quien está aportando dinero las pérdidas tempranas son un regalo y las tardías son el peligro, porque las pérdidas tardías golpean el saldo más grande.
+
+La regla práctica es que el riesgo de secuencia es proporcional a cuánto dinero se mueve en relación con el portafolio, y a qué tan grande es el portafolio cuando llegan las pérdidas. Alcanza su punto máximo en los años inmediatamente anteriores y posteriores a la jubilación, cuando el saldo está en su nivel más alto y comienzan los retiros.
+
+## Un ejemplo práctico
+
+Dos jubilados hipotéticos empiezan cada uno con \$1,000,000 y retiran \$40,000 el primer año, 4% del saldo inicial, aumentando el retiro 3% al año por inflación. A lo largo de diez años obtienen los mismos diez rendimientos anuales, uno de ellos en orden inverso: un promedio aritmético de 3.8% al año y un rendimiento compuesto de cerca de 3.3%. Los retiros se toman al inicio de cada año; los saldos son de fin de año (ilustrativo).
+
+| Año | Pérdidas primero | Saldo | Ganancias primero | Saldo |
+| --- | ---: | ---: | ---: | ---: |
+| 1 | −20% | \$768,000 | +6% | \$1,017,600 |
+| 2 | −10% | \$654,120 | +11% | \$1,083,804 |
+| 3 | +5% | \$642,268 | +7% | \$1,114,264 |
+| 4 | +8% | \$646,444 | +9% | \$1,166,905 |
+| 5 | +12% | \$673,594 | +10% | \$1,234,073 |
+| 6 | +10% | \$689,946 | +12% | \$1,330,226 |
+| 7 | +9% | \$699,980 | +8% | \$1,385,061 |
+| 8 | +7% | \$696,340 | +5% | \$1,402,659 |
+| 9 | +11% | \$716,693 | −10% | \$1,216,790 |
+| 10 | +6% | \$704,372 | −20% | \$931,679 |
+
+Ambos retiraron los mismos \$458,555 a lo largo de la década. Si ninguno hubiera tocado el dinero, ambos habrían terminado con cerca de \$1,380,000. Con retiros, quien enfrentó las pérdidas primero termina con \$704,000; quien las enfrentó al final termina con \$932,000, unos \$227,000 más, con los mismos rendimientos.
+
+<Chart
+  title="Solo ilustrativo: saldo final después de diez años (miles de \$)"
+  caption="Cálculo ilustrativo, no datos ni pronóstico. Los mismos diez rendimientos anuales en orden opuesto; retiro de \$40,000 el primer año, que sube 3% al año, tomado al inicio de cada año."
+  decimals={0}
+  data={[
+    { label: "Sin retiros (en cualquier orden)", value: 1380 },
+    { label: "Ganancias primero", value: 932 },
+    { label: "Pérdidas primero", value: 704, highlight: true },
+  ]}
+/>
+
+El daño se hace temprano y en silencio. Después de los dos primeros años, la jubilada que enfrentó las pérdidas primero tiene \$654,000, y el siguiente retiro de \$42,436 equivale a 6.5% de lo que queda en lugar de 4% de lo que tenía al inicio. Cada ganancia posterior se obtiene sobre una base más pequeña, que es la misma aritmética por la que una pérdida de 50% necesita una recuperación de 100%, como expusimos en [la aritmética de los drawdowns](/es/analisis/la-aritmetica-de-los-drawdowns).
+
+Invierta la dirección de los flujos de efectivo y el orden de los resultados se voltea. Un ahorrador que aporta \$10,000 al inicio de cada uno de los mismos diez años termina con cerca de \$149,000 si las pérdidas llegan primero y con cerca de \$100,000 si llegan al final. Las pérdidas tempranas permiten que las aportaciones compren barato; las tardías golpean cuando el saldo es más grande.
+
+<PullQuote>El riesgo de secuencia no es una propiedad de los rendimientos. Es una propiedad de los flujos de efectivo.</PullQuote>
+
+## ¿A quién perjudica más?
+
+- **Recién jubilados.** Los primeros cinco a diez años de retiros son la ventana en la que una mala secuencia puede poner un plan en una trayectoria de la que nunca se recupera, porque el saldo está en su punto más alto y el gasto está fijado en dólares y no en unidades del portafolio.
+- **Ahorradores cerca de la jubilación.** Para una persona de treinta años, una caída de 30% golpea un saldo pequeño con décadas de aportaciones por delante. Para una de cincuenta y ocho, golpea el saldo más grande que tendrá en su vida, con pocas aportaciones restantes para comprar en la caída.
+- **Cualquiera que gaste una cantidad fija de un fondo volátil:** fondos patrimoniales (endowments) y fundaciones con reglas de gasto, fideicomisos e inversionistas que viven de un portafolio por cualquier motivo.
+- **Fondos que enfrentan reembolsos.** Una estrategia sólida para capital paciente puede arruinarse por salidas de dinero que coinciden con sus drawdowns, que es una de las razones por las que los términos de liquidez importan tanto como la estrategia.
+
+## Cómo se ve la evidencia
+
+La pregunta "¿qué tasa de retiro habría sobrevivido?" la respondió por primera vez de forma sistemática Bengen (1994), quien puso a prueba tasas de retiro fijas y ajustadas por inflación contra los rendimientos de acciones y bonos de EE. UU. desde 1926 para cada año histórico de inicio. El resultado que se convirtió en la regla del 4% fue que un retiro en el primer año de 4% del portafolio, con entre 50% y 75% en acciones, duró treinta años desde cualquier punto de partida de sus datos. Los casos limitantes no fueron los desplomes más profundos, sino las jubilaciones que comenzaron justo antes de una larga racha de malos rendimientos reales, con mediados de la década de 1960 como el ejemplo habitual: pérdidas moderadas combinadas con inflación alta, de modo que los retiros subían mientras el portafolio caía.
+
+Cooley, Hubbard y Walz (1998), el "estudio Trinity", extendieron el enfoque a periodos móviles y reportaron tasas de éxito en lugar de un único peor caso. Para portafolios balanceados y una tasa de 4% ajustada por inflación a lo largo de treinta años, la tasa de éxito histórica se ubicó en torno a 95%, y caía rápidamente conforme subía la tasa. Pfau (2015) actualizó el estudio y advirtió que una tasa de éxito histórica es una descripción del pasado de un solo país, no la probabilidad de que un plan que comience hoy funcione: con rendimientos de bonos más bajos, se esperaba que las mismas reglas fallaran con mayor frecuencia.
+
+Tres advertencias se desprenden de esta literatura. Las tasas de éxito provienen de ventanas superpuestas de una sola historia, así que descansan en muchos menos episodios independientes de lo que aparentan. Los peores casos están definidos tanto por la inflación como por los rendimientos. Y "éxito" significa no quedarse sin dinero antes de una fecha fija, lo que no dice nada sobre el drawdown que el jubilado vivió en el camino.
+
+## ¿Cómo se mide el riesgo de secuencia?
+
+El riesgo de secuencia no aparece en la volatilidad ni en el drawdown máximo, que son iguales para las dos secuencias anteriores. Aparece en la distribución de resultados una vez que se incluyen los flujos de efectivo.
+
+<Callout type="method" title="Cómo ponemos a prueba un plan de gasto o de ahorro">
+Simule el plan, no el activo. Tome el conjunto completo de flujos de efectivo (retiros, aportaciones, comisiones, impuestos) y hágalos pasar por muchas trayectorias de rendimientos: ventanas históricas móviles, un bootstrap que remuestree años completos o bloques de años para conservar el agrupamiento de los rendimientos, y un modelo paramétrico con los supuestos explícitos. Reporte la distribución de la riqueza final, la probabilidad de que el plan falle antes de su horizonte, el peor drawdown a diez años del saldo y la tasa de retiro como proporción del saldo *actual* a lo largo de las trayectorias malas. Reporte los fracasos con la misma prominencia que la mediana.
+</Callout>
+
+Un diagnóstico sencillo captura la mayor parte del riesgo sin una simulación: divida el retiro planeado entre el saldo actual. Una regla de gasto fijada en 4% del portafolio original se convierte en 8% del saldo después de una caída de 50%, una tasa que ningún periodo histórico ha sostenido por mucho tiempo. Si un plan no tiene una regla para lo que ocurre cuando esa cifra sube, está confiando en que la secuencia sea benévola.
+
+## Qué reduce el riesgo de secuencia y qué no
+
+**La flexibilidad en el gasto es la palanca más grande.** Las reglas que recortan modestamente los retiros después de un año malo y los elevan después de los buenos, como las barandillas (guardrails) de Guyton y Klinger (2006), convierten un plan que fracasa de plano en uno que se dobla. El costo es la variabilidad del ingreso; el beneficio es que el portafolio deja de venderse con más fuerza en el fondo.
+
+**Una tasa inicial más baja.** Cada medio punto que se resta a la tasa de retiro inicial compra una cantidad significativa de seguridad, porque reduce la proporción del portafolio que se vende cada año, incluidos los malos.
+
+**Una reserva de activos seguros de la cual gastar después de una caída.** Mantener de uno a tres años de gasto en efectivo o bonos de corto plazo, y recurrir a ella en lugar de vender acciones después de una caída, ataca directamente el mecanismo. La evidencia es mixta sobre si una "cubeta" separada supera a simplemente mantener una asignación más conservadora y rebalancear, porque una reserva también reduce el rendimiento esperado; lo que sí cambia de forma confiable es el comportamiento, al eliminar la necesidad de vender en medio de una caída.
+
+**Trayectorias (glide paths) que respetan dónde está el riesgo.** Pfau y Kitces (2014) encontraron que un portafolio que comienza la jubilación de forma más conservadora y *aumenta* la exposición a acciones con el tiempo mejoró modestamente los peores resultados, porque mantiene el menor riesgo exactamente cuando el riesgo de secuencia alcanza su máximo. La misma lógica dice que la exposición a acciones de un ahorrador debería bajar conforme crece el saldo y se acorta el horizonte.
+
+**Diversificación entre regímenes y control de drawdowns.** Un portafolio que limita sus propios peores años, al [equilibrar el riesgo entre las estaciones de la economía](/es/analisis/las-cuatro-estaciones-de-la-economia) y al [tratar los drawdowns como una restricción de diseño](/es/analisis/la-aritmetica-de-los-drawdowns), reduce el riesgo de secuencia en su origen. Un [rebalanceo](/es/analisis/rebalanceo-el-almuerzo-gratis-que-hay-que-ganarse) disciplinado ayuda en el margen al dirigir los retiros hacia lo que haya subido.
+
+**Lo que no ayuda:** buscar un rendimiento promedio más alto asumiendo más riesgo. Un rendimiento esperado más alto eleva el resultado mediano y amplía la dispersión de resultados al mismo tiempo, y el riesgo de secuencia vive en la dispersión. Tampoco el rendimiento promedio de la última década dice nada sobre el orden de la siguiente.
+
+<Callout type="warning" title="No es una recomendación">
+Las cifras anteriores son ilustrativas, y los estudios históricos describen los mercados de EE. UU. en el pasado. Un plan de gasto depende de los impuestos, de otros ingresos, de la salud, de los objetivos de herencia y del portafolio real; esta nota es educativa y no es una recomendación de ninguna tasa de retiro ni asignación.
+</Callout>
+
+## Puntos clave
+
+- Sin flujos de efectivo, el orden de los rendimientos no importa; con retiros o aportaciones puede cambiar el resultado por un margen amplio.
+- Para un jubilado, las pérdidas tempranas son el peligro, porque los retiros las vuelven permanentes; para un ahorrador lo son las tardías, porque golpean el saldo más grande.
+- La regla del 4% y el estudio Trinity son estudios históricos de peor caso y de tasas de éxito sobre el pasado de un solo país, acotados tanto por la inflación como por los rendimientos.
+- Mida el riesgo de secuencia simulando los flujos de efectivo, y vigile la tasa de retiro como proporción del saldo actual.
+- El gasto flexible, una tasa inicial más baja, una reserva de la cual retirar después de las caídas, una trayectoria sensata y el control de drawdowns lo reducen; un rendimiento promedio más alto no.
+
+## Fuentes
+
+- Bengen, W. P. (1994). "Determining Withdrawal Rates Using Historical Data." *Journal of Financial Planning*, October.
+- Cooley, P. L., Hubbard, C. M., and Walz, D. T. (1998). "Retirement Savings: Choosing a Withdrawal Rate That Is Sustainable." *AAII Journal*, February.
+- Guyton, J. T., and Klinger, W. J. (2006). "Decision Rules and Maximum Initial Withdrawal Rates." *Journal of Financial Planning*, March.
+- Pfau, W. D. (2015). "Sustainable Retirement Spending in Low Interest Rates: Updating the Trinity Study." *Journal of Financial Planning*, August.
+- Pfau, W. D., and Kitces, M. E. (2014). "Reducing Retirement Risk with a Rising Equity Glide Path." *Journal of Financial Planning*, January.

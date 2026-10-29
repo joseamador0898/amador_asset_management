@@ -1,15 +1,16 @@
 import { ArrowDownRight, ArrowRight, ArrowUpRight } from "lucide-react";
+import { formatDateFor, type Lang } from "@/lib/i18n";
 import type { SignalAlert } from "@/lib/signals/types";
-import { cn, formatDate } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 const levelStyle = {
-  high: { label: "High", dark: "border-down/40 bg-down/10 text-down", light: "border-oxblood/40 bg-oxblood/10 text-oxblood" },
-  medium: { label: "Medium", dark: "border-amber/40 bg-amber/10 text-amber", light: "border-brass/50 bg-brass/10 text-brass" },
-  info: { label: "Info", dark: "border-term-line bg-term-3 text-paper/60", light: "border-line bg-paper-2 text-muted" },
+  high: { label: { en: "High", es: "Alta" }, dark: "border-down/40 bg-down/10 text-down", light: "border-oxblood/40 bg-oxblood/10 text-oxblood" },
+  medium: { label: { en: "Medium", es: "Media" }, dark: "border-amber/40 bg-amber/10 text-amber", light: "border-brass/50 bg-brass/10 text-brass" },
+  info: { label: { en: "Info", es: "Info" }, dark: "border-term-line bg-term-3 text-paper/60", light: "border-line bg-paper-2 text-muted" },
 } as const;
 
-/** Rule-based alerts list (dark terminal or light page tone). */
-export function AlertList({ alerts, tone = "dark", limit }: { alerts: SignalAlert[]; tone?: "dark" | "light"; limit?: number }) {
+/** Rule-based alerts list (dark terminal or light page tone). The alerts arrive already written in the page's language. */
+export function AlertList({ alerts, tone = "dark", limit, lang = "en" }: { alerts: SignalAlert[]; tone?: "dark" | "light"; limit?: number; lang?: Lang }) {
   const dark = tone === "dark";
   const items = limit ? alerts.slice(0, limit) : alerts;
   return (
@@ -32,12 +33,12 @@ export function AlertList({ alerts, tone = "dark", limit }: { alerts: SignalAler
               <div className="flex flex-wrap items-center gap-2">
                 <p className={cn("text-sm font-semibold", dark ? "text-paper" : "text-ink")}>{a.title}</p>
                 <span className={cn("rounded-full border px-2 py-0.5 font-mono text-[0.58rem] uppercase tracking-wider", dark ? style.dark : style.light)}>
-                  {style.label}
+                  {style.label[lang]}
                 </span>
               </div>
               <p className={cn("mt-1 text-[0.82rem] leading-relaxed", dark ? "text-paper/65" : "text-muted")}>{a.detail}</p>
               <p className={cn("mt-1 font-mono text-[0.6rem] uppercase tracking-wider", dark ? "text-paper/60" : "text-muted")}>
-                {a.source} · {formatDate(a.date, { month: "short", day: "numeric", year: "numeric" })}
+                {a.source} · {formatDateFor(a.date, lang, { month: "short", day: "numeric", year: "numeric" })}
               </p>
             </div>
           </li>

@@ -5,8 +5,40 @@ import { cn } from "@/lib/utils";
 
 export type SubmitState = { status: "idle" | "submitting" | "success" | "error"; error?: string; fieldErrors?: Record<string, string> };
 
-/** POSTs JSON to an API route and tracks status and field errors. */
-export function useSubmit(endpoint: string) {
+type SubmitMessages = {
+  generic: string;
+  network: string;
+  /** When set (Spanish), these replace the API's English messages: by status, and per field. */
+  invalid?: string;
+  rate?: string;
+  fields?: Record<string, string>;
+  fieldFallback?: string;
+};
+
+export const SUBMIT_MESSAGES: Record<"en" | "es", SubmitMessages> = {
+  en: { generic: "Something went wrong. Please try again.", network: "Network error. Please check your connection and try again." },
+  es: {
+    generic: "Algo salió mal. Inténtelo de nuevo.",
+    network: "Error de red. Revise su conexión e inténtelo de nuevo.",
+    invalid: "Revise los campos señalados.",
+    rate: "Demasiadas solicitudes. Inténtelo de nuevo en un minuto.",
+    fields: {
+      name: "Escriba su nombre.",
+      email: "Escriba un correo electrónico válido.",
+      message: "Cuéntenos un poco más (10 caracteres o más).",
+      consent: "Acepte el aviso de privacidad para continuar.",
+      attestation: "Confirme la declaración para continuar.",
+      country: "Indique su país de residencia.",
+      topics: "Elija al menos un boletín.",
+      date: "Elija una fecha.",
+      time: "Elija un horario.",
+    },
+    fieldFallback: "Revise este campo.",
+  },
+};
+
+/** POSTs JSON to an API route and tracks status and field errors (the API writes them in English; see SubmitMessages). */
+export function useSubmit(endpoint: string, messages: SubmitMessages = SUBMIT_MESSAGES.en) {
   const [state, setState] = useState<SubmitState>({ status: "idle" });
   async function submit(payload: Record<string, unknown>) {
     setState({ status: "submitting" });
@@ -17,9 +49,13 @@ export function useSubmit(endpoint: string) {
         setState({ status: "success" });
         return true;
       }
-      setState({ status: "error", error: json.error ?? "Something went wrong. Please try again.", fieldErrors: json.fieldErrors });
+      const fieldErrors = messages.fields
+        ? Object.fromEntries(Object.keys(json.fieldErrors ?? {}).map((k) => [k, messages.fields?.[k] ?? messages.fieldFallback ?? ""]))
+        : json.fieldErrors;
+      const error = (res.status === 422 && messages.invalid) || (res.status === 429 && messages.rate) || (messages.fields ? messages.generic : json.error);
+      setState({ status: "error", error: error ?? messages.generic, fieldErrors });
     } catch {
-      setState({ status: "error", error: "Network error. Please check your connection and try again." });
+      setState({ status: "error", error: messages.network });
     }
     return false;
   }

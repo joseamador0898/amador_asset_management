@@ -1,8 +1,15 @@
+import type { Lang } from "@/lib/i18n";
 import type { TidePoint } from "@/lib/signals/types";
 import { fmt } from "@/lib/utils";
 
+const COPY = {
+  en: { aria: "Net call and put premium through the session", call: "Net call premium", put: "Net put premium" },
+  es: { aria: "Prima neta de calls y puts durante la sesión", call: "Prima neta de calls", put: "Prima neta de puts" },
+};
+
 /** Intraday net call vs net put premium (two lines around a zero axis). */
-export function MarketTide({ points }: { points: TidePoint[] }) {
+export function MarketTide({ points, lang = "en" }: { points: TidePoint[]; lang?: Lang }) {
+  const copy = COPY[lang];
   const W = 760;
   const H = 240;
   const P = { l: 52, r: 12, t: 14, b: 26 };
@@ -18,7 +25,7 @@ export function MarketTide({ points }: { points: TidePoint[] }) {
 
   return (
     <div className="px-3 py-4">
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label="Net call and put premium through the session">
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={copy.aria}>
         {ticks.map((t) => (
           <g key={t}>
             <line x1={P.l} x2={W - P.r} y1={y(t)} y2={y(t)} stroke="#24242b" />
@@ -40,10 +47,10 @@ export function MarketTide({ points }: { points: TidePoint[] }) {
       </svg>
       <div className="mt-2 flex gap-5 px-2 font-mono text-[0.62rem] uppercase tracking-wider text-paper/50">
         <span className="flex items-center gap-2">
-          <span className="h-0.5 w-4 bg-up" /> Net call premium
+          <span className="h-0.5 w-4 bg-up" /> {copy.call}
         </span>
         <span className="flex items-center gap-2">
-          <span className="h-0.5 w-4 bg-down" /> Net put premium
+          <span className="h-0.5 w-4 bg-down" /> {copy.put}
         </span>
       </div>
     </div>

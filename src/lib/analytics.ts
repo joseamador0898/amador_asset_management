@@ -24,9 +24,15 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-
 const STATIC_ROUTES = [
   "/", "/firm", "/approach", "/insights", "/studio", "/signals", "/fund", "/book", "/briefings", "/contact",
   "/legal/disclosures", "/legal/privacy", "/legal/terms",
+  // Spanish tree
+  "/es", "/es/firma", "/es/enfoque", "/es/analisis", "/es/senales", "/es/boletines", "/es/fondo", "/es/reservar", "/es/contacto",
+  "/es/legal/divulgaciones", "/es/legal/privacidad", "/es/legal/terminos",
 ];
 // A placeholder is also accepted as input, so a template stays a template when it passes through again.
-const DYNAMIC_ROUTES: Array<[RegExp, string]> = [[/^\/insights\/(?:[a-z0-9-]{1,120}|:slug)$/, "/insights/:slug"]];
+const DYNAMIC_ROUTES: Array<[RegExp, string]> = [
+  [/^\/insights\/(?:[a-z0-9-]{1,120}|:slug)$/, "/insights/:slug"],
+  [/^\/es\/analisis\/(?:[a-z0-9-]{1,120}|:slug)$/, "/es/analisis/:slug"],
+];
 
 export type Route = { route: string; known: boolean };
 

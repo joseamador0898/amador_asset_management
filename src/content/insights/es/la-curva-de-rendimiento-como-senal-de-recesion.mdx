@@ -1,0 +1,147 @@
+---
+title: "La curva de rendimiento como señal de recesión: qué dice y qué no"
+dek: "Una curva de bonos del Tesoro invertida precedió a todas las recesiones de EE. UU. de 1969 a 2020, pero sus tiempos de anticipación varían mucho y su larga inversión de 2022–2024 no fue seguida por una recesión en el plazo esperado, así que conviene leerla como una probabilidad, no como un cronómetro."
+seoTitle: "Curva de rendimiento invertida y recesión"
+description: "Una curva de rendimiento invertida precedió a toda recesión de EE. UU. de 1969 a 2020, pero 2022–24 rompió el patrón: una probabilidad, no un cronómetro."
+date: "2026-10-22"
+category: "Markets"
+author: "Jose Luis Amador Jaime"
+tags: ["curva de rendimiento", "indicadores de recesión", "bonos del Tesoro", "política monetaria", "prima por plazo", "macro"]
+featured: false
+cover: "waves"
+translationOf: "the-yield-curve-as-a-recession-signal"
+---
+
+Una curva de rendimiento invertida, en la que los rendimientos de los bonos del Tesoro de corto plazo superan a los de largo plazo, precedió a todas las recesiones de EE. UU. de 1969 a 2020, y por eso los diferenciales de 10 años menos 3 meses y de 10 años menos 2 años están entre los indicadores de recesión más vigilados. Pero una inversión de la curva es una afirmación sobre las tasas de interés esperadas, no una cuenta regresiva: el rezago hasta la recesión ha ido de unos seis meses a dos años, y la larga inversión de 2022–2024 no fue seguida por una recesión dentro de ese plazo. La curva se aprovecha mejor como un insumo para decidir cuánto riesgo carga un portafolio, no como una señal para operar.
+
+## ¿Qué es una curva de rendimiento invertida?
+
+La curva de rendimiento grafica los rendimientos de los bonos del Tesoro contra su plazo, desde los certificados (bills) que vencen en semanas hasta los bonos a 30 años. Normalmente tiene pendiente positiva, porque los inversionistas exigen una compensación adicional por prestar a plazos más largos, y se invierte cuando los rendimientos de corto plazo superan a los de largo plazo. Dos diferenciales resumen la pendiente, y ambos se publican a diario en FRED:
+
+- **10 años menos 3 meses (T10Y3M).** La referencia en la investigación académica, popularizada por Estrella y Mishkin (1996) en la Fed de Nueva York y el insumo del modelo de probabilidad de recesión de ese banco. El certificado a 3 meses sigue la tasa de política de la Fed, así que este diferencial compara los rendimientos largos con la postura de política monetaria actual.
+- **10 años menos 2 años (T10Y2Y).** El favorito del mercado. El rendimiento a 2 años incorpora la trayectoria esperada de la política monetaria durante dos años, así que este diferencial se invierte cuando los mercados esperan tasas más bajas en el futuro.
+
+Estrella y Trubin (2006) encontraron que la versión a 2 años tiende a invertirse antes y con mayor frecuencia. Elija la que elija, úsela de forma consistente.
+
+## Cómo calcular el diferencial: un ejemplo práctico
+
+Suponga que estos rendimientos ilustrativos, todos en base de equivalente bono (bond-equivalent), prevalecen en un día dado; no son datos de mercado.
+
+| Plazo | Rendimiento ilustrativo |
+| --- | ---: |
+| Certificado a 3 meses | 5.40% |
+| Nota a 2 años | 4.90% |
+| Nota a 10 años | 4.20% |
+
+Cada diferencial es el rendimiento largo menos el corto, en puntos porcentuales:
+
+$$
+S_{\text{10y-3m}} = 4.20 - 5.40 = -1.20 \qquad S_{\text{10y-2y}} = 4.20 - 4.90 = -0.70
+$$
+
+La curva está invertida según ambas medidas: por 120 puntos base (pb) frente al certificado y 70 pb frente a la nota a 2 años.
+
+Un diferencial se convierte en probabilidad solo a través de un modelo. El modelo probit de Estrella y Trubin, del tipo que publica la Fed de Nueva York, transforma el promedio mensual del diferencial de 10 años menos 3 meses $S$ en la probabilidad de estar en recesión doce meses después:
+
+$$
+P = \Phi(-0.6045 - 0.7374\,S)
+$$
+
+donde $\Phi$ es la función de distribución normal estándar y los coeficientes se estimaron con datos de 1959–2005. Con el valor ilustrativo $S = -1.20$, el modelo arroja cerca de 61%; una curva plana da alrededor de 27%, y un diferencial de $+1.00$ cerca de 9%. La señal es continua, así que el cero es una convención y no un precipicio, y el resultado es una probabilidad, no una fecha.
+
+<Callout type="method" title="Cómo obtener los insumos correctos">
+
+**Use promedios mensuales.** Entre 1968 y 2005, Estrella y Trubin contaron 100 días con diferenciales negativos en meses cuyo promedio no fue negativo, y sin embargo las inversiones medidas con promedios mensuales no dieron señales falsas.
+
+**Use una sola base.** Los certificados se cotizan en base de descuento, que subestima su rendimiento. Para un certificado a 91 días con tasa de descuento $d$, el rendimiento equivalente bono es $365d/(360 - 91d)$, así que una tasa de descuento de 5.25% equivale a cerca de 5.39%: una brecha de 14 pb que puede decidir si una curva poco pronunciada cuenta como invertida. La serie T10Y3M de FRED usa el rendimiento a 3 meses de vencimiento constante, que puede diferir ligeramente de la medida basada en certificados que usan Estrella y Trubin.
+
+**Observe niveles, no cambios.** En sus pruebas, el nivel contenía mucha más información que los cambios recientes.
+
+</Callout>
+
+## ¿Por qué una curva invertida tiende a preceder a las recesiones?
+
+Un rendimiento de largo plazo es, en términos aproximados, el promedio de las tasas cortas que los inversionistas esperan durante la vida del bono más una prima por plazo por asumir el riesgo de tasa de interés:
+
+$$
+y_t^{(n)} \approx \frac{1}{n}\sum_{i=0}^{n-1} \mathbb{E}_t\left[r_{t+i}\right] + TP_t^{(n)}
+$$
+
+**La política esperada.** Cuando los inversionistas esperan que la Fed recorte, las tasas cortas esperadas quedan por debajo de las actuales y arrastran los rendimientos largos por debajo de los cortos, y la Fed normalmente ha recortado con más fuerza cuando la economía se debilita. El apretón monetario también actúa de forma directa, al elevar las tasas cortas más que las largas mientras frena la economía: antes de cada una de las seis recesiones de 1969 a 2001, encontraron Estrella y Trubin, la tasa a 3 meses había subido en el periodo previo a la señal. Como señalan Bauer y Mertens (2018b), la causalidad también puede correr en sentido contrario: el temor a una desaceleración puede empujar a los inversionistas hacia los bonos del Tesoro de largo plazo, lo que reduce los rendimientos largos.
+
+**La prima por plazo.** Un argumento común sostiene que la expansión cuantitativa deprimió los rendimientos largos a través de la prima por plazo, de modo que una curva invertida exageraría el riesgo de recesión. Bauer y Mertens lo pusieron a prueba: restar una estimación de la prima por plazo obtenida con un modelo hizo del diferencial de 10 años menos 3 meses un peor predictor, no uno mejor.
+
+**El corto plazo.** Engstrom y Sharpe (2018) sostuvieron que la señal proviene de la política esperada durante el próximo año y medio. Su diferencial forward de corto plazo (near-term forward spread), la tasa a 3 meses implícita seis trimestres adelante menos el rendimiento a 3 meses actual, superó a todos los diferenciales de largo plazo que probaron. Bauer y Mertens confirmaron que domina al diferencial de 10 años menos 2 años, pero encontraron que el de 10 años menos 3 meses es al menos igual de confiable.
+
+## ¿Cuánto tiempo después de una inversión comienza una recesión?
+
+El historial es sólido pero escaso. Según la medida de 10 años menos 3 meses, una inversión precedió a cada una de las ocho recesiones de EE. UU. de 1969 a 2020. Bauer y Mertens (2018a), usando el diferencial de 10 años menos 1 año, encontraron un solo falso positivo desde 1955, a mediados de la década de 1960, y tiempos de anticipación de 6 a 24 meses. Incluso los aciertos exigen cautela: pocos atribuirían a la inversión de 2019 el haber pronosticado la pandemia que causó la recesión de 2020.
+
+Incluso las inversiones poco profundas han contado:
+
+<Chart
+  title="Diferencial mensual de 10 años menos 3 meses más profundo en el año previo a cada recesión (puntos porcentuales)"
+  caption="Fuente: Estrella y Trubin (2006), con datos H.15 de la Reserva Federal, certificado a 3 meses en base de equivalente bono. Resaltado: 1990–91, apenas invertida."
+  decimals={2}
+  data={[
+    { label: "1969–70", value: -0.51 },
+    { label: "1973–75", value: -1.59 },
+    { label: "1980", value: -2.2 },
+    { label: "1981–82", value: -3.51 },
+    { label: "1990–91", value: -0.08, highlight: true },
+    { label: "2001", value: -0.7 },
+  ]}
+/>
+
+La curva también tiende a volver a empinarse antes de que llegue la contracción, a medida que los rendimientos cortos caen en anticipación de recortes de tasas: en 1990, 2001 y 2007, el diferencial de 10 años menos 3 meses ya era positivo de nuevo cuando comenzó la recesión. Y el NBER fecha las recesiones meses después de que empiezan, así que la señal no puede confirmarse en tiempo real.
+
+## Señales falsas y la inversión de 2022–2024
+
+Para combatir la inflación más alta en cuatro décadas, la Fed elevó su tasa de política desde cerca de cero en marzo de 2022 hasta 5.25–5.50% en julio de 2023, y la curva se invirtió según las tres medidas:
+
+- El diferencial de 10 años menos 2 años, de julio de 2022 (tras una breve inversión ese abril) a principios de septiembre de 2024.
+- El diferencial de 10 años menos 3 meses, de finales de octubre de 2022 a mediados de diciembre de 2024.
+- El diferencial forward de corto plazo, desde noviembre de 2022; Reuters lo reportó cerca de −170 pb en abril de 2023.
+
+Sin embargo, la economía siguió creciendo durante 2023 y 2024, el desempleo se mantuvo bajo para los estándares históricos y el NBER no ha identificado ninguna recesión en ese periodo. Ninguna comenzó dentro de los 24 meses posteriores a cualquiera de las dos inversiones de largo plazo, el límite exterior del rango histórico.
+
+Destacan tres explicaciones. Los recortes de tasas pueden seguir tanto a una inflación en descenso como a una economía que se debilita, y la Fed empezó a recortar en septiembre de 2024 con la economía todavía en crecimiento. Muchos hogares y empresas habían asegurado tasas fijas bajas en 2020 y 2021, lo que frenó la transmisión de las tasas cortas más altas. Algunos argumentaron que la recesión se había pospuesto y no evitado, una defensa que se debilita con cada mes que pasa.
+
+Descartar la señal tiene su propio historial. En marzo de 2006, el presidente de la Fed, Ben Bernanke, sostuvo que, en la medida en que el aplanamiento o la inversión de la curva reflejara una prima por plazo menor, sus implicaciones para la actividad futura eran positivas y no negativas. La recesión que comenzó en diciembre de 2007 fue la más profunda desde la década de 1930. Los argumentos de que esta vez es diferente fueron erróneos en 2006 y, dentro de la ventana histórica, acertados en 2022–2024. La curva no merece ni fe ciega ni un descarte apresurado.
+
+## ¿Cómo debería un inversionista usar la curva de rendimiento?
+
+Los pasos siguientes tratan la curva como un insumo de un proceso de riesgo; son educativos, no una recomendación de comprar o vender ningún valor.
+
+1. **Traduzca el diferencial en una probabilidad** con un modelo publicado, como la estimación mensual de la Fed de Nueva York, en lugar de tratar el cero como un interruptor.
+2. **Diagnostique la inversión.** ¿La impulsan tasas cortas al alza (política restrictiva), tasas largas a la baja (un susto de crecimiento o una huida hacia la seguridad) o una prima por plazo baja? ¿Los forwards de corto plazo y los futuros de fondos federales descuentan recortes dentro de unos 18 meses?
+3. **Busque confirmación** en el mercado laboral, los diferenciales de crédito y las condiciones financieras. Nuestro [tablero de Señales](/es/senales) muestra el diferencial de 10 años menos 2 años junto a los rendimientos de los bonos del Tesoro, la tasa de fondos federales, el desempleo y el índice de condiciones financieras de la Fed de Chicago, todos tomados de FRED.
+4. **Ajuste en el margen, dentro de límites fijados de antemano.** Una probabilidad en aumento es motivo para revisar la duración, la calidad crediticia, la liquidez, el apalancamiento y las pruebas de estrés, no para abandonar una asignación de largo plazo.
+5. **Siga observando después de que la curva deje de estar invertida,** ya que el reempinamiento con frecuencia ha llegado cerca de la recesión.
+
+No venda todo ante la primera inversión: las acciones con frecuencia han seguido subiendo durante meses, y el S&P 500 marcó nuevos récords después de las inversiones de 2006, 2019 y 2022. No opere con los vaivenes diarios, no cambie de diferencial hasta que uno le dé la razón ni lea la profundidad como un calendario. El uso más robusto de cualquier señal de recesión es necesitarla menos, con un portafolio construido para resistir en distintos entornos, como se describe en [Las cuatro estaciones de la economía](/es/analisis/las-cuatro-estaciones-de-la-economia).
+
+## Limitaciones
+
+- **Una muestra pequeña.** Ocho recesiones son poca evidencia, y una regla juzgada en retrospectiva con tan pocos eventos puede parecer mejor de lo que es, una trampa descrita en [Cómo leer un *backtest* con escepticismo](/es/analisis/como-leer-un-backtest-con-escepticismo).
+- **Un mercado de bonos cambiante.** Los balances de los bancos centrales y los cambios en quién posee los bonos del Tesoro pueden mover los rendimientos largos por razones ajenas al crecimiento, y con las tasas cortas cerca de cero, como en 2009–2015, la curva difícilmente podía invertirse.
+- **Puntos ciegos.** La curva no puede ver pandemias, guerras ni accidentes financieros, y dice poco sobre la severidad de una recesión o sobre cómo responderán los mercados.
+
+## Puntos clave
+
+- Según la medida de 10 años menos 3 meses, una inversión precedió a todas las recesiones de EE. UU. de 1969 a 2020, con tiempos de anticipación de entre 6 y 24 meses aproximadamente.
+- Funciona en gran medida a través de la política monetaria esperada y entrega una probabilidad, no una fecha.
+- La inversión de 2022–2024 duró cerca de dos años sin una recesión dentro de la ventana histórica.
+- Use la curva para ajustar el riesgo en el margen, con confirmación de otros datos, no para intentar anticipar al mercado.
+
+## Fuentes
+
+- Barbuscia, D. (2023). "'Powell's curve' plunges to new lows, flashing US recession warning." Reuters, April 6.
+- Bauer, M. D., and Mertens, T. M. (2018a). "[Economic Forecasts with the Yield Curve](https://www.frbsf.org/research-and-insights/publications/economic-letter/2018/03/economic-forecasts-with-yield-curve/)." *FRBSF Economic Letter* 2018-07, March 5.
+- Bauer, M. D., and Mertens, T. M. (2018b). "[Information in the Yield Curve about Future Recessions](https://www.frbsf.org/wp-content/uploads/el2018-20.pdf)." *FRBSF Economic Letter* 2018-20, August 27.
+- Bernanke, B. S. (2006). "[Reflections on the Yield Curve and Monetary Policy](https://www.federalreserve.gov/newsevents/speech/bernanke20060320a.htm)." Remarks before the Economic Club of New York, March 20.
+- Engstrom, E. C., and Sharpe, S. A. (2018). "[(Don't Fear) The Yield Curve](https://www.federalreserve.gov/econres/notes/feds-notes/dont-fear-the-yield-curve-20180628.html)." *FEDS Notes*, Federal Reserve Board, June 28.
+- Estrella, A., and Mishkin, F. S. (1996). "[The Yield Curve as a Predictor of U.S. Recessions](https://www.newyorkfed.org/research/current_issues/ci2-7.pdf)." Federal Reserve Bank of New York, *Current Issues in Economics and Finance* 2(7).
+- Estrella, A., and Trubin, M. R. (2006). "[The Yield Curve as a Leading Indicator: Some Practical Issues](https://www.newyorkfed.org/medialibrary/media/research/current_issues/ci12-5.pdf)." Federal Reserve Bank of New York, *Current Issues in Economics and Finance* 12(5).
+- Federal Reserve Bank of New York. "[The Yield Curve as a Leading Indicator](https://www.newyorkfed.org/research/capital_markets/ycfaq)." Recession-probability model.
+- Federal Reserve Bank of St. Louis, FRED. Series [T10Y3M](https://fred.stlouisfed.org/series/T10Y3M) and [T10Y2Y](https://fred.stlouisfed.org/series/T10Y2Y).

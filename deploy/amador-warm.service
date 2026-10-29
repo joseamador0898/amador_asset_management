@@ -13,4 +13,4 @@ Requires=amador-web.service
 [Service]
 Type=oneshot
 User=amador
-ExecStart=/usr/bin/curl --silent --show-error --output /dev/null --max-time 90 --header "Host: amadoram.com" --user-agent "amador-warm/1 (cache warmer)" http://127.0.0.1:8781/ http://127.0.0.1:8781/signals http://127.0.0.1:8781/briefings
+ExecStart=/usr/bin/curl --silent --show-error --output /dev/null --max-time 90 --header "Host: amadoram.com" --user-agent "amador-warm/1 (cache warmer)" http://127.0.0.1:8781/ http://127.0.0.1:8781/signals http://127.0.0.1:8781/briefings http://127.0.0.1:8781/es http://127.0.0.1:8781/es/senales http://127.0.0.1:8781/es/boletines
