@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage } from "@/components/legal/LegalPage";
 import { site } from "@/lib/site";
+import { JsonLd, pageGraph } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "Terms of Use",
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 export default function TermsPage() {
   return (
     <LegalPage title="Terms of Use" updated="October 19, 2026" current="/legal/terms">
+      <JsonLd data={pageGraph("WebPage", "Terms of Use", "/legal/terms")} />
       <p>
         By using this website you agree to these terms. If you do not agree, please do not use the site.
       </p>

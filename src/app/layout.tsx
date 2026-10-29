@@ -15,16 +15,20 @@ const newsreader = Newsreader({
   display: "swap",
 });
 
+// Body and mono fonts use "optional": on a slow first visit the metrics-matched fallback simply stays, instead of
+// swapping in a second later and reflowing the page (Inter's fallback wraps the hero text one line longer, which
+// was the whole of the home page's layout shift). On normal connections and every later visit the real font shows.
+// Newsreader keeps "swap": its fallback matches closely and the display face is the brand.
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
-  display: "swap",
+  display: "optional",
 });
 
 const jetbrains = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains",
-  display: "swap",
+  display: "optional",
 });
 
 // Google AdSense (optional): set NEXT_PUBLIC_ADSENSE_CLIENT="ca-pub-…" to add the
@@ -34,11 +38,13 @@ const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   ...(adsenseClient ? { other: { "google-adsense-account": adsenseClient } } : {}),
+  // Google shows about 60 characters of a title and 155 of a description: a short brand suffix keeps page titles
+  // whole in search results, and the home description is a trimmed version of the longer site.description.
   title: {
-    default: `${site.name} | Research, Signals & the Nautilus Fund`,
-    template: `%s | ${site.name}`,
+    default: `${site.name} | Research, Signals & Nautilus Fund`,
+    template: `%s | ${site.shortName}`,
   },
-  description: site.description,
+  description: "Independent investment research, the Amador Signals market dashboard, investor education and the forthcoming Amador Nautilus Fund, from Chicago.",
   applicationName: site.name,
   authors: [{ name: site.founder.name }],
   openGraph: {

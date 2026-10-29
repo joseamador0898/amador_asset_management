@@ -2,16 +2,18 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage } from "@/components/legal/LegalPage";
 import { site } from "@/lib/site";
+import { JsonLd, pageGraph } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "Privacy Notice",
-  description: "How Amador Asset Management collects and uses information: forms, cookie-free analytics, Google AdSense advertising cookies and your opt-outs, service providers, retention and your rights.",
+  description: "How Amador collects and uses information: forms, cookie-free analytics, Google AdSense cookies and opt-outs, service providers, retention and your rights.",
   alternates: { canonical: "/legal/privacy" },
 };
 
 export default function PrivacyPage() {
   return (
     <LegalPage title="Privacy Notice" updated="October 22, 2026" current="/legal/privacy">
+      <JsonLd data={pageGraph("WebPage", "Privacy Notice", "/legal/privacy")} />
       <p>
         This notice explains how {site.name} (&ldquo;Amador&rdquo;, &ldquo;we&rdquo;) collects and uses personal information
         through this website.

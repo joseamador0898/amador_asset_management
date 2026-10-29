@@ -13,7 +13,11 @@ export type CoverTheme = "dendrogram" | "nautilus" | "waves" | "bars" | "rings" 
 export type ArticleMeta = {
   slug: string;
   title: string;
+  /** Search-result title (≤ 50 characters, keyword first); the page's <title> uses it, the headline stays `title`. */
+  seoTitle?: string;
   dek: string;
+  /** Search-result description (≤ 155 characters); falls back to the dek, which is often longer. */
+  description?: string;
   date: string;
   updated?: string;
   category: Category;
@@ -39,7 +43,9 @@ function parse(file: string): { meta: ArticleMeta; content: string; draft: boole
   const meta: ArticleMeta = {
     slug,
     title: String(data.title ?? slug),
+    seoTitle: data.seoTitle ? String(data.seoTitle) : undefined,
     dek: String(data.dek ?? ""),
+    description: data.description ? String(data.description) : undefined,
     date: String(data.date ?? "2026-01-01"),
     updated: data.updated ? String(data.updated) : undefined,
     category: (CATEGORIES as readonly string[]).includes(data.category) ? data.category : "Research",

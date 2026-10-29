@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Lock, MessagesSquare, ShieldCheck } from "lucide-react";
 import { PageHero } from "@/components/ui/Section";
 import { BookingFlow } from "@/components/booking/BookingFlow";
+import { JsonLd, pageGraph } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "Book a consultation",
@@ -14,6 +16,7 @@ const calLink = process.env.NEXT_PUBLIC_CALCOM_LINK; // e.g. "amador/discovery" 
 export default function BookPage() {
   return (
     <>
+      <JsonLd data={pageGraph("WebPage", "Book a consultation", "/book")} />
       <PageHero
         eyebrow="Consultations"
         title={
@@ -49,6 +52,34 @@ export default function BookPage() {
               </div>
             ))}
           </aside>
+        </div>
+      </section>
+
+      {/* What to read first: gives the page substance beyond the form, and links the consultation to the work behind it. */}
+      <section className="border-t border-line bg-paper">
+        <div className="container-x grid gap-10 py-16 md:py-20 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <p className="eyebrow text-brass">Before we talk</p>
+            <h2 className="display mt-5 text-4xl">How we think, in three reads.</h2>
+            <p className="mt-5 leading-relaxed text-muted">
+              A consultation goes further when you have seen our process first. These three pages cover most of the questions
+              people bring to a first conversation.
+            </p>
+          </div>
+          <ul className="grid gap-px bg-line sm:grid-cols-3 lg:col-span-8">
+            {[
+              { href: "/approach", title: "Our approach", body: "Research, construct, control, review: how we build portfolios and what we hold them to." },
+              { href: "/insights/the-amador-framework", title: "The Amador Framework", body: "The five questions we ask before any position earns capital, from what would prove it wrong to how to size it." },
+              { href: "/insights/the-arithmetic-of-drawdowns", title: "Drawdown math", body: "Why losses hurt more than gains help, and why sizing starts from the drawdown you can survive." },
+            ].map((r) => (
+              <li key={r.href} className="bg-paper-2 p-6">
+                <Link href={r.href} className="link-underline font-serif text-xl text-ink">
+                  {r.title}
+                </Link>
+                <p className="mt-3 text-sm leading-relaxed text-muted">{r.body}</p>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
     </>

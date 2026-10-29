@@ -28,9 +28,10 @@ export async function generateMetadata({ params }: PageProps<"/insights/[slug]">
   const article = getArticle(slug);
   if (!article) return { title: "Insight not found" };
   const { meta } = article;
+  // Search results get the short title and description; social cards and the page keep the full headline and dek.
   return {
-    title: meta.title,
-    description: meta.dek,
+    title: meta.seoTitle ?? meta.title,
+    description: meta.description ?? meta.dek,
     keywords: meta.tags,
     // The markdown twin (/insights/<slug>.md) is the same text for AI tools and agents.
     alternates: { canonical: `/insights/${meta.slug}`, types: { "text/markdown": `/insights/${meta.slug}.md` } },

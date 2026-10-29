@@ -1,0 +1,16 @@
+# Keeps the market pages' caches warm so no visitor or crawler ever waits for every data provider at once
+# (a cold /signals took 13 seconds; ChatGPT's fetcher gave up on it). Runs from amador-warm.timer every few minutes
+# and talks to the app directly, so it never appears in Caddy's access log.
+#
+# Install (as root on the VM):
+#   install -m 0644 amador-warm.service amador-warm.timer /etc/systemd/system/
+#   systemctl daemon-reload && systemctl enable --now amador-warm.timer
+[Unit]
+Description=Amador: warm the cached market pages
+After=amador-web.service
+Requires=amador-web.service
+
+[Service]
+Type=oneshot
+User=amador
+ExecStart=/usr/bin/curl --silent --show-error --output /dev/null --max-time 90 --header "Host: amadoram.com" --user-agent "amador-warm/1 (cache warmer)" http://127.0.0.1:8781/ http://127.0.0.1:8781/signals http://127.0.0.1:8781/briefings

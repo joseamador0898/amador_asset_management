@@ -7,7 +7,7 @@ import { fund, site } from "@/lib/site";
 import { JsonLd, pageGraph } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "The firm",
+  title: "About Amador Asset Management: the firm",
   description: `${site.name} is an independent investment firm built on research, risk discipline and transparency.`,
   alternates: { canonical: "/firm" },
 };

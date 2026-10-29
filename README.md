@@ -137,6 +137,7 @@ Palette: Ink `#0A0E16` · Ivory `#F7F5F0` · Brass `#A8834A` · Light brass `#C9
 | Code | `/opt/amador/releases/<date>-<sha>`, with `/opt/amador/current` pointing at the live one; Node 24 in `/opt/node` |
 | Secrets | `/etc/amador/amador.env` (root:amador, 0640): read-only market-data keys and `NEXT_PUBLIC_SITE_URL` |
 | Web server | juricio's Caddy imports `/etc/caddy/amador.caddy` (`deploy/amador.caddy`): HTTPS, `www` → apex, logs in `/var/log/caddy/amador.log` |
+| Cache warmer | `amador-warm.timer` (`deploy/amador-warm.service` and `.timer`, installed in `/etc/systemd/system`) fetches the market pages every 4 minutes; `journalctl -u amador-warm` shows its runs |
 
 To ship the latest `main`, run `deploy/deploy.sh` from a machine with SSH access. It builds a new release while the current one keeps serving, switches the symlink, restarts the service and keeps the three newest releases. Logs: `journalctl -u amador-web`. Until email delivery is configured, form submissions are written there.
 
@@ -168,8 +169,13 @@ To keep your own visits out, open amadoram.com/?noanalytics=1 once in each brows
 | AI assistants | `/llms.txt`, `/llms-full.txt` and a markdown twin of every article at `/insights/<slug>.md` (`src/lib/markdown.ts`) |
 | IndexNow | Key file in `public/`, `scripts/indexnow.mjs`; `deploy/deploy.sh` notifies Bing and the other IndexNow engines after each deploy |
 | Ownership tags | `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` (Search Console) and `NEXT_PUBLIC_BING_SITE_VERIFICATION` (Bing Webmaster Tools), if you verify with a meta tag instead of DNS |
+| Titles and descriptions | Page titles get a short `| Amador` suffix (root layout). Google shows about 60 characters of a title and 155 of a description, so an article whose headline is longer sets `seoTitle` (≤ 50 characters, keyword first) and `description` (≤ 155) in its frontmatter; the headline and dek stay as written on the page and in social cards |
+| Audit | `npm run audit:seo` crawls every sitemap URL of the live site (or `npm run audit:seo -- http://localhost:3000`) and lists title, description, heading, canonical, Open Graph, structured-data, link and word-count problems |
+| Speed for crawlers | `deploy/amador-warm.timer` fetches `/`, `/signals` and `/briefings` every 4 minutes so the market panels are always cached: a cold `/signals` took 13 seconds and ChatGPT's fetcher gave up on it. `cacheLife` in `next.config.ts` also serves the last panels for up to a day when they expire instead of making the visitor wait |
 
 Google says AI Overviews and AI Mode need nothing beyond normal SEO; `llms.txt` and the markdown twins are for other assistants and agents, not a ranking lever.
+
+**Core Web Vitals.** Lighthouse's default "simulated" mobile throttling reports an LCP of 7–8 seconds here that real throttling does not reproduce (2.6 seconds); judge the site with `--throttling-method=devtools` or with Search Console's Core Web Vitals report once it has data. Layout shift came from web fonts: Inter's fallback wraps text slightly longer, so the body and mono fonts load with `font-display: optional` (root layout) and the fallback stays for a slow first visit rather than reflowing the page.
 
 **AdSense readiness.** Google reviews the whole site, and pages without real content are the usual reason for "low value content" rejections. So Studio stays hidden (a 404, out of the navigation and sitemap) until a video or clip is published in `src/content/studio.ts`, and Signals hides partner panels without a live licensed feed. When AdSense gives you a publisher ID, set `NEXT_PUBLIC_ADSENSE_CLIENT="ca-pub-…"` in `/etc/amador/amador.env` and redeploy: that adds the verification meta tag, the AdSense script and `/ads.txt`. In AdSense, turn on a Google-certified consent message (Privacy & messaging) for visitors in the EEA, UK and Switzerland. The privacy notice already discloses Google's advertising cookies and the opt-outs.
 

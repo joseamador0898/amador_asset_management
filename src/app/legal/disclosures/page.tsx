@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/legal/LegalPage";
 import { fund, site } from "@/lib/site";
+import { JsonLd, pageGraph } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "Important Disclosures",
-  description: "Important disclosures for Amador Asset Management: educational content only, no investment advice, third-party market data, research limitations and the pre-launch status of the Amador Nautilus Fund.",
+  description: "Amador Asset Management disclosures: educational content, not investment advice; third-party data; research limits; the Nautilus Fund is pre-launch.",
   alternates: { canonical: "/legal/disclosures" },
 };
 
 export default function DisclosuresPage() {
   return (
     <LegalPage title="Important Disclosures" updated="October 19, 2026" current="/legal/disclosures">
+      <JsonLd data={pageGraph("WebPage", "Important Disclosures", "/legal/disclosures")} />
       <h2>No offer or advice</h2>
       <p>
         The content of this website, including research, articles, videos, briefings, alerts and the Amador Signals dashboard,

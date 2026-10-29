@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import Link from "next/link";
 import { BellRing, CalendarClock, FileText, LineChart, Newspaper, Scale, Waves } from "lucide-react";
 import { CircleArrowLink } from "@/components/ui/Button";
 import { PageHero, SectionHeader } from "@/components/ui/Section";
@@ -10,6 +11,7 @@ import { MorningNote } from "@/components/signals/MorningNote";
 import { getGsMacro } from "@/lib/signals";
 import { buildGsAlerts } from "@/lib/signals/alerts";
 import { fund } from "@/lib/site";
+import { JsonLd, pageGraph } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "Briefings & Alerts",
@@ -18,14 +20,15 @@ export const metadata: Metadata = {
   alternates: { canonical: "/briefings" },
 };
 
+// Each product links to the article that explains how we read that signal (and gives search engines a path to it).
 const PRODUCTS = [
-  { icon: Newspaper, name: "Daily Brief", cadence: "Weekdays · 7:30 a.m. CT", body: "What moved overnight across equities, rates, commodities, FX and crypto, the calendar for the day, and one chart that matters." },
-  { icon: FileText, name: "Weekly Memo", cadence: "Sundays", body: "One framework or research idea, explained properly, the long-form thinking behind how we build portfolios." },
-  { icon: Waves, name: "Unusual Options Activity", cadence: "Daily digest after the close", body: "The largest contracts trading far above open interest, with context: hedge, spread or directional?" },
-  { icon: BellRing, name: "Insider Buying", cadence: "As filed · daily digest", body: "Open-market purchases from SEC Form 4 filings, cluster buys flagged, sales and routine grants filtered out." },
-  { icon: Scale, name: "Macro & Prediction Markets", cadence: "When triggered · around FOMC, CPI and jobs", body: "Alerts on Goldman Sachs financial conditions, growth nowcast and data surprises, plus what prediction markets imply around each major release." },
-  { icon: LineChart, name: "Research Papers", cadence: "When published", body: "New Amador research, like our Deep HRP work, with a plain-language summary and the full paper." },
-  { icon: CalendarClock, name: `${fund.shortName} Updates`, cadence: "Milestones only", body: "Launch timeline, investor events and offering availability, for eligible investors who opt in." },
+  { icon: Newspaper, name: "Daily Brief", cadence: "Weekdays · 7:30 a.m. CT", body: "What moved overnight across equities, rates, commodities, FX and crypto, the calendar for the day, and one chart that matters.", link: { href: "/signals", label: "See the live dashboard" } },
+  { icon: FileText, name: "Weekly Memo", cadence: "Sundays", body: "One framework or research idea, explained properly, the long-form thinking behind how we build portfolios.", link: { href: "/insights/the-amador-framework", label: "Read the Amador Framework" } },
+  { icon: Waves, name: "Unusual Options Activity", cadence: "Daily digest after the close", body: "The largest contracts trading far above open interest, with context: hedge, spread or directional?", link: { href: "/insights/reading-options-flow", label: "How we read options flow" } },
+  { icon: BellRing, name: "Insider Buying", cadence: "As filed · daily digest", body: "Open-market purchases from SEC Form 4 filings, cluster buys flagged, sales and routine grants filtered out.", link: { href: "/insights/what-insider-buying-tells-you", label: "What insider buying tells you" } },
+  { icon: Scale, name: "Macro & Prediction Markets", cadence: "When triggered · around FOMC, CPI and jobs", body: "Alerts on Goldman Sachs financial conditions, growth nowcast and data surprises, plus what prediction markets imply around each major release.", link: { href: "/insights/financial-conditions-indexes-explained", label: "Financial conditions, explained" } },
+  { icon: LineChart, name: "Research Papers", cadence: "When published", body: "New Amador research, like our Deep HRP work, with a plain-language summary and the full paper.", link: { href: "/insights/deep-hrp-learnable-risk-parity", label: "Read the Deep HRP paper" } },
+  { icon: CalendarClock, name: `${fund.shortName} Updates`, cadence: "Milestones only", body: "Launch timeline, investor events and offering availability, for eligible investors who opt in.", link: { href: "/fund", label: `About the ${fund.shortName}` } },
 ];
 
 /** Live alerts from the Goldman Sachs feed, with the AI commentary built on them. Hidden when the feed is off. */
@@ -62,6 +65,7 @@ async function LatestAlerts() {
 export default function BriefingsPage() {
   return (
     <>
+      <JsonLd data={pageGraph("WebPage", "Briefings & Alerts", "/briefings")} />
       <PageHero
         eyebrow="Briefings & Alerts"
         title={
@@ -86,6 +90,9 @@ export default function BriefingsPage() {
                 <p className="mt-6 font-serif text-2xl">{p.name}</p>
                 <p className="mt-1 text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-muted">{p.cadence}</p>
                 <p className="mt-4 text-sm leading-relaxed text-muted">{p.body}</p>
+                <Link href={p.link.href} className="link-underline mt-5 self-start text-sm font-medium text-ink">
+                  {p.link.label}
+                </Link>
               </Reveal>
             ))}
           </div>

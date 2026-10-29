@@ -6,7 +6,7 @@ import { site } from "@/lib/site";
 import { JsonLd, pageGraph } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "Contact",
+  title: "Contact Amador Asset Management",
   description: `Contact ${site.name}: advisory, the Nautilus Fund, media, research collaborations and careers.`,
   alternates: { canonical: "/contact" },
 };
@@ -48,6 +48,24 @@ export default function ContactPage() {
                   Register your interest
                 </Link>
                 .
+              </p>
+            </div>
+            <div className="border-t border-ink pt-6">
+              <p className="text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-muted">Looking for something else?</p>
+              <p className="mt-3 leading-relaxed text-muted">
+                Our research lives in{" "}
+                <Link href="/insights" className="text-ink underline underline-offset-2">
+                  Insights
+                </Link>
+                , the live market dashboard is{" "}
+                <Link href="/signals" className="text-ink underline underline-offset-2">
+                  Amador Signals
+                </Link>
+                , and email{" "}
+                <Link href="/briefings" className="text-ink underline underline-offset-2">
+                  briefings and alerts
+                </Link>{" "}
+                need no conversation at all. Media, speaking and research collaborations are welcome through the form.
               </p>
             </div>
           </aside>

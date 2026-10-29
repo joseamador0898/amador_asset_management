@@ -16,11 +16,12 @@ import { MorningNote } from "@/components/signals/MorningNote";
 import { GsAlertsPanel, GsMacroPanel } from "@/components/signals/GsMacroPanel";
 import { WorldMarketsLive } from "@/components/signals/WorldMarketsLive";
 import { ButtonLink } from "@/components/ui/Button";
+import { JsonLd, pageGraph } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "Signals: live market dashboard",
   description:
-    "Amador Signals: Goldman Sachs macro indicators and forecasts, signal alerts, live world markets, unusual options activity, SEC insider filings and prediction-market odds in one terminal.",
+    "Free live market dashboard: Goldman Sachs macro indicators, world markets, unusual options activity, insider filings and prediction-market odds.",
   alternates: { canonical: "/signals" },
 };
 
@@ -120,6 +121,7 @@ async function TidePanel() {
 export default function SignalsPage() {
   return (
     <div className="bg-term text-paper">
+      <JsonLd data={pageGraph("WebPage", "Amador Signals: live market dashboard", "/signals")} />
       <section className="grain border-b border-line-dark bg-ink">
         <div className="container-x flex flex-col gap-8 py-12 md:flex-row md:items-end md:justify-between md:py-16">
           <div className="max-w-2xl">
@@ -148,16 +150,17 @@ export default function SignalsPage() {
 
       <div className="container-x space-y-5 py-8">
         {/* Goldman Sachs first: alerts, macro lens, then the analyst commentary built on them. */}
+        {/* Placeholders sized like the panels they become, so streaming them in does not shift the page (CLS). */}
         <div className="grid gap-5 lg:grid-cols-3">
-          <Suspense fallback={null}>
+          <Suspense fallback={<Skeleton className="h-72 lg:col-span-3" />}>
             <GsAlertsPanel />
           </Suspense>
-          <Suspense fallback={null}>
+          <Suspense fallback={<Skeleton className="h-[30rem] lg:col-span-3" />}>
             <GsMacroPanel />
           </Suspense>
         </div>
 
-        <Suspense fallback={null}>
+        <Suspense fallback={<Skeleton className="h-44" />}>
           <MorningNote />
         </Suspense>
 

@@ -4,11 +4,12 @@ import { Dendrogram } from "@/components/art/Dendrogram";
 import { ButtonLink, CircleArrowLink } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { PageHero, SectionHeader } from "@/components/ui/Section";
+import { JsonLd, pageGraph } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: "Our approach: process over prediction",
   description:
-    "How Amador Asset Management researches, builds and risk-manages portfolios: all-season risk balance, hierarchical allocation, and an evidence standard that includes negative results.",
+    "How Amador researches, builds and risk-manages portfolios: all-season risk balance, hierarchical allocation and an evidence standard that reports failures.",
   alternates: { canonical: "/approach" },
 };
 
@@ -47,6 +48,7 @@ const STANDARD = [
 export default function ApproachPage() {
   return (
     <>
+      <JsonLd data={pageGraph("WebPage", "Our approach", "/approach")} />
       <PageHero
         eyebrow="Approach"
         title={

@@ -7,6 +7,7 @@ import { SectionHeader } from "@/components/ui/Section";
 import { FundGate } from "@/components/fund/FundGate";
 import { FundInterestForm } from "@/components/forms/FundInterestForm";
 import { fund, site } from "@/lib/site";
+import { JsonLd, pageGraph } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
   title: `${fund.name}: our forthcoming flagship`,
@@ -81,6 +82,7 @@ const FAQ = [
 export default function FundPage() {
   return (
     <>
+      <JsonLd data={pageGraph("WebPage", fund.name, "/fund")} />
       <section className="relative overflow-hidden bg-sea text-paper">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_80%_20%,rgba(201,169,110,0.18),transparent_55%)]" aria-hidden />
         <div className="container-x relative grid gap-10 pb-16 pt-14 md:pb-24 md:pt-20 lg:grid-cols-12 lg:items-center">
