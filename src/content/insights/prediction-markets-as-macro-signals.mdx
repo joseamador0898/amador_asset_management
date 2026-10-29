@@ -14,6 +14,10 @@ Macro investors spend much of the day asking what the market is pricing. For the
 
 Prediction markets fill part of that gap, and their prices, quoted in cents, are widely read as probabilities. Read carefully, they are a useful input; read naively, they are a source of false precision. This note covers how to convert prices into probabilities, how they compare with rates markets, where they mislead, and how we show them on [Signals](/signals).
 
+## What are prediction markets?
+
+Prediction markets are exchanges for contracts that pay out on the outcome of an event: whether the Federal Reserve cuts rates at a given meeting, whether inflation prints above a threshold, who wins an election. The simplest contract pays \$1 if the event happens and nothing otherwise, so its price, quoted in cents, reads as the market's probability of the event. Polymarket and Kalshi are the largest venues today; the mechanics are the same as any order-driven market, with prices set by buyers and sellers rather than by a forecaster.
+
 ## From prices to probabilities
 
 A binary event contract pays one dollar if the event occurs and nothing otherwise. If traders were risk-neutral, faced no costs and shared a common view, the price would equal the probability: 62 cents would imply a 62% chance. Justin Wolfers and Eric Zitzewitz set out this mapping in "Prediction Markets" (*Journal of Economic Perspectives*, 2004), alongside contract designs that reveal a market's expected mean or median of a quantity instead.

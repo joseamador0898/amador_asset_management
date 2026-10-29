@@ -1,0 +1,119 @@
+---
+title: "Sequence of Returns Risk: Why the Order of Returns Matters"
+seoTitle: "Sequence of Returns Risk Explained (With Examples)"
+dek: "Two investors can earn exactly the same returns in a different order and end up far apart once money is flowing in or out. What sequence-of-returns risk is, who it hurts most, how to measure it, and what actually reduces it."
+description: "Sequence of returns risk explained: why the order of returns matters once money flows in or out, a worked example, who it hurts most and what reduces it."
+date: "2026-10-29"
+category: "Risk"
+author: "Jose Luis Amador Jaime"
+tags: ["sequence of returns risk", "retirement withdrawals", "safe withdrawal rate", "drawdowns", "risk management", "asset allocation"]
+featured: false
+cover: "rings"
+---
+
+Sequence of returns risk (also written sequence-of-returns risk, sequence risk or SORR) is the risk that the *order* in which returns arrive, not only their average, decides the outcome for anyone who is adding money to a portfolio or taking money out. For a buy-and-hold investor who does neither, order is irrelevant. For a retiree drawing an income, or a saver in the last years before retirement, it can be the single largest risk in the plan, and it is invisible in the figures most people look at: average return, volatility and even maximum drawdown.
+
+This note defines the risk, works through an example with real arithmetic, shows where the historical evidence comes from, and separates the measures that reduce it from the ones that only feel as if they do. Figures labeled illustrative are invented to show the mechanics; they are not forecasts.
+
+## What is sequence of returns risk?
+
+Without cash flows, final wealth is the product of the growth factors, $W_T = W_0 (1 + r_1)(1 + r_2)\cdots(1 + r_T)$, and a product does not care about the order of its terms. Shuffle the returns and the ending value is unchanged. That is why the average and compound returns of a strategy say everything about a lump sum left alone.
+
+Cash flows break the symmetry. A withdrawal taken after a decline sells more units at low prices, and the money that leaves the portfolio cannot take part in the recovery that follows. Two investors with identical returns, identical averages and identical withdrawals can therefore end up with very different balances, depending only on when the bad years came. The same mechanism runs in reverse for a saver: contributions made after a decline buy more units cheaply, so for someone adding money, early losses are a gift and late losses are the danger, because late losses hit the largest balance.
+
+The practical rule is that sequence risk is proportional to how much money is moving relative to the portfolio, and to how large the portfolio is when the losses arrive. It peaks in the years on either side of retirement, when the balance is at its largest and withdrawals begin.
+
+## A worked example
+
+Two hypothetical retirees each start with \$1,000,000 and withdraw \$40,000 in the first year, 4% of the starting balance, raising the withdrawal by 3% a year for inflation. Over ten years they earn the same ten annual returns, one of them in reverse order: an arithmetic average of 3.8% a year and a compound return of about 3.3%. Withdrawals are taken at the start of each year; balances are year-end (illustrative).
+
+| Year | Losses first | Balance | Gains first | Balance |
+| --- | ---: | ---: | ---: | ---: |
+| 1 | −20% | \$768,000 | +6% | \$1,017,600 |
+| 2 | −10% | \$654,120 | +11% | \$1,083,804 |
+| 3 | +5% | \$642,268 | +7% | \$1,114,264 |
+| 4 | +8% | \$646,444 | +9% | \$1,166,905 |
+| 5 | +12% | \$673,594 | +10% | \$1,234,073 |
+| 6 | +10% | \$689,946 | +12% | \$1,330,226 |
+| 7 | +9% | \$699,980 | +8% | \$1,385,061 |
+| 8 | +7% | \$696,340 | +5% | \$1,402,659 |
+| 9 | +11% | \$716,693 | −10% | \$1,216,790 |
+| 10 | +6% | \$704,372 | −20% | \$931,679 |
+
+Both withdrew the same \$458,555 over the decade. Had neither touched the money, both would have finished with about \$1,380,000. With withdrawals, the retiree who met the losses first finishes with \$704,000; the one who met them last finishes with \$932,000, about \$227,000 more, from the same returns.
+
+<Chart
+  title="Illustrative only: ending balance after ten years (\$ thousands)"
+  caption="Illustrative calculation, not data or a forecast. Same ten annual returns in opposite order; \$40,000 first-year withdrawal rising 3% a year, taken at the start of each year."
+  decimals={0}
+  data={[
+    { label: "No withdrawals (either order)", value: 1380 },
+    { label: "Gains first", value: 932 },
+    { label: "Losses first", value: 704, highlight: true },
+  ]}
+/>
+
+The damage is done early and quietly. After the first two years the losses-first retiree has \$654,000, and the next withdrawal of \$42,436 is 6.5% of what remains rather than 4% of what she started with. Every later gain is earned on a smaller base, which is the same arithmetic that makes a 50% loss need a 100% recovery, as we set out in [the arithmetic of drawdowns](/insights/the-arithmetic-of-drawdowns).
+
+Reverse the direction of the cash flows and the ranking flips. A saver contributing \$10,000 at the start of each of the same ten years ends with about \$149,000 if the losses come first and about \$100,000 if they come last. Early losses let the contributions buy cheaply; late losses strike when the balance is largest.
+
+<PullQuote>Sequence risk is not a property of the returns. It is a property of the cash flows.</PullQuote>
+
+## Who does it hurt most?
+
+- **New retirees.** The first five to ten years of withdrawals are the window in which a poor sequence can set a plan on a path it never recovers from, because the balance is at its largest and spending is fixed in dollars rather than in units of the portfolio.
+- **Savers near retirement.** For a thirty-year-old, a 30% decline hits a small balance with decades of contributions ahead. For a fifty-eight-year-old, it hits the largest balance she will ever have, with few contributions left to buy the dip.
+- **Anyone spending a fixed amount from a volatile pool:** endowments and foundations with spending rules, trusts, and investors living on a portfolio for any reason.
+- **Funds facing redemptions.** A strategy that is sound for patient capital can be ruined by outflows timed to its drawdowns, which is one reason liquidity terms matter as much as the strategy.
+
+## What the evidence looks like
+
+The question "what withdrawal rate would have survived?" was first answered systematically by Bengen (1994), who tested fixed, inflation-adjusted withdrawal rates against U.S. stock and bond returns from 1926 for every historical starting year. The result that became the 4% rule was that a first-year withdrawal of 4% of the portfolio, with 50% to 75% in stocks, lasted thirty years from every starting point in his data. The binding cases were not the deepest crashes but the retirements that began just before a long stretch of poor real returns, with the mid-1960s the usual example: moderate losses combined with high inflation, so withdrawals rose while the portfolio fell.
+
+Cooley, Hubbard and Walz (1998), the "Trinity study," extended the approach to rolling periods and reported success rates rather than a single worst case. For balanced portfolios and a 4% inflation-adjusted rate over thirty years, the historical success rate was in the mid-nineties percent, and it fell quickly as the rate rose. Pfau (2015) updated the study and warned that a historical success rate is a description of one country's past, not the probability that a plan starting today will work: with lower bond yields, the same rules were expected to fail more often.
+
+Three cautions follow from this literature. The success rates come from overlapping windows of a single history, so they rest on far fewer independent episodes than they appear to. The worst cases are defined by inflation as much as by returns. And "success" means not running out of money by a fixed date, which says nothing about the drawdown a retiree lived through on the way.
+
+## How is sequence risk measured?
+
+Sequence risk does not appear in volatility or maximum drawdown, both of which are the same for the two sequences above. It appears in the distribution of outcomes once cash flows are included.
+
+<Callout type="method" title="How we test a spending or saving plan">
+Simulate the plan, not the asset. Take the full set of cash flows (withdrawals, contributions, fees, taxes) and run them through many return paths: historical rolling windows, a bootstrap that resamples whole years or blocks of years to keep return clustering, and a parametric model with the assumptions stated. Report the distribution of ending wealth, the probability that the plan fails before its horizon, the worst ten-year drawdown of the balance, and the withdrawal rate as a share of the *current* balance along the bad paths. Report the failures with the same prominence as the median.
+</Callout>
+
+A simple diagnostic captures most of the risk without a simulation: divide the planned withdrawal by the current balance. A spending rule set at 4% of the original portfolio becomes 8% of the balance after a 50% decline, which is a rate no historical period has sustained for long. If a plan has no rule for what happens when that number rises, it is relying on the sequence being kind.
+
+## What reduces sequence risk, and what does not
+
+**Spending flexibility is the largest lever.** Rules that cut withdrawals modestly after a bad year and raise them after good ones, such as the guardrails of Guyton and Klinger (2006), convert a plan that fails outright into one that bends. The cost is variability of income; the benefit is that the portfolio stops being sold hardest at the bottom.
+
+**A lower starting rate.** Each half-point off the initial withdrawal rate buys a meaningful amount of safety, because it reduces the share of the portfolio sold in every year, including the bad ones.
+
+**A reserve of safe assets to spend from after a decline.** Holding one to three years of spending in cash or short bonds, and drawing on it rather than selling equities after a fall, directly attacks the mechanism. The evidence is mixed on whether a separate "bucket" beats simply holding a more conservative allocation and rebalancing, because a reserve also lowers expected return; what it reliably changes is behavior, by removing the need to sell into a decline.
+
+**Glide paths that respect where the risk is.** Pfau and Kitces (2014) found that a portfolio that starts retirement more conservative and *raises* equity exposure over time improved the worst outcomes modestly, because it holds the least risk exactly when sequence risk peaks. The same logic says a saver's equity exposure should fall as the balance grows and the horizon shortens.
+
+**Diversification across regimes and drawdown control.** A portfolio that limits its own worst years, by [balancing risk across economic seasons](/insights/four-seasons-of-the-economy) and by [treating drawdowns as a design constraint](/insights/the-arithmetic-of-drawdowns), reduces sequence risk at the source. Disciplined [rebalancing](/insights/rebalancing-a-free-lunch-you-work-for) helps at the margin by directing withdrawals from whatever has risen.
+
+**What does not help:** reaching for a higher average return by taking more risk. A higher expected return raises the median outcome and widens the spread of outcomes at the same time, and sequence risk lives in the spread. Nor does the average return of the past decade say anything about the order of the next one.
+
+<Callout type="warning" title="Not advice">
+The figures above are illustrative, and the historical studies describe U.S. markets in the past. A spending plan depends on taxes, other income, health, legacy goals and the actual portfolio; this note is educational and not a recommendation of any withdrawal rate or allocation.
+</Callout>
+
+## Key takeaways
+
+- Without cash flows the order of returns does not matter; with withdrawals or contributions it can change the outcome by a large margin.
+- For a retiree, early losses are the danger, because withdrawals lock them in; for a saver, late losses are, because they strike the largest balance.
+- The 4% rule and the Trinity study are historical worst-case and success-rate studies of one country's past, bounded by inflation as much as by returns.
+- Measure sequence risk by simulating the cash flows, and watch the withdrawal rate as a share of the current balance.
+- Flexible spending, a lower starting rate, a reserve to draw from after declines, a sensible glide path and drawdown control reduce it; a higher average return does not.
+
+## Sources
+
+- Bengen, W. P. (1994). "Determining Withdrawal Rates Using Historical Data." *Journal of Financial Planning*, October.
+- Cooley, P. L., Hubbard, C. M., and Walz, D. T. (1998). "Retirement Savings: Choosing a Withdrawal Rate That Is Sustainable." *AAII Journal*, February.
+- Guyton, J. T., and Klinger, W. J. (2006). "Decision Rules and Maximum Initial Withdrawal Rates." *Journal of Financial Planning*, March.
+- Pfau, W. D. (2015). "Sustainable Retirement Spending in Low Interest Rates: Updating the Trinity Study." *Journal of Financial Planning*, August.
+- Pfau, W. D., and Kitces, M. E. (2014). "Reducing Retirement Risk with a Rising Equity Glide Path." *Journal of Financial Planning*, January.
